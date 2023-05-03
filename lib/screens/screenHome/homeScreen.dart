@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../utils/app_images.dart';
 import '../../components/GridView.dart';
 import '../../components/PopupMenu.dart';
@@ -16,7 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Banana Digital'),
+        // title: const Text('Banana Digital'),
+        title: Text(AppLocalizations.of(context)!.language),
         actions: const <Widget>[
           PopupMenu(),
         ],
