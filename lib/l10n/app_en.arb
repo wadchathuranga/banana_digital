@@ -1,0 +1,11 @@
+{
+    "language": "English",
+    "@language": {
+        "description": "The Current Language"
+    },
+
+    "questionnaireTitle": "Fill this form",
+    "@questionnaireTitle": {
+        "description": "This is questionnaire form for collecting data"
+    }
+}
