@@ -1,3 +1,4 @@
+import 'package:banana_digital/provider/local_provider.dart';
 import 'package:banana_digital/screens/profile/profile_page.dart';
 import 'package:banana_digital/screens/screenHome/homeScreen.dart';
 import 'package:banana_digital/screens/screenFour/screenFour.dart';
@@ -7,7 +8,12 @@ import 'package:banana_digital/screens/screenTwo/screenTwo.dart';
 import 'package:banana_digital/screens/splash_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import './l10n/l10n.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,26 +24,36 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext? context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const SplashScreen(),
-        '/main': (context) => const MainPage(),
-        '/one': (context) => const  ScreenOne(),
-        '/two': (context) => const ScreenTwo(title: 'Two'),
-        '/three': (context) => const ScreenThree(title: 'Three'),
-        '/four': (context) => const ScreenFour(title: 'Four'),
-      },
-      // home: const MainPage(),
-      // home: SplashScreen(),
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+      create: (context) => LocaleProvider(),
+      builder: (context, child) {
+        final provider = Provider.of<LocaleProvider>(context);
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          locale: provider.locale,
+          supportedLocales: L10n.all,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          initialRoute: '/',
+          routes: {
+            '/': (context) => const SplashScreen(),
+            '/main': (context) => const MainPage(),
+            '/one': (context) => const ScreenOne(),
+            '/two': (context) => const ScreenTwo(),
+            '/three': (context) => const ScreenThree(title: 'Three'),
+            '/four': (context) => const ScreenFour(title: 'Four'),
+          },
+        );
+      }
     );
   }
-}
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
