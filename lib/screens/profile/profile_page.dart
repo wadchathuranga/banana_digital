@@ -11,6 +11,17 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  //update user details
+  Future _updateProfile() async {
+    // var data = {
+    //   "username": usernameController.text,
+    //   "email": emailController.text,
+    // };
+    // databaseReference.child('Users').child(userId).update(data);
+    // print(data);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

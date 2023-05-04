@@ -4,8 +4,23 @@
         "description": "The Current Language"
     },
 
-    "questionnaireTitle": "Fill this form",
+    "required": "Required",
+    "@language": {
+        "description": "Input field can not be null"
+    },
+
+    "formTitle": "Fill the following questionnaire",
     "@questionnaireTitle": {
         "description": "This is questionnaire form for collecting data"
+    },
+
+    "q1name": "Variety",
+    "@questionnaireTitle": {
+        "description": "1st question of questionnaire"
+    },
+
+    "q1desc": "The type of banana variety being grown (e.g. Cavendish, Williams, etc.)",
+    "@questionnaireTitle": {
+        "description": "1st question description of questionnaire"
     }
 }

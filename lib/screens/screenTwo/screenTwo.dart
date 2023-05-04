@@ -30,7 +30,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
         ],
       ),
       body: Center(
-        child: Text(AppLocalizations.of(context)!.questionnaireTitle),
+        child: Text(AppLocalizations.of(context)!.formTitle),
       ),
     );
   }
