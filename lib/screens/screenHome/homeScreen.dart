@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         // title: const Text('Banana Digital'),
-        title: Text(AppLocalizations.of(context)!.language),
+        title: const Text('Banana Digital'),
         actions: const <Widget>[
           PopupMenu(),
         ],
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         flex: 1,
                         child: GridViewCard(
                           title:
-                              'Identify Banana Disease using Questionnaires and give solution',
+                              'Identify Banana Diseases using Questionnaires',
                           icon: Icons.list_alt_outlined,
                           img: AppImages.logoTB,
                           value: '2',
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         flex: 1,
                         child: GridViewCard(
                           title:
-                              'Estimate Harvest of Banana, provide post harvesting best practices and inform Farmers About spreading diseases and Pests',
+                              'Estimate Harvest of Banana using Questionnaires',
                           icon: Icons.person_outline,
                           img: AppImages.logoTB,
                           value: '3',

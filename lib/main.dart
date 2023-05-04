@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
             '/main': (context) => const MainPage(),
             '/one': (context) => const ScreenOne(),
             '/two': (context) => const ScreenTwo(),
-            '/three': (context) => const ScreenThree(title: 'Three'),
+            '/three': (context) => const ScreenThree(),
             '/four': (context) => const ScreenFour(title: 'Four'),
           },
         );
