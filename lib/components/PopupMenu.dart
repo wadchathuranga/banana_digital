@@ -8,12 +8,14 @@ class PopupMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+        String? route = ModalRoute.of(context)?.settings.name;
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
           value: "about",
-          child: Text("About"),
+          enabled: route == '/about' ? false : true,
+          child: const Text("About"),
         ),
         const PopupMenuItem<String>(
           value: "reset",
@@ -26,7 +28,7 @@ class PopupMenu extends StatelessWidget {
       ],
       onSelected: (value) async {
         if (value == 'about') {
-          // about dialog here
+          Navigator.pushNamed(context, '/about');
         }
         if (value == 'reset') {
           Navigator.of(context).pushAndRemoveUntil(

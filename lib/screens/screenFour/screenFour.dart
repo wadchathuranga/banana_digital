@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ScreenFour extends StatefulWidget {
-  const ScreenFour({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const ScreenFour({Key? key}) : super(key: key);
 
   @override
   State<ScreenFour> createState() => _ScreenFourState();
@@ -13,7 +12,7 @@ class _ScreenFourState extends State<ScreenFour> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Four'),
       ),
       body: const Center(
         child: Text('Screen Four'),

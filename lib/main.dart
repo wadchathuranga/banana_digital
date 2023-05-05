@@ -1,4 +1,5 @@
 import 'package:banana_digital/provider/local_provider.dart';
+import 'package:banana_digital/screens/AboutScreen.dart';
 import 'package:banana_digital/screens/profile/profile_page.dart';
 import 'package:banana_digital/screens/screenHome/homeScreen.dart';
 import 'package:banana_digital/screens/screenFour/screenFour.dart';
@@ -16,6 +17,7 @@ import 'package:provider/provider.dart';
 import './l10n/l10n.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -48,7 +50,9 @@ class MyApp extends StatelessWidget {
             '/one': (context) => const ScreenOne(),
             '/two': (context) => const ScreenTwo(),
             '/three': (context) => const ScreenThree(),
-            '/four': (context) => const ScreenFour(title: 'Four'),
+            '/four': (context) => const ScreenFour(),
+            '/about': (context) => const AboutScreen(),
+
           },
         );
       }
