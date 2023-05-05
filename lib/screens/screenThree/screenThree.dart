@@ -82,20 +82,28 @@ class _ScreenThreeState extends State<ScreenThree> {
         fit: StackFit.expand,
         children: [
           SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.formTitle,
-                    style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.formTitle,
+                        style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 5),
+                      const Text(
+                          'Using the provided data bellow, you can estimate the banana harvest, press the button to proceed with prediction process.',
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 5),
-                  const Text(
-                      'Using the provided data bellow, you can estimate the banana harvest, press the button to proceed with prediction process.'),
-                  buildSizedBox(),
-                  Form(
+                ),
+                buildSizedBox(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 12.0, right: 1),
+                  child: Form(
                     key: _qaFormKey,
                       child: Column(
                         children: [
@@ -111,11 +119,10 @@ class _ScreenThreeState extends State<ScreenThree> {
                               SizedBox(
                                 width: 50,
                                 height: 50,
-                                // child: IconButton(
-                                //   icon: const Icon(Icons.info_outline),
-                                //   onPressed: () => bottomSheet('Variety', 'The type of banana variety being grown (e.g. Cavendish, Williams, etc.)'),
-                                // ),
-                                child: Container(color: Colors.green,),
+                                child: IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  onPressed: () => bottomSheet('Variety', 'The type of banana variety being grown (e.g. Cavendish, Williams, etc.)'),
+                                ),
                               ),
                             ],
                           ),
@@ -379,32 +386,34 @@ class _ScreenThreeState extends State<ScreenThree> {
                               ),
                             ],
                           ),
-                          buildSizedBox(),
-                          ElevatedButton(
-                              child: SizedBox(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width,
-                                  child: const Center(
-                                      child: Text(
-                                        'Estimate the Harvest',
-                                        style: TextStyle(fontSize: 20),
-                                      ),
-                                  ),
-                              ),
-                              onPressed: () {
-                                if (_qaFormKey.currentState!.validate()) {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  _estimatHarvest();
-                                }
-                              },
-                          ),
                         ],
                       ),
                   ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: ElevatedButton(
+                    child: SizedBox(
+                      height: 55,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: Text(
+                          'Estimate the Harvest',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_qaFormKey.currentState!.validate()) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        _estimatHarvest();
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(
