@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+import '../../components/Loading.dart';
 
 class ScreenOne extends StatefulWidget {
   const ScreenOne({Key? key}) : super(key: key);
@@ -12,6 +16,8 @@ class ScreenOne extends StatefulWidget {
 
 class _ScreenOneState extends State<ScreenOne> {
   CroppedFile? _croppedImg;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,118 +56,114 @@ class _ScreenOneState extends State<ScreenOne> {
       appBar: AppBar(
         title: const Text('One'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                'Select Image to Classify',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-              child: Text(
-                  'Upload a new photo from your camera or gallery bellow, and once you have finalized the image selection, press the activated button to proceed with classification process.'),
-            ),
-            Column(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.black,
-                            radius: 25,
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.camera_alt,
-                                size: 25,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                pickImage(ImageSource.camera);
-                              },
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('Camera'),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.black,
-                            radius: 25,
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.image_search,
-                                size: 25,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                pickImage(ImageSource.gallery);
-                              },
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('Gallery'),
-                          ),
-                        ],
-                      ),
-                    ],
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    'Select Image to Classify',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 ),
-                _imageWidget(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, bottom: 15),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 6 * 4,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: _croppedImg == null
-                          ? null
-                          : () {
-                              _proceedToClassification();
-                            },
-                      child: const Text(
-                        'Proceed to Classification',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: Text(
+                      'Upload a new photo from your camera or gallery bellow, and once you have finalized the image selection, press the activated button to proceed with classification process.'),
                 ),
                 Column(
-                  children: const [
-                    Text(
-                      'Classification Results',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: Colors.black,
+                                radius: 25,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.camera_alt,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    pickImage(ImageSource.camera);
+                                  },
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Camera'),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: Colors.black,
+                                radius: 25,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.image_search,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    pickImage(ImageSource.gallery);
+                                  },
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Gallery'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 1.0,
-                      indent: 50.0,
-                      endIndent: 50.0,
-                    ),
-                    Text(
-                      'Not Found! Please Try Again...',
-                      style: TextStyle(fontSize: 16),
+                    const SizedBox(height: 20),
+                    _imageWidget(),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 15),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width / 6 * 4,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: _croppedImg == null
+                              ? null
+                              : () {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  _proceedToClassification();
+                                },
+                          child: const Text(
+                            'Proceed to Classification',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            child: !isLoading
+                ? null
+                : const LoadingWidget(),
+          ),
+        ],
       ),
     );
   }
@@ -191,5 +193,12 @@ class _ScreenOneState extends State<ScreenOne> {
 
   _proceedToClassification() {
     // api call here
+
+    Timer(const Duration(seconds: 8), () {
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.pushNamed(context, '/oneResult');
+    });
   }
 }
