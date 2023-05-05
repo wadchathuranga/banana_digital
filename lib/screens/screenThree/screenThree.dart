@@ -98,7 +98,6 @@ class _ScreenThreeState extends State<ScreenThree> {
                     Form(
                       key: _qaFormKey,
                         child: Column(
-                          // crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
@@ -112,10 +111,11 @@ class _ScreenThreeState extends State<ScreenThree> {
                                 SizedBox(
                                   width: 50,
                                   height: 50,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.info_outline),
-                                    onPressed: () => bottomSheet('Variety', 'The type of banana variety being grown (e.g. Cavendish, Williams, etc.)'),
-                                  ),
+                                  // child: IconButton(
+                                  //   icon: const Icon(Icons.info_outline),
+                                  //   onPressed: () => bottomSheet('Variety', 'The type of banana variety being grown (e.g. Cavendish, Williams, etc.)'),
+                                  // ),
+                                  child: Container(color: Colors.green,),
                                 ),
                               ],
                             ),
