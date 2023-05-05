@@ -422,7 +422,7 @@ class _ScreenThreeState extends State<ScreenThree> {
         context: context,
         isScrollControlled: true,
         builder: (builder) {
-          return Container(
+          return SizedBox(
             // height: MediaQuery.of(context).size.height * 0.20,
             width: MediaQuery.of(context).size.width,
             // color: Colors.deepPurple.shade300,
