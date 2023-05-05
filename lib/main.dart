@@ -3,6 +3,7 @@ import 'package:banana_digital/screens/AboutScreen.dart';
 import 'package:banana_digital/screens/profile/profile_page.dart';
 import 'package:banana_digital/screens/screenHome/homeScreen.dart';
 import 'package:banana_digital/screens/screenFour/screenFour.dart';
+import 'package:banana_digital/screens/screenOne/oneResultScreen.dart';
 import 'package:banana_digital/screens/screenOne/screenOne.dart';
 import 'package:banana_digital/screens/screenThree/screenThree.dart';
 import 'package:banana_digital/screens/screenTwo/screenTwo.dart';
@@ -48,11 +49,11 @@ class MyApp extends StatelessWidget {
             '/': (context) => const SplashScreen(),
             '/main': (context) => const MainPage(),
             '/one': (context) => const ScreenOne(),
+            '/oneResult': (context) => const OneResultScreen(),
             '/two': (context) => const ScreenTwo(),
             '/three': (context) => const ScreenThree(),
             '/four': (context) => const ScreenFour(),
             '/about': (context) => const AboutScreen(),
-
           },
         );
       }
