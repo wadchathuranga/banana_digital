@@ -9,4 +9,7 @@ class AppColors {
   static const Color greyColor = Color(0xffAAAAAA);
 }
 
+Color scaffoldBackgroundColor = const Color(0xFF343541);
+Color cardColor = const Color(0xFF444654);
+
 // still not use

@@ -1,13 +1,3 @@
-import 'package:banana_digital/provider/local_provider.dart';
-import 'package:banana_digital/screens/AboutScreen.dart';
-import 'package:banana_digital/screens/profile/profile_page.dart';
-import 'package:banana_digital/screens/screenHome/homeScreen.dart';
-import 'package:banana_digital/screens/screenFour/screenFour.dart';
-import 'package:banana_digital/screens/screenOne/oneResultScreen.dart';
-import 'package:banana_digital/screens/screenOne/screenOne.dart';
-import 'package:banana_digital/screens/screenThree/screenThree.dart';
-import 'package:banana_digital/screens/screenTwo/screenTwo.dart';
-import 'package:banana_digital/screens/splash_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -15,6 +5,17 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/chat_provider.dart';
+import '../providers/local_provider.dart';
+import '../screens/AboutScreen.dart';
+import '../screens/profile/profile_page.dart';
+import '../screens/screenHome/homeScreen.dart';
+import '../screens/screenFour/screenFour.dart';
+import '../screens/screenOne/oneResultScreen.dart';
+import '../screens/screenOne/screenOne.dart';
+import '../screens/screenThree/screenThree.dart';
+import '../screens/screenTwo/screenTwo.dart';
+import '../screens/splash_screen.dart';
 import './l10n/l10n.dart';
 
 void main() {
@@ -27,14 +28,22 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-      create: (context) => LocaleProvider(),
+  Widget build(BuildContext context) => MultiProvider(
+      providers:[
+        ChangeNotifierProvider(
+          create: (_) => LocaleProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ChatProvider(),
+        ),
+      ],
       builder: (context, child) {
         final provider = Provider.of<LocaleProvider>(context);
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
+            scaffoldBackgroundColor: const Color(0xfff1f1f1),
           ),
           locale: provider.locale,
           supportedLocales: L10n.all,

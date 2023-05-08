@@ -1,9 +1,15 @@
 class AppImages {
-  static const String logoTB = "assets/logo.png";
-  static const String logoTW = "assets/logoW.png";
-  static const String backgroundImg = "assets/blue_background.jpg";
-  static const String background1 = "assets/bckgrnd.jpg";
-  static const String background2 = "assets/bckgrnd1.jpg";
+  static String imagePath = "assets";
+  static String logoTB = "$imagePath/logo.png";
+  static String logoTW = "$imagePath/logoW.png";
+  static String backgroundImg = "$imagePath/blue_background.jpg";
+  static String background1 = "$imagePath/bckgrnd.jpg";
+  static String background2 = "$imagePath/bckgrnd1.jpg";
+
+  // chat bot related images
+  static String userImage = "$imagePath/person.png";
+  static String botImage = "$imagePath/chat_icon.png";
+  static String chatLogo = "$imagePath/chat_logo.png";
 }
 
 

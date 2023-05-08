@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../components/PopupMenu.dart';
+import '../../widgets/PopupMenu.dart';
 import '../../utils/app_images.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -40,9 +40,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: <Widget>[
                 Stack(
                   children: <Widget>[
-                    const Center(
+                    Center(
                       child: Padding(
-                        padding: EdgeInsets.all(30.0),
+                        padding: const EdgeInsets.all(30.0),
                         child: CircleAvatar(
                           backgroundColor: Colors.black,
                           radius: 80,

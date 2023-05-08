@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../../components/LanguagePicker.dart';
-import '../../components/Loading.dart';
+import '../../widgets/LanguagePicker.dart';
+import '../../widgets/Loading.dart';
 
 
 class ScreenThree extends StatefulWidget {

@@ -150,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          const Image(
+          Image(
             image: AssetImage(AppImages.backgroundImg),
             fit: BoxFit.cover,
             color: Colors.black54,
@@ -161,7 +161,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
               shrinkWrap: true,
               children: <Widget>[
                 Image(
-                  image: const AssetImage(AppImages.logoTW),
+                  image: AssetImage(AppImages.logoTW),
                   width: _iconAnimation.value * 120,
                   height: _iconAnimation.value * 120,
                 ),
