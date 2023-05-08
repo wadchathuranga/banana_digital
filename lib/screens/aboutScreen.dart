@@ -1,10 +1,10 @@
-import 'package:banana_digital/utils/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../components/PopupMenu.dart';
+import '../utils/app_images.dart';
+import '../widgets/PopupMenu.dart';
 
 
 class AboutScreen extends StatefulWidget {
@@ -57,7 +57,7 @@ class _AboutScreenState extends State<AboutScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(
+                SizedBox(
                   width: 120,
                   height: 120,
                   child: Image(

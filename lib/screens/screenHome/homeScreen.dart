@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../utils/app_images.dart';
-import '../../components/GridView.dart';
-import '../../components/PopupMenu.dart';
+import '../../widgets/GridView.dart';
+import '../../widgets/PopupMenu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -44,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Row(
-                    children: const <Widget>[
+                    children: <Widget>[
                       Expanded(
                         flex: 1,
                         child: GridViewCard(
@@ -67,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   Row(
-                    children: const <Widget>[
+                    children: <Widget>[
                       Expanded(
                         flex: 1,
                         child: GridViewCard(

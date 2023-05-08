@@ -1,7 +1,7 @@
-import 'package:banana_digital/provider/local_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/local_provider.dart';
 import '../l10n/l10n.dart';
 
 class LanguagePicker extends StatefulWidget {
