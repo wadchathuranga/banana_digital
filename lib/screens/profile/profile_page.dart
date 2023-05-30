@@ -1,7 +1,9 @@
+import 'package:banana_digital/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/PopupMenu.dart';
 import '../../utils/app_images.dart';
+import '../zoom_drawer_menu/menu_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -26,6 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const MenuWidget(),
         title: const Text('Profile'),
         actions: const [
           PopupMenu()
@@ -65,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       right: 130,
                       bottom: 40,
                       child: CircleAvatar(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: AppColors.primaryColor,
                         child: IconButton(
                           icon: const Icon(
                             Icons.camera_alt,
@@ -82,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       right: 240,
                       bottom: 40,
                       child: CircleAvatar(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: AppColors.primaryColor,
                         child: IconButton(
                           icon: const Icon(
                             Icons.image,
@@ -110,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             labelText: 'User Name',
                             suffixIcon: Icon(
                               Icons.edit,
-                              color: Colors.blue,
+                              color: AppColors.primaryColor,
                             ),
                           ),
                           // controller: usernameController,
@@ -133,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             labelText: 'Email',
                             suffixIcon: Icon(
                               Icons.edit,
-                              color: Colors.blue,
+                              color: AppColors.primaryColor,
                             ),
                           ),
                           // controller: emailController,
