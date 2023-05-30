@@ -7,11 +7,9 @@ class AppColors {
   static const Color primaryColor = Colors.teal;
   static const Color blueDarkColor = Color(0xff252B5C);
   static const Color textColor = Color(0xff53587A);
-    static const Color greyColor = Color(0xffAAAAAA);
+  static const Color greyColor = Color(0xffAAAAAA);
   static const Color scaffoldBackgroundColor = Color(0xfff1f1f1);
+
+  static const Color chatScaffoldBackgroundColor = Color(0xFF0D7377);
+  static const Color cardColor = Colors.teal;
 }
-
-Color chatScaffoldBackgroundColor = const Color(0xFF343541);
-Color cardColor = const Color(0xFF444654);
-
-// still not use
