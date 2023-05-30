@@ -22,7 +22,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     return Column(
       children: [
         Material(
-          color: widget.chatIndex == 0 ? chatScaffoldBackgroundColor : cardColor,
+          color: widget.chatIndex == 0 ? AppColors.chatScaffoldBackgroundColor : AppColors.cardColor,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

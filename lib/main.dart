@@ -164,6 +164,7 @@ class _MainPageState extends State<MainPage> {
         style: DrawerStyle.defaultStyle,
         // showShadow: true,
         // borderRadius: 40,
+        mainScreenTapClose: true,
         angle: 0,
         menuScreenWidth: 250,
         slideWidth: 200,
@@ -174,7 +175,7 @@ class _MainPageState extends State<MainPage> {
             currentItem: currentItem,
             onSelectedItem: (item) {
               setState(() => currentItem = item);
-              ZoomDrawer.of(context)!.close();
+              // ZoomDrawer.of(context)!.close(); // AUTO CLOSE THE DRAWER WHEN TAP A MENU TILE
             },
           ),
         ),

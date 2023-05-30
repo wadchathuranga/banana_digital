@@ -47,9 +47,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
     return Scaffold(
-      backgroundColor: chatScaffoldBackgroundColor,
+      backgroundColor: AppColors.chatScaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: chatScaffoldBackgroundColor,
+        // backgroundColor: AppColors.chatScaffoldBackgroundColor,
         leading: const MenuWidget(),
         title: const Text('Chat'),
         actions: const <Widget>[
@@ -88,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ],
             const SizedBox(height: 15),
             Material(
-              color: cardColor,
+              color: AppColors.cardColor,
               child: SizedBox(
                 height: 60,
                 child: Padding(
@@ -103,10 +103,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             await sendMessageFCT(chatProvider: chatProvider);
                           },
                           decoration: const InputDecoration.collapsed(
-                            hintText: 'How can I help you',
+                            hintText: 'How can I help you..?',
                             hintStyle: TextStyle(
                               fontSize: 18,
-                              color: Colors.grey,
+                              color: Colors.white,
                             ),
                           ),
                         ),
