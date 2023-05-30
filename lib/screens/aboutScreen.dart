@@ -1,3 +1,4 @@
+import 'package:banana_digital/screens/zoom_drawer_menu/menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,6 +43,7 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const MenuWidget(),
         title: const Text('About'),
         actions: const <Widget>[
           PopupMenu(),
@@ -57,7 +59,7 @@ class _AboutScreenState extends State<AboutScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                SizedBox(
+                  SizedBox(
                   width: 120,
                   height: 120,
                   child: Image(

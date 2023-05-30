@@ -1,3 +1,4 @@
+import 'package:banana_digital/screens/zoom_drawer_menu/menu_widget.dart';
 import 'package:flutter/material.dart';
 import '../../utils/app_images.dart';
 import '../../widgets/GridView.dart';
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: const Text('Banana Digital'),
+        leading: const MenuWidget(),
         title: const Text('Banana Digital'),
         actions: const <Widget>[
           PopupMenu(),
@@ -49,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: GridViewCard(
                           title: 'Identify Pests and Diseases using Images',
                           icon: Icons.person_outline,
-                          img: AppImages.logoTB,
+                          img: AppImages.logoTW,
                           value: '1',
                         ),
                       ),
@@ -59,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           title:
                               'Identify Banana Diseases using Questionnaires',
                           icon: Icons.list_alt_outlined,
-                          img: AppImages.logoTB,
+                          img: AppImages.logoTW,
                           value: '2',
                         ),
                       ),
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           title:
                               'Estimate Harvest of Banana using Questionnaires',
                           icon: Icons.person_outline,
-                          img: AppImages.logoTB,
+                          img: AppImages.logoTW,
                           value: '3',
                         ),
                       ),
@@ -82,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: GridViewCard(
                           title: 'Supply Fertilizer and water management plan',
                           icon: Icons.list_alt_outlined,
-                          img: AppImages.logoTB,
+                          img: AppImages.logoTW,
                           value: '4',
                         ),
                       ),

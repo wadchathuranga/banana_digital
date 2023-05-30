@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:banana_digital/utils/app_colors.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../providers/chat_provider.dart';
 import '../../widgets/ChatWidget.dart';
 import '../../widgets/LanguagePicker.dart';
+import '../../widgets/Loading.dart';
 import '../../widgets/TextWidget.dart';
 
 
@@ -21,36 +23,59 @@ class ScreenTwo extends StatefulWidget {
 
 class _ScreenTwoState extends State<ScreenTwo> {
 
-  bool _isTyping = false;
-
-  // List<ChatModel> chatList = [];
-  late ScrollController _listScrollController;
-  late TextEditingController textEditingController;
-  late FocusNode focusNode;
-
-  @override
-  void initState() {
-    _listScrollController = ScrollController();
-    textEditingController = TextEditingController();
-    focusNode = FocusNode();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _listScrollController.dispose();
-    textEditingController.dispose();
-    focusNode.dispose();
-    super.dispose();
-  }
+  final _qaFormKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatProvider>(context);
+
+    // TextFormField common InputDecoration function
+    InputDecoration buildInputDecoration(String hintText) {
+      return InputDecoration(
+        // helperText: "(Wet Zone, Intermediate Zone, or Dry Zone)",
+        labelText: hintText,
+        labelStyle: const TextStyle(fontSize: 18),
+        contentPadding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      );
+    }
+
+    SizedBox buildSizedBox() {
+      return const SizedBox(
+        height: 15,
+      );
+    }
+
+    //update user details
+    Future _estimatHarvest() async {
+      // var data = {
+      //   "username": usernameController.text,
+      //   "email": emailController.text,
+      // };
+
+      Timer(const Duration(seconds: 8), () {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
+
+    validateFunc(String val) {
+      return null;
+      // if (val!.trim().isEmpty) {
+      //   return 'Required!';
+      // } else {
+      //   return null;
+      // }
+    }
+
+
     return Scaffold(
-      backgroundColor: scaffoldBackgroundColor,
+      // backgroundColor: chatScaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: scaffoldBackgroundColor,
+        // backgroundColor: chatScaffoldBackgroundColor,
         title: const Text('Two'),
         actions: const <Widget>[
           // Center(
@@ -65,121 +90,296 @@ class _ScreenTwoState extends State<ScreenTwo> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Flexible(
-              child: ListView.builder(
-                controller: _listScrollController,
-                itemCount: chatProvider.getChatList.length, //chatList.length,
-                itemBuilder: (context, index) {
-                  return ChatWidget(
-                    msg: chatProvider.getChatList[index].msg, //chatList[index].msg,
-                    chatIndex: chatProvider.getChatList[index].chatIndex, //chatList[index].chatIndex,
-                  );
-                },
-              ),
-            ),
-            if(_isTyping) ...[
-              const SpinKitThreeBounce(
-                color: Colors.white,
-                size: 18,
-              ),
-            ],
-            const SizedBox(height: 15),
-            Material(
-              color: cardColor,
-              child: SizedBox(
-                height: 60,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15.0, right: 5.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          style: const TextStyle(color: Colors.white),
-                          controller: textEditingController,
-                          onSubmitted: (value) async {
-                            await sendMessageFCT(chatProvider: chatProvider);
-                          },
-                          decoration: const InputDecoration.collapsed(
-                            hintText: 'How can I help you',
-                            hintStyle: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 12.0, right: 1),
+                  child: Form(
+                    key: _qaFormKey,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12.0, right: 12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                'Fill the following questionnaire',
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                'Using the provided data bellow, you can see watering plan, press the button to proceed with prediction process.',
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.send, color: Colors.white),
-                        onPressed: () async {
-                          await sendMessageFCT(chatProvider: chatProvider);
-                        },
-                      ),
-                    ],
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) => validateFunc(val!),
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Leaf Color'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: IconButton(
+                                icon: const Icon(Icons.info_outline),
+                                onPressed: () => bottomSheet('Leaf Color', 'The color of the banana leaf observed as a symptom. Possible values include yellow, brown, irregular patterns of yellowing or lightening, and pale green'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) => validateFunc(val!),
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Leaf Spots'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: IconButton(
+                                icon: const Icon(Icons.info_outline),
+                                onPressed: () => bottomSheet('Leaf Spots', 'The presence of spots on the banana leaf. Possible spot colors include black, brown, and yellow.'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) => validateFunc(val!),
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Leaf Wilting'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: IconButton(
+                                icon: const Icon(Icons.info_outline),
+                                onPressed: () => bottomSheet('Leaf Wilting', 'Whether the banana leaf shows wilting or not. Possible values are yes or no'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) => validateFunc(val!),
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Leaf Curling'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: IconButton(
+                                icon: const Icon(Icons.info_outline),
+                                onPressed: () => bottomSheet('Leaf Curling', 'Whether the banana leaf exhibits curling or not. Possible values are yes or no.'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) => validateFunc(val!),
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Stunted Growth'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: IconButton(
+                                icon: const Icon(Icons.info_outline),
+                                onPressed: () => bottomSheet('Stunted Growth', 'The growth pattern of the banana plant. Possible values include slow growth and normal growth'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) => validateFunc(val!),
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Stem Color'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: IconButton(
+                                icon: const Icon(Icons.info_outline),
+                                onPressed: () => bottomSheet('Stem Color', 'The color of the stem of the banana plant. Possible colors include brown, black, yellow, red, and green'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) => validateFunc(val!),
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Root Rot'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: IconButton(
+                                icon: const Icon(Icons.info_outline),
+                                onPressed: () => bottomSheet('Root Rot', 'Whether the banana plant shows symptoms of root rot or not. Possible values are yes or no'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) => validateFunc(val!),
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Abnormal Fruiting'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: IconButton(
+                                icon: const Icon(Icons.info_outline),
+                                onPressed: () => bottomSheet('Abnormal Fruiting', 'The appearance of fruits on the banana plant. Possible values include distorted and normal'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) => validateFunc(val!),
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Presence of Pests'),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: IconButton(
+                                icon: const Icon(Icons.info_outline),
+                                onPressed: () => bottomSheet('Presence of Pests', 'The presence of pests on the banana plant. Possible pests include aphids, caterpillars, mites, or none'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: ElevatedButton(
+                    child: SizedBox(
+                      height: 55,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: Text(
+                          'Estimate the Harvest',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_qaFormKey.currentState!.validate()) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        _estimatHarvest();
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            child: !isLoading
+                ? null
+                : const LoadingWidget(),
+          ),
+        ],
       ),
     );
   }
 
-  void scrollListToEND() {
-    _listScrollController.animateTo(_listScrollController.position.maxScrollExtent, duration: const Duration(seconds: 1), curve: Curves.easeInOut);
-  }
-
-  Future<void> sendMessageFCT({required ChatProvider chatProvider}) async {
-    // avoid send another msg before coming response of previous one
-    if (_isTyping) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: TextWidget(label: "You can't send multiple messages at a time!"),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    // avoid sending empty msg
-    if (textEditingController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: TextWidget(label: "Please type a message"),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-    try {
-      String msg = textEditingController.text;
-      setState(() {
-        _isTyping = true;
-        // chatList.add(ChatModel(msg: textEditingController.text, chatIndex: 0));
-        chatProvider.addUserMessage(msg: msg);
-        textEditingController.clear();
-        focusNode.unfocus();
-      });
-      // chatList.addAll(await ApiServices.sendMessage(
-      //   message: textEditingController.text,
-      //   modelId: modelsProvider.getCurrentModel,
-      // ));
-      chatProvider.sendMessageAndGetAnswers(msg: msg, chosenModelId: "gpt-3.5-turbo-0301");
-      setState(() {});
-    } catch (error) {
-      log("Error $error");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: TextWidget(label: error.toString()),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      scrollListToEND();
-      setState(() {
-        _isTyping = false;
-      });
-    }
+  void bottomSheet(String name, String desc) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (builder) {
+          return SizedBox(
+            // height: MediaQuery.of(context).size.height * 0.20,
+            width: MediaQuery.of(context).size.width,
+            // color: Colors.deepPurple.shade300,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            desc,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:banana_digital/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -53,6 +54,7 @@ class _ScreenOneState extends State<ScreenOne> {
     }
 
     return Scaffold(
+      backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('One'),
       ),
@@ -85,7 +87,7 @@ class _ScreenOneState extends State<ScreenOne> {
                           Column(
                             children: [
                               CircleAvatar(
-                                backgroundColor: Colors.black,
+                                backgroundColor: AppColors.primaryColor,
                                 radius: 25,
                                 child: IconButton(
                                   icon: const Icon(
@@ -107,7 +109,7 @@ class _ScreenOneState extends State<ScreenOne> {
                           Column(
                             children: [
                               CircleAvatar(
-                                backgroundColor: Colors.black,
+                                backgroundColor: AppColors.primaryColor,
                                 radius: 25,
                                 child: IconButton(
                                   icon: const Icon(

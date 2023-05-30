@@ -1,3 +1,4 @@
+import 'package:banana_digital/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 
@@ -45,7 +46,7 @@ class _GridViewCardState extends State<GridViewCard> {
                 width: MediaQuery.of(context).size.width,
                 height: 100,
                 child: Container(
-                  color: Colors.blue,
+                  color: AppColors.primaryColor,
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Image.asset(
