@@ -37,18 +37,19 @@ class _ChatWidgetState extends State<ChatWidget> {
                 Expanded(
                   child: widget.chatIndex == 0
                       ? TextWidget(label: widget.msg)
-                      : DefaultTextStyle(
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
-                            child: AnimatedTextKit(
-                              isRepeatingAnimation: false,
-                              repeatForever: false,
-                              displayFullTextOnTap: true,
-                              totalRepeatCount: 1,
-                              animatedTexts: [
-                                TyperAnimatedText(widget.msg.trim()),
-                              ],
-                            ),
-                        ),
+                      : TextWidget(label: widget.msg.trim()),
+                      // : DefaultTextStyle(
+                      //       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
+                      //       child: AnimatedTextKit(
+                      //         isRepeatingAnimation: false,
+                      //         repeatForever: false,
+                      //         displayFullTextOnTap: true,
+                      //         totalRepeatCount: 1,
+                      //         animatedTexts: [
+                      //           TyperAnimatedText(widget.msg.trim()),
+                      //         ],
+                      //       ),
+                      //   ),
                 ),
               ],
             ),
