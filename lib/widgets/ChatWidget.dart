@@ -37,7 +37,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 Expanded(
                   child: widget.chatIndex == 0
                       ? TextWidget(label: widget.msg)
-                      : TextWidget(label: widget.msg.trim()),
+                      : TextWidget(label: widget.msg.trim()), // WITHOUT TYPING ANIMATION
                       // : DefaultTextStyle(
                       //       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
                       //       child: AnimatedTextKit(

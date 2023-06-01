@@ -13,11 +13,37 @@ class ScreenFour extends StatefulWidget {
 
 class _ScreenFourState extends State<ScreenFour> {
 
+  late final GlobalKey<FormFieldState> _key;
   final _qaFormKey = GlobalKey<FormState>();
 
   bool isLoading = false;
 
+  final List leafColor = ["Yellow", "Brown", "Pale Green"];
+  var selectedLeafColor;
 
+  final List leafSpots = ["Black", "Brown", "None"];
+  var selectedLeafSpots;
+
+  final List leafWilting = ["Yes", "No"];
+  var selectedLeafWilting;
+
+  final List leafCurling = ["Yes", "No"];
+  var selectedLeafCurling;
+
+  final List stuntedGrowth = ["Slow Growth", "Normal"];
+  var selectedstuntedGrowth;
+
+  final List stemColor = ["Brown", "Black", "Yellow", "Red", "Green"];
+  var selectedStemColor;
+
+  final List rootRot = ["Yes", "No"];
+  var selectedRootRot;
+
+  final List abnormalFruiting = ["Normal", "Distorted"];
+  var selectedAbnormalFruiting;
+
+  final List presenceOfPets = ["Aphids", "None", "Caterpillars"];
+  var selectedPresenceOfPets;
 
 
   @override
@@ -94,7 +120,7 @@ class _ScreenFourState extends State<ScreenFour> {
                 ),
                 buildSizedBox(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 1),
+                  padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                   child: Form(
                     key: _qaFormKey,
                     child: Column(
@@ -102,18 +128,302 @@ class _ScreenFourState extends State<ScreenFour> {
                         Row(
                           children: [
                             Expanded(
-                              child: TextFormField(
-                                validator: (val) => validateFunc(val!),
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Leaf Color'),
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Leaf Color',
+                                ),
+                                items: leafColor.map((variety) {
+                                  return DropdownMenuItem(
+                                    value: variety
+                                        .toString(),
+                                    child: Text(variety
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedLeafColor = newValueSelected!;
+                                  });
+                                },
+                                value: selectedLeafColor,
+                                isExpanded: false,
                               ),
                             ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Leaf Color', 'The color of the banana leaf observed as a symptom. Possible values include yellow, brown, irregular patterns of yellowing or lightening, and pale green'),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Leaf Spots',
+                                ),
+                                items: leafSpots.map((variety) {
+                                  return DropdownMenuItem(
+                                    value: variety
+                                        .toString(),
+                                    child: Text(variety
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedLeafSpots = newValueSelected!;
+                                  });
+                                },
+                                value: selectedLeafSpots,
+                                isExpanded: false,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Leaf Wilting',
+                                ),
+                                items: leafWilting.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedLeafWilting = newValueSelected!;
+                                  });
+                                },
+                                value: selectedLeafWilting,
+                                isExpanded: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Leaf Curling',
+                                ),
+                                items: leafCurling.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedLeafCurling = newValueSelected!;
+                                  });
+                                },
+                                value: selectedLeafCurling,
+                                isExpanded: false,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Stunted Growth',
+                                ),
+                                items: stuntedGrowth.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedstuntedGrowth = newValueSelected!;
+                                  });
+                                },
+                                value: selectedstuntedGrowth,
+                                isExpanded: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Stem Color',
+                                ),
+                                items: stemColor.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedStemColor = newValueSelected!;
+                                  });
+                                },
+                                value: selectedStemColor,
+                                isExpanded: false,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Root Rot',
+                                ),
+                                items: rootRot.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedRootRot = newValueSelected!;
+                                  });
+                                },
+                                value: selectedRootRot,
+                                isExpanded: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val== null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Abnormal Fruiting',
+                                ),
+                                items: abnormalFruiting.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedAbnormalFruiting = newValueSelected!;
+                                  });
+                                },
+                                value: selectedAbnormalFruiting,
+                                isExpanded: false,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Presence of Pets',
+                                ),
+                                items: presenceOfPets.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedPresenceOfPets = newValueSelected!;
+                                  });
+                                },
+                                value: selectedPresenceOfPets,
+                                isExpanded: false,
                               ),
                             ),
                           ],
@@ -123,167 +433,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Leaf Spots'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Leaf Spots', 'The presence of spots on the banana leaf. Possible spot colors include black, brown, and yellow.'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) => validateFunc(val!),
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Leaf Wilting'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Leaf Wilting', 'Whether the banana leaf shows wilting or not. Possible values are yes or no'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) => validateFunc(val!),
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Leaf Curling'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Leaf Curling', 'Whether the banana leaf exhibits curling or not. Possible values are yes or no.'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) => validateFunc(val!),
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Stunted Growth'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Stunted Growth', 'The growth pattern of the banana plant. Possible values include slow growth and normal growth'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) => validateFunc(val!),
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Stem Color'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Stem Color', 'The color of the stem of the banana plant. Possible colors include brown, black, yellow, red, and green'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) => validateFunc(val!),
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Root Rot'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Root Rot', 'Whether the banana plant shows symptoms of root rot or not. Possible values are yes or no'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) => validateFunc(val!),
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Abnormal Fruiting'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Abnormal Fruiting', 'The appearance of fruits on the banana plant. Possible values include distorted and normal'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) => validateFunc(val!),
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Presence of Pests'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Presence of Pests', 'The presence of pests on the banana plant. Possible pests include aphids, caterpillars, mites, or none'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Plant density'),
                               ),
@@ -303,7 +455,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Soil texture'),
                               ),
@@ -323,7 +477,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Soil color'),
                               ),
@@ -343,7 +499,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Temperature'),
                               ),
@@ -363,7 +521,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Humidity (in percentage)'),
                               ),
@@ -383,7 +543,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Rainfall (in mm)'),
                               ),
@@ -403,7 +565,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Water source'),
                               ),
@@ -423,7 +587,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Irrigation method'),
                               ),
@@ -443,7 +609,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Fertilizer type used in the previous season'),
                               ),
@@ -463,7 +631,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Crop rotation'),
                               ),
@@ -483,7 +653,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Pest and disease infestation'),
                               ),
@@ -503,7 +675,9 @@ class _ScreenFourState extends State<ScreenFour> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                validator: (val) => validateFunc(val!),
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
                                 // onSaved: (value) => _username = value,
                                 decoration: buildInputDecoration('Slope of the land'), // The height of the plant
                               ),
@@ -523,26 +697,50 @@ class _ScreenFourState extends State<ScreenFour> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: ElevatedButton(
-                    child: SizedBox(
-                      height: 55,
-                      width: MediaQuery.of(context).size.width,
-                      child: const Center(
-                        child: Text(
-                          'Estimate the Harvest',
-                          style: TextStyle(fontSize: 20),
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ElevatedButton(
+                          child: SizedBox(
+                            height: 55,
+                            width: MediaQuery.of(context).size.width,
+                            child: const Center(
+                              child: Text(
+                                'Clear Form',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ),
+                          onPressed: () =>  clearFormData(),
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      if (_qaFormKey.currentState!.validate()) {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        _estimatHarvest();
-                      }
-                    },
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 3,
+                        child: ElevatedButton(
+                          child: SizedBox(
+                            height: 55,
+                            width: MediaQuery.of(context).size.width,
+                            child: const Center(
+                              child: Text(
+                                'Proceed',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (_qaFormKey.currentState!.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              _estimatHarvest();
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -556,6 +754,21 @@ class _ScreenFourState extends State<ScreenFour> {
         ],
       ),
     );
+  }
+
+  void clearFormData() {
+    setState(() {
+      _qaFormKey.currentState!.reset();
+      selectedLeafColor = null;
+      selectedPresenceOfPets = null;
+      selectedAbnormalFruiting = null;
+      selectedRootRot = null;
+      selectedLeafCurling = null;
+      selectedstuntedGrowth = null;
+      selectedLeafSpots = null;
+      selectedStemColor = null;
+      selectedLeafWilting = null;
+    });
   }
 
   void bottomSheet(String name, String desc) {

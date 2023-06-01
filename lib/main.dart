@@ -1,5 +1,6 @@
 import 'package:banana_digital/screens/chatScreen.dart';
 import 'package:banana_digital/screens/profile_page.dart';
+import 'package:banana_digital/screens/testScreen.dart';
 import 'package:banana_digital/screens/zoom_drawer_menu/menu_item.dart';
 import 'package:banana_digital/screens/zoom_drawer_menu/menu_page.dart';
 import 'package:banana_digital/utils/app_colors.dart';
@@ -191,6 +192,8 @@ class _MainPageState extends State<MainPage> {
         return const ProfileScreen();
       case MenuItems.chat:
         return const ChatScreen();
+      case MenuItems.test:
+        return const TestScreen();
       default:
         return const AboutScreen();
     }

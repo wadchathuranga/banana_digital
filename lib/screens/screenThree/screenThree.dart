@@ -22,6 +22,21 @@ class _ScreenThreeState extends State<ScreenThree> {
 
   bool isLoading = false;
 
+  final List varieties = ["Anamalu Banana", "Mysore Banana", "Pisang Awak Banana", "Silk Banana", "Amban Banana"];
+  var selectedVariety;
+
+  final List climaticRegions = ["Wet Zone", "Dry Zone", "Intermediate Zone"];
+  var selectedClimaticRegion;
+
+  final List fertilizerTypes = ["Organic", "Non Organic", "Both Used", "None"];
+  var selectedFertilizerType;
+
+  final List wateringSchedule = ["Twice a week", "Randomly", "None", "3 times a week", "Daily"];
+  var selectedWateringSchedule;
+
+  final List sunlightReceived = ["Low", "Moderate", "High"];
+  var selectedSunlightReceived;
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +60,6 @@ class _ScreenThreeState extends State<ScreenThree> {
       );
     }
 
-    validateFunc(String val) {
-      return null;
-      // if (val!.trim().isEmpty) {
-      //   return 'Required!';
-      // } else {
-      //   return null;
-      // }
-    }
 
     //update user details
     Future _estimatHarvest() async {
@@ -82,6 +89,8 @@ class _ScreenThreeState extends State<ScreenThree> {
         fit: StackFit.expand,
         children: [
           SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: const ScrollPhysics(),
             child: Column(
               children: [
                 Padding(
@@ -102,7 +111,7 @@ class _ScreenThreeState extends State<ScreenThree> {
                 ),
                 buildSizedBox(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 1),
+                  padding: const EdgeInsets.only(left: 12.0, right: 12),
                   child: Form(
                     key: _qaFormKey,
                       child: Column(
@@ -110,18 +119,66 @@ class _ScreenThreeState extends State<ScreenThree> {
                           Row(
                             children: [
                               Expanded(
-                                child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Variety'), // The type of banana variety being grown (e.g. Cavendish, Williams, etc.)
+                                child: DropdownButtonFormField<String>(
+                                  validator: (val) {
+                                    if (val == null) {return 'Required!';} else {return null;}
+                                  },
+                                  itemHeight: 50,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Variety',
+                                  ),
+                                  items: varieties.map((variety) {
+                                    return DropdownMenuItem(
+                                      value: variety
+                                          .toString(),
+                                      child: Text(variety
+                                          .toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValueSelected) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    setState(() {
+                                      selectedVariety = newValueSelected!;
+                                    });
+                                  },
+                                  value: selectedVariety,
+                                  isExpanded: false,
                                 ),
                               ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Variety', 'The type of banana variety being grown (e.g. Cavendish, Williams, etc.)'),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  validator: (val) {
+                                    if (val == null) {return 'Required!';} else {return null;}
+                                  },
+                                  itemHeight: 50,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Agro Climatic Region',
+                                  ),
+                                  items: climaticRegions.map((value) {
+                                    return DropdownMenuItem(
+                                      value: value
+                                          .toString(),
+                                      child: Text(value
+                                          .toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValueSelected) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    setState(() {
+                                      selectedClimaticRegion = newValueSelected!;
+                                    });
+                                  },
+                                  value: selectedClimaticRegion,
+                                  isExpanded: false,
                                 ),
                               ),
                             ],
@@ -131,59 +188,32 @@ class _ScreenThreeState extends State<ScreenThree> {
                             children: [
                               Expanded(
                                 child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Agro-climatic region'), // The region in Sri Lanka where the plant is being grown (Wet Zone, Intermediate Zone, or Dry Zone)
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Agro-climatic region', 'The region in Sri Lanka where the plant is being grown (Wet Zone, Intermediate Zone, or Dry Zone)'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
+                                  keyboardType: TextInputType.number,
+                                  validator: (val) {
+                                    if (val!.isEmpty) {
+                                      return 'Required!';
+                                    }
+                                    // else if (int.parse(val!) > 5) {
+                                    //   return 'Should between 1 - 5 ';
+                                    // }
+                                    else {
+                                      return null;
+                                    }
+                                  },
                                   // onSaved: (value) => _username = value,
                                   decoration: buildInputDecoration('Plant density'), // The number of banana plants per unit area of land
                                 ),
                               ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Plant density', 'The number of banana plants per unit area of land'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
                                   // onSaved: (value) => _username = value,
                                   decoration: buildInputDecoration('Spacing between plants'), // The distance between adjacent banana plants
                                 ),
                               ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Spacing between plants', 'The distance between adjacent banana plants'),
-                                ),
-                              ),
                             ],
                           ),
                           buildSizedBox(),
@@ -191,17 +221,43 @@ class _ScreenThreeState extends State<ScreenThree> {
                             children: [
                               Expanded(
                                 child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
                                   // onSaved: (value) => _username = value,
                                   decoration: buildInputDecoration('Plant generation'), // Whether the plant is a first generation or subsequent generation plant
                                 ),
                               ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Plant generation', 'Whether the plant is a first generation or subsequent generation plant'),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  validator: (val) {
+                                    if (val == null) {return 'Required!';} else {return null;}
+                                  },
+                                  itemHeight: 50,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Fertilizer Type',
+                                  ),
+                                  items: fertilizerTypes.map((value) {
+                                    return DropdownMenuItem(
+                                      value: value
+                                          .toString(),
+                                      child: Text(value
+                                          .toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValueSelected) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    setState(() {
+                                      selectedFertilizerType = newValueSelected!;
+                                    });
+                                  },
+                                  value: selectedFertilizerType,
+                                  isExpanded: false,
                                 ),
                               ),
                             ],
@@ -211,27 +267,9 @@ class _ScreenThreeState extends State<ScreenThree> {
                             children: [
                               Expanded(
                                 child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Fertilizer type'), // The type of fertilizer used (organic or chemical)
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Fertilizer type', 'The type of fertilizer used (organic or chemical)'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
                                   // onSaved: (value) => _username = value,
                                   decoration: buildInputDecoration('Soil pH'), // The pH level of the soil where the plant is being grown
                                 ),
@@ -250,18 +288,107 @@ class _ScreenThreeState extends State<ScreenThree> {
                           Row(
                             children: [
                               Expanded(
-                                child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Amount of sunlight received'), // The amount of sunlight the plant receives (low, moderate, or high)
+                                child: DropdownButtonFormField<String>(
+                                  validator: (val) {
+                                    if (val == null) {return 'Required!';} else {return null;}
+                                  },
+                                  itemHeight: 50,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Amount of sunlight received',
+                                  ),
+                                  items: sunlightReceived.map((value) {
+                                    return DropdownMenuItem(
+                                      value: value
+                                          .toString(),
+                                      child: Text(value
+                                          .toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValueSelected) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    setState(() {
+                                      selectedSunlightReceived = newValueSelected!;
+                                    });
+                                  },
+                                  value: selectedSunlightReceived,
+                                  isExpanded: false,
                                 ),
                               ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Amount of sunlight received', 'The amount of sunlight the plant receives (low, moderate, or high)'),
+                              const SizedBox(width: 10),
+                            ],
+                          ),
+                          buildSizedBox(),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  validator: (val) {
+                                    if (val == null) {return 'Required!';} else {return null;}
+                                  },
+                                  itemHeight: 50,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Watering Schedule',
+                                  ),
+                                  items: wateringSchedule.map((value) {
+                                    return DropdownMenuItem(
+                                      value: value
+                                          .toString(),
+                                      child: Text(value
+                                          .toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValueSelected) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    setState(() {
+                                      selectedWateringSchedule = newValueSelected!;
+                                    });
+                                  },
+                                  value: selectedWateringSchedule,
+                                  isExpanded: false,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: TextFormField(
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
+                                  // onSaved: (value) => _username = value,
+                                  decoration: buildInputDecoration('# banana combs'), // The number of combs (clusters) of bananas produced by the plant
+                                ),
+                              ),
+                            ],
+                          ),
+                          buildSizedBox(),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: TextFormField(
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
+                                  // onSaved: (value) => _username = value,
+                                  decoration: buildInputDecoration('# leaves'), // The number of leaves on the plant
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                flex: 2,
+                                child: TextFormField(
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
+                                  // onSaved: (value) => _username = value,
+                                  decoration: buildInputDecoration('# days for flower initiation'), // The number of days it takes for the plant to begin producing flowers
                                 ),
                               ),
                             ],
@@ -271,119 +398,24 @@ class _ScreenThreeState extends State<ScreenThree> {
                             children: [
                               Expanded(
                                 child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
                                   // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Watering schedule'), // The frequency of watering (daily, twice a week, once a week, or no watering)
+                                  decoration: buildInputDecoration('# bananas in one comb'), // The number of bananas in a single comb
                                 ),
                               ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Watering schedule', 'The frequency of watering (daily, twice a week, once a week, or no watering)'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Number of days for flower initiation'), // The number of days it takes for the plant to begin producing flowers
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Number of days for flower initiation', 'The number of days it takes for the plant to begin producing flowers'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Number of leaves'), // The number of leaves on the plant
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Number of leaves', 'The number of leaves on the plant'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Number of banana combs'), // The number of combs (clusters) of bananas produced by the plant
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Number of banana combs', 'The number of combs (clusters) of bananas produced by the plant'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Number of bananas in one comb'), // The number of bananas in a single comb
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Number of bananas in one comb', 'The number of bananas in a single comb'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  validator: (val) => validateFunc(val!),
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
                                   // onSaved: (value) => _username = value,
                                   decoration: buildInputDecoration('Height (in feet)'), // The height of the plant
                                 ),
                               ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Height (in feet)', 'The height of the plant'),
-                                ),
-                              ),
+
                             ],
                           ),
                         ],
@@ -391,26 +423,50 @@ class _ScreenThreeState extends State<ScreenThree> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: ElevatedButton(
-                    child: SizedBox(
-                      height: 55,
-                      width: MediaQuery.of(context).size.width,
-                      child: const Center(
-                        child: Text(
-                          'Estimate the Harvest',
-                          style: TextStyle(fontSize: 20),
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ElevatedButton(
+                          child: SizedBox(
+                            height: 55,
+                            width: MediaQuery.of(context).size.width,
+                            child: const Center(
+                              child: Text(
+                                'Clear Form',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ),
+                          onPressed: () =>  clearFormData(),
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      if (_qaFormKey.currentState!.validate()) {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        _estimatHarvest();
-                      }
-                    },
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 3,
+                        child: ElevatedButton(
+                          child: SizedBox(
+                            height: 55,
+                            width: MediaQuery.of(context).size.width,
+                            child: const Center(
+                              child: Text(
+                                'Estimate the Harvest',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (_qaFormKey.currentState!.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              _estimatHarvest();
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -424,6 +480,17 @@ class _ScreenThreeState extends State<ScreenThree> {
         ]
       ),
     );
+  }
+
+  void clearFormData() {
+    setState(() {
+      _qaFormKey.currentState!.reset();
+      selectedSunlightReceived = null;
+      selectedClimaticRegion = null;
+      selectedFertilizerType = null;
+      selectedVariety = null;
+      selectedWateringSchedule = null;
+    });
   }
 
   void bottomSheet(String name, String desc) {

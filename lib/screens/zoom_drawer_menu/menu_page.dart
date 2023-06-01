@@ -7,8 +7,9 @@ class MenuItems {
   static const profile = MenuItem('Profile', Icons.person);
   static const chat = MenuItem('Chat', Icons.message);
   static const about = MenuItem('About', Icons.info_outlined);
+  static const test = MenuItem('Test Form', Icons.folder_delete_outlined);
 
-  static const all = <MenuItem>[ home, profile, chat, about ];
+  static const all = <MenuItem>[ home, profile, chat, about, test ];
 }
 
 
