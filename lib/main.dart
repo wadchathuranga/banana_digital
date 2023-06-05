@@ -90,7 +90,7 @@ class _MainPageState extends State<MainPage> {
 
   MenuItem currentItem = MenuItems.home;
 
-  final navigationKey = GlobalKey<CurvedNavigationBarState>();
+  // final navigationKey = GlobalKey<CurvedNavigationBarState>();
   // int currentIndex = 0;
 
   // final screens = [
