@@ -28,6 +28,14 @@ class _ScreenThreeState extends State<ScreenThree> {
   final List climaticRegions = ["Wet Zone", "Dry Zone", "Intermediate Zone"];
   var selectedClimaticRegion;
 
+  final List plantDensity = ["1", "2", "3","4", "5"];
+  var selectedPlantDensity;
+
+  var selectedPesticide;
+
+  final List plantGeneration = ["1", "2", "3","4", "5", "More than 5"];
+  var selectedPlantGeneration;
+
   final List fertilizerTypes = ["Organic", "Non Organic", "Both Used", "None"];
   var selectedFertilizerType;
 
@@ -44,9 +52,8 @@ class _ScreenThreeState extends State<ScreenThree> {
     // TextFormField common InputDecoration function
     InputDecoration buildInputDecoration(String hintText) {
       return InputDecoration(
-        // helperText: "(Wet Zone, Intermediate Zone, or Dry Zone)",
         labelText: hintText,
-        labelStyle: const TextStyle(fontSize: 18),
+        // labelStyle: const TextStyle(fontSize: 18),
         contentPadding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -187,21 +194,34 @@ class _ScreenThreeState extends State<ScreenThree> {
                           Row(
                             children: [
                               Expanded(
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
+                                child: DropdownButtonFormField<String>(
                                   validator: (val) {
-                                    if (val!.isEmpty) {
-                                      return 'Required!';
-                                    }
-                                    // else if (int.parse(val!) > 5) {
-                                    //   return 'Should between 1 - 5 ';
-                                    // }
-                                    else {
-                                      return null;
-                                    }
+                                    if (val == null) {return 'Required!';} else {return null;}
                                   },
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Plant density'), // The number of banana plants per unit area of land
+                                  itemHeight: 50,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Plant Density',
+                                  ),
+                                  items: plantDensity.map((value) {
+                                    return DropdownMenuItem(
+                                      value: value
+                                          .toString(),
+                                      child: Text(value
+                                          .toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValueSelected) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    setState(() {
+                                      selectedPlantDensity = newValueSelected!;
+                                    });
+                                  },
+                                  value: selectedPlantDensity,
+                                  isExpanded: false,
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -210,8 +230,8 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   validator: (val) {
                                     if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
                                   },
-                                  // onSaved: (value) => _username = value,
                                   decoration: buildInputDecoration('Spacing between plants'), // The distance between adjacent banana plants
+                                  keyboardType: TextInputType.number,
                                 ),
                               ),
                             ],
@@ -220,15 +240,73 @@ class _ScreenThreeState extends State<ScreenThree> {
                           Row(
                             children: [
                               Expanded(
-                                child: TextFormField(
+                                child: DropdownButtonFormField<String>(
                                   validator: (val) {
-                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                    if (val == null) {return 'Required!';} else {return null;}
                                   },
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Plant generation'), // Whether the plant is a first generation or subsequent generation plant
+                                  itemHeight: 50,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Pesticides Used',
+                                  ),
+                                  items: ["Yes", "No"].map((value) {
+                                    return DropdownMenuItem(
+                                      value: value
+                                          .toString(),
+                                      child: Text(value
+                                          .toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValueSelected) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    setState(() {
+                                      selectedPesticide = newValueSelected!;
+                                    });
+                                  },
+                                  value: selectedPesticide,
+                                  isExpanded: false,
                                 ),
                               ),
                               const SizedBox(width: 10),
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  validator: (val) {
+                                    if (val == null) {return 'Required!';} else {return null;}
+                                  },
+                                  itemHeight: 50,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Plant Generation',
+                                  ),
+                                  items: plantGeneration.map((value) {
+                                    return DropdownMenuItem(
+                                      value: value
+                                          .toString(),
+                                      child: Text(value
+                                          .toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValueSelected) {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    setState(() {
+                                      selectedPlantGeneration = newValueSelected!;
+                                    });
+                                  },
+                                  value: selectedPlantGeneration,
+                                  isExpanded: false,
+                                ),
+                              ),
+                            ],
+                          ),
+                          buildSizedBox(),
+                          Row(
+                            children: [
                               Expanded(
                                 child: DropdownButtonFormField<String>(
                                   validator: (val) {
@@ -260,26 +338,20 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   isExpanded: false,
                                 ),
                               ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: TextFormField(
                                   validator: (val) {
-                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                    if (val!.trim().isEmpty) {
+                                      return 'Required!';
+                                    } else if (double.parse(val) > 0.0 || double.parse(val) <= 14.0) {
+                                      return 'It should between 1 and 14';
+                                    } else {
+                                      return null;
+                                    }
                                   },
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Soil pH'), // The pH level of the soil where the plant is being grown
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  onPressed: () => bottomSheet('Soil pH', 'The pH level of the soil where the plant is being grown'),
+                                  decoration: buildInputDecoration('Soil pH'),
+                                  keyboardType: TextInputType.number,
                                 ),
                               ),
                             ],
@@ -298,7 +370,7 @@ class _ScreenThreeState extends State<ScreenThree> {
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    labelText: 'Amount of sunlight received',
+                                    labelText: 'Sunlight Received',
                                   ),
                                   items: sunlightReceived.map((value) {
                                     return DropdownMenuItem(
@@ -319,11 +391,6 @@ class _ScreenThreeState extends State<ScreenThree> {
                                 ),
                               ),
                               const SizedBox(width: 10),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
                               Expanded(
                                 child: DropdownButtonFormField<String>(
                                   validator: (val) {
@@ -355,16 +422,6 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   isExpanded: false,
                                 ),
                               ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: TextFormField(
-                                  validator: (val) {
-                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                  },
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('# banana combs'), // The number of combs (clusters) of bananas produced by the plant
-                                ),
-                              ),
                             ],
                           ),
                           buildSizedBox(),
@@ -376,33 +433,8 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   validator: (val) {
                                     if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
                                   },
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('# leaves'), // The number of leaves on the plant
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                flex: 2,
-                                child: TextFormField(
-                                  validator: (val) {
-                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                  },
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('# days for flower initiation'), // The number of days it takes for the plant to begin producing flowers
-                                ),
-                              ),
-                            ],
-                          ),
-                          buildSizedBox(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  validator: (val) {
-                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                  },
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('# bananas in one comb'), // The number of bananas in a single comb
+                                  decoration: buildInputDecoration('Number of Leaves'),
+                                  keyboardType: TextInputType.number,
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -411,11 +443,10 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   validator: (val) {
                                     if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
                                   },
-                                  // onSaved: (value) => _username = value,
-                                  decoration: buildInputDecoration('Height (in feet)'), // The height of the plant
+                                  decoration: buildInputDecoration('Height (in feet)'),
+                                  keyboardType: TextInputType.number,
                                 ),
                               ),
-
                             ],
                           ),
                         ],
@@ -487,7 +518,10 @@ class _ScreenThreeState extends State<ScreenThree> {
       _qaFormKey.currentState!.reset();
       selectedSunlightReceived = null;
       selectedClimaticRegion = null;
+      selectedPlantDensity = null;
+      selectedPesticide = null;
       selectedFertilizerType = null;
+      selectedPlantGeneration = null;
       selectedVariety = null;
       selectedWateringSchedule = null;
     });
