@@ -1,10 +1,3 @@
-import 'package:banana_digital/screens/chatScreen.dart';
-import 'package:banana_digital/screens/profile_page.dart';
-import 'package:banana_digital/screens/testScreen.dart';
-import 'package:banana_digital/screens/zoom_drawer_menu/menu_item.dart';
-import 'package:banana_digital/screens/zoom_drawer_menu/menu_page.dart';
-import 'package:banana_digital/utils/app_colors.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_zoom_drawer/config.dart';
@@ -13,6 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/chatScreen.dart';
+import '../screens/zoom_drawer_menu/menu_item.dart';
+import '../screens/zoom_drawer_menu/menu_page.dart';
 import '../providers/chat_provider.dart';
 import '../providers/local_provider.dart';
 import '../screens/AboutScreen.dart';
