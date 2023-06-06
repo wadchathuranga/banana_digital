@@ -51,7 +51,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
   final List abnormalFruiting = ["Normal", "Distorted"];
   var selectedAbnormalFruiting;
 
-  final List presenceOfPets = ["Aphids", "None", "Caterpillars"];
+  final List presenceOfPets = ["Aphids", "None", "Caterpillars", "Mites"];
   var selectedPresenceOfPets;
 
   @override

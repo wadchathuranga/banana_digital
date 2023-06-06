@@ -21,29 +21,32 @@ class _ScreenFourState extends State<ScreenFour> {
   final List leafColor = ["Yellow", "Brown", "Pale Green"];
   var selectedLeafColor;
 
-  final List leafSpots = ["Black", "Brown", "None"];
-  var selectedLeafSpots;
+  final List waterSource = ["River", "Rainwater Harvesting", "Municipal Supply", "Well", "Canal"];
+  var selectedWaterSource;
 
-  final List leafWilting = ["Yes", "No"];
-  var selectedLeafWilting;
+  final List organicMatterContent = ["Low", "Moderate", "High"];
+  var selectedOrganicMatterContent;
 
-  final List leafCurling = ["Yes", "No"];
-  var selectedLeafCurling;
+  final List cropRotation = ["Yes", "No"];
+  var selectedCropRotation;
 
-  final List stuntedGrowth = ["Slow Growth", "Normal"];
-  var selectedstuntedGrowth;
+  final List pestDiseaseInfestation = ["Yes", "No"];
+  var selectedPestDiseaseInfestation;
 
-  final List stemColor = ["Brown", "Black", "Yellow", "Red", "Green"];
-  var selectedStemColor;
+  final List slope = ["Low", "Medium", "High", "High"];
+  var selectedSlope;
 
-  final List rootRot = ["Yes", "No"];
-  var selectedRootRot;
+  final List irrigationMethod = ["Drip", "Sprinkle", "Flood"];
+  var selectedIrrigationMethod;
 
-  final List abnormalFruiting = ["Normal", "Distorted"];
-  var selectedAbnormalFruiting;
+  final List fertilizerUsedLastSeason = ["Organic", "Non Organic", "Both Used", "None"];
+  var selectedFertilizerUsedLastSeason;
 
-  final List presenceOfPets = ["Aphids", "None", "Caterpillars"];
-  var selectedPresenceOfPets;
+  final List soilTexture = ["Loamy", "Clayey", "Sandy"];
+  var selectedSoilTexture;
+
+  final List soilColor = ["Red", "Brown", "Yellow", "Dark", "Black"];
+  var selectedSoilColor;
 
 
   @override
@@ -52,9 +55,8 @@ class _ScreenFourState extends State<ScreenFour> {
     // TextFormField common InputDecoration function
     InputDecoration buildInputDecoration(String hintText) {
       return InputDecoration(
-        // helperText: "(Wet Zone, Intermediate Zone, or Dry Zone)",
         labelText: hintText,
-        labelStyle: const TextStyle(fontSize: 18),
+        // labelStyle: const TextStyle(fontSize: 18),
         contentPadding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -81,16 +83,6 @@ class _ScreenFourState extends State<ScreenFour> {
         });
       });
     }
-
-    validateFunc(String val) {
-      return null;
-      // if (val!.trim().isEmpty) {
-      //   return 'Required!';
-      // } else {
-      //   return null;
-      // }
-    }
-
 
     return Scaffold(
       appBar: AppBar(
@@ -128,6 +120,82 @@ class _ScreenFourState extends State<ScreenFour> {
                         Row(
                           children: [
                             Expanded(
+                              child: TextFormField(
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Temperature'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Humidity (in percentage)'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
+                                // onSaved: (value) => _username = value,
+                                decoration: buildInputDecoration('Rainfall (in mm)'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        buildSizedBox(),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Fertilizer Used Last Season',
+                                ),
+                                items: fertilizerUsedLastSeason.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedFertilizerUsedLastSeason = newValueSelected!;
+                                  });
+                                },
+                                value: selectedFertilizerUsedLastSeason,
+                                isExpanded: false,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
                               child: DropdownButtonFormField<String>(
                                 validator: (val) {
                                   if (val == null) {return 'Required!';} else {return null;}
@@ -158,7 +226,11 @@ class _ScreenFourState extends State<ScreenFour> {
                                 isExpanded: false,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
                             Expanded(
                               child: DropdownButtonFormField<String>(
                                 validator: (val) {
@@ -170,23 +242,23 @@ class _ScreenFourState extends State<ScreenFour> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  labelText: 'Leaf Spots',
+                                  labelText: 'Water Source',
                                 ),
-                                items: leafSpots.map((variety) {
+                                items: waterSource.map((value) {
                                   return DropdownMenuItem(
-                                    value: variety
+                                    value: value
                                         .toString(),
-                                    child: Text(variety
+                                    child: Text(value
                                         .toString()),
                                   );
                                 }).toList(),
                                 onChanged: (newValueSelected) {
                                   FocusScope.of(context).requestFocus(FocusNode());
                                   setState(() {
-                                    selectedLeafSpots = newValueSelected!;
+                                    selectedWaterSource = newValueSelected!;
                                   });
                                 },
-                                value: selectedLeafSpots,
+                                value: selectedWaterSource,
                                 isExpanded: false,
                               ),
                             ),
@@ -202,9 +274,9 @@ class _ScreenFourState extends State<ScreenFour> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  labelText: 'Leaf Wilting',
+                                  labelText: 'Organic Matter Content',
                                 ),
-                                items: leafWilting.map((value) {
+                                items: organicMatterContent.map((value) {
                                   return DropdownMenuItem(
                                     value: value
                                         .toString(),
@@ -215,10 +287,10 @@ class _ScreenFourState extends State<ScreenFour> {
                                 onChanged: (newValueSelected) {
                                   FocusScope.of(context).requestFocus(FocusNode());
                                   setState(() {
-                                    selectedLeafWilting = newValueSelected!;
+                                    selectedOrganicMatterContent = newValueSelected!;
                                   });
                                 },
-                                value: selectedLeafWilting,
+                                value: selectedOrganicMatterContent,
                                 isExpanded: false,
                               ),
                             ),
@@ -238,9 +310,9 @@ class _ScreenFourState extends State<ScreenFour> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  labelText: 'Leaf Curling',
+                                  labelText: 'Crop Rotation',
                                 ),
-                                items: leafCurling.map((value) {
+                                items: cropRotation.map((value) {
                                   return DropdownMenuItem(
                                     value: value
                                         .toString(),
@@ -251,10 +323,10 @@ class _ScreenFourState extends State<ScreenFour> {
                                 onChanged: (newValueSelected) {
                                   FocusScope.of(context).requestFocus(FocusNode());
                                   setState(() {
-                                    selectedLeafCurling = newValueSelected!;
+                                    selectedCropRotation = newValueSelected!;
                                   });
                                 },
-                                value: selectedLeafCurling,
+                                value: selectedCropRotation,
                                 isExpanded: false,
                               ),
                             ),
@@ -270,9 +342,9 @@ class _ScreenFourState extends State<ScreenFour> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  labelText: 'Stunted Growth',
+                                  labelText: 'Pest Disease Infestation',
                                 ),
-                                items: stuntedGrowth.map((value) {
+                                items: pestDiseaseInfestation.map((value) {
                                   return DropdownMenuItem(
                                     value: value
                                         .toString(),
@@ -283,78 +355,10 @@ class _ScreenFourState extends State<ScreenFour> {
                                 onChanged: (newValueSelected) {
                                   FocusScope.of(context).requestFocus(FocusNode());
                                   setState(() {
-                                    selectedstuntedGrowth = newValueSelected!;
+                                    selectedPestDiseaseInfestation = newValueSelected!;
                                   });
                                 },
-                                value: selectedstuntedGrowth,
-                                isExpanded: false,
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: DropdownButtonFormField<String>(
-                                validator: (val) {
-                                  if (val == null) {return 'Required!';} else {return null;}
-                                },
-                                itemHeight: 50,
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  labelText: 'Stem Color',
-                                ),
-                                items: stemColor.map((value) {
-                                  return DropdownMenuItem(
-                                    value: value
-                                        .toString(),
-                                    child: Text(value
-                                        .toString()),
-                                  );
-                                }).toList(),
-                                onChanged: (newValueSelected) {
-                                  FocusScope.of(context).requestFocus(FocusNode());
-                                  setState(() {
-                                    selectedStemColor = newValueSelected!;
-                                  });
-                                },
-                                value: selectedStemColor,
-                                isExpanded: false,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: DropdownButtonFormField<String>(
-                                validator: (val) {
-                                  if (val == null) {return 'Required!';} else {return null;}
-                                },
-                                itemHeight: 50,
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  labelText: 'Root Rot',
-                                ),
-                                items: rootRot.map((value) {
-                                  return DropdownMenuItem(
-                                    value: value
-                                        .toString(),
-                                    child: Text(value
-                                        .toString()),
-                                  );
-                                }).toList(),
-                                onChanged: (newValueSelected) {
-                                  FocusScope.of(context).requestFocus(FocusNode());
-                                  setState(() {
-                                    selectedRootRot = newValueSelected!;
-                                  });
-                                },
-                                value: selectedRootRot,
+                                value: selectedPestDiseaseInfestation,
                                 isExpanded: false,
                               ),
                             ),
@@ -374,9 +378,9 @@ class _ScreenFourState extends State<ScreenFour> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  labelText: 'Abnormal Fruiting',
+                                  labelText: 'Slope of the Land',
                                 ),
-                                items: abnormalFruiting.map((value) {
+                                items: slope.map((value) {
                                   return DropdownMenuItem(
                                     value: value
                                         .toString(),
@@ -387,10 +391,10 @@ class _ScreenFourState extends State<ScreenFour> {
                                 onChanged: (newValueSelected) {
                                   FocusScope.of(context).requestFocus(FocusNode());
                                   setState(() {
-                                    selectedAbnormalFruiting = newValueSelected!;
+                                    selectedSlope = newValueSelected!;
                                   });
                                 },
-                                value: selectedAbnormalFruiting,
+                                value: selectedSlope,
                                 isExpanded: false,
                               ),
                             ),
@@ -406,9 +410,9 @@ class _ScreenFourState extends State<ScreenFour> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  labelText: 'Presence of Pets',
+                                  labelText: 'Irrigation Method',
                                 ),
-                                items: presenceOfPets.map((value) {
+                                items: irrigationMethod.map((value) {
                                   return DropdownMenuItem(
                                     value: value
                                         .toString(),
@@ -419,10 +423,78 @@ class _ScreenFourState extends State<ScreenFour> {
                                 onChanged: (newValueSelected) {
                                   FocusScope.of(context).requestFocus(FocusNode());
                                   setState(() {
-                                    selectedPresenceOfPets = newValueSelected!;
+                                    selectedIrrigationMethod = newValueSelected!;
                                   });
                                 },
-                                value: selectedPresenceOfPets,
+                                value: selectedIrrigationMethod,
+                                isExpanded: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val== null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Soil texture',
+                                ),
+                                items: soilTexture.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedSoilTexture = newValueSelected!;
+                                  });
+                                },
+                                value: selectedSoilTexture,
+                                isExpanded: false,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Soil Color',
+                                ),
+                                items: soilColor.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedSoilColor = newValueSelected!;
+                                  });
+                                },
+                                value: selectedSoilColor,
                                 isExpanded: false,
                               ),
                             ),
@@ -436,16 +508,18 @@ class _ScreenFourState extends State<ScreenFour> {
                                 validator: (val) {
                                   if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
                                 },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Plant density'),
+                                keyboardType: TextInputType.number,
+                                decoration: buildInputDecoration('Plant Density'),
                               ),
                             ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Plant density', '(number of plants per unit area)'),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: TextFormField(
+                                validator: (val) {
+                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                },
+                                keyboardType: TextInputType.number,
+                                decoration: buildInputDecoration('Stem Diameter'),
                               ),
                             ),
                           ],
@@ -458,236 +532,24 @@ class _ScreenFourState extends State<ScreenFour> {
                                 validator: (val) {
                                   if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
                                 },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Soil texture'),
+                                keyboardType: TextInputType.number,
+                                decoration: buildInputDecoration('Plant Height'),
                               ),
                             ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Soil texture', 'Soil texture'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
+                            const SizedBox(width: 10),
                             Expanded(
                               child: TextFormField(
                                 validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  if (val!.trim().isEmpty) {
+                                    return 'Required!';
+                                  } else if (double.parse(val) > 0.0 || double.parse(val) <= 14.0) {
+                                    return 'It should between 1 and 14';
+                                  } else {
+                                    return null;
+                                  }
                                 },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Soil color'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Soil color', 'Soil color'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Temperature'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Temperature', '(in degrees Celsius)'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Humidity (in percentage)'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Humidity (in percentage)', 'Humidity (in percentage)'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Rainfall (in mm)'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Rainfall (in mm)', 'Rainfall (in mm)'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Water source'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Water source', 'Water source (Well, River, Canal, Rainwater harvesting, Municipal supply)'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Irrigation method'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Irrigation method', 'Irrigation method (Drip, Flood, Sprinkler)'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Fertilizer type used in the previous season'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Fertilizer type used in the previous season', '(Organic, Inorganic, both)'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Crop rotation'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Crop rotation', 'Crop rotation (Yes, No)'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Pest and disease infestation'),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Pest and disease infestation', 'Pest and disease infestation (Yes, No)'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        buildSizedBox(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                validator: (val) {
-                                  if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
-                                },
-                                // onSaved: (value) => _username = value,
-                                decoration: buildInputDecoration('Slope of the land'), // The height of the plant
-                              ),
-                            ),
-                            SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: IconButton(
-                                icon: const Icon(Icons.info_outline),
-                                onPressed: () => bottomSheet('Slope of the land', 'Slope of the land (None, Low, Medium, High)'),
+                                decoration: buildInputDecoration('Soil pH'),
+                                keyboardType: TextInputType.number,
                               ),
                             ),
                           ],
@@ -760,14 +622,15 @@ class _ScreenFourState extends State<ScreenFour> {
     setState(() {
       _qaFormKey.currentState!.reset();
       selectedLeafColor = null;
-      selectedPresenceOfPets = null;
-      selectedAbnormalFruiting = null;
-      selectedRootRot = null;
-      selectedLeafCurling = null;
-      selectedstuntedGrowth = null;
-      selectedLeafSpots = null;
-      selectedStemColor = null;
-      selectedLeafWilting = null;
+      selectedIrrigationMethod = null;
+      selectedSlope = null;
+      selectedPestDiseaseInfestation = null;
+      selectedWaterSource = null;
+      selectedOrganicMatterContent = null;
+      selectedCropRotation = null;
+      selectedFertilizerUsedLastSeason = null;
+      selectedSoilTexture = null;
+      selectedSoilColor = null;
     });
   }
 
