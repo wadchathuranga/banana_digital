@@ -159,10 +159,10 @@ class _MainPageState extends State<MainPage> {
       onWillPop: () => popped(),
       child: ZoomDrawer(
         style: DrawerStyle.defaultStyle,
-        // showShadow: true,
+        showShadow: true,
         // borderRadius: 40,
         mainScreenTapClose: true,
-        angle: 0,
+        angle: -5,
         menuScreenWidth: 250,
         slideWidth: 200,
         menuBackgroundColor: Colors.indigo,
@@ -172,7 +172,7 @@ class _MainPageState extends State<MainPage> {
             currentItem: currentItem,
             onSelectedItem: (item) {
               setState(() => currentItem = item);
-              // ZoomDrawer.of(context)!.close(); // AUTO CLOSE THE DRAWER WHEN TAP A MENU TILE
+              ZoomDrawer.of(context)!.close(); // AUTO CLOSE THE DRAWER WHEN TAP A MENU TILE
             },
           ),
         ),
