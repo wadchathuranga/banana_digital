@@ -21,56 +21,76 @@ class _GridViewCardState extends State<GridViewCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 8.0,
-      margin: const EdgeInsets.all(5.0),
-      // color: Colors.blue,
-      child: InkWell(
-        onTap: (){
-          if (widget.value == '1') {
-            Navigator.pushNamed(context, '/one');
-          } else if (widget.value == '2') {
-            Navigator.pushNamed(context, '/two');
-          } else if (widget.value == '3') {
-            Navigator.pushNamed(context, '/three');
-          } else if (widget.value == '4') {
-            Navigator.pushNamed(context, '/four');
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                child: Container(
-                  color: AppColors.primaryColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Image.asset(
-                      widget.img,
+        elevation: 8.0,
+        margin: const EdgeInsets.all(5.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        // color: Colors.blue,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: AppColors.primaryColor,
+              // color: Colors.transparent,
+              width: 2.0,
+            ),
+          ),
+          child: InkWell(
+            onTap: (){
+              if (widget.value == '1') {
+                Navigator.pushNamed(context, '/one');
+              } else if (widget.value == '2') {
+                Navigator.pushNamed(context, '/two');
+              } else if (widget.value == '3') {
+                Navigator.pushNamed(context, '/three');
+              } else if (widget.value == '4') {
+                Navigator.pushNamed(context, '/four');
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 100,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: Colors.transparent,
+                          width: 2.0,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Image.asset(
+                          widget.img,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 3,),
-              SizedBox(
-                height: 80,
-                child: Text(
-                  widget.title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 50,
+                    child: Text(
+                      widget.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
