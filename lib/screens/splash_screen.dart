@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
+import '../services/shared_preference.dart';
 import './screenHome/homeScreen.dart';
 import './authentication/login_page.dart';
 
@@ -30,7 +33,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
   //check user still logged in
   checkLoginStatus() async {
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const LoginScreen()), (Route<dynamic> route) => false);
+    //check user still logged in or not
+    final token = UserSharedPreference.getAccessToken();
+    if (kDebugMode) {
+      print('========== Access Token: $token ==========');
+    }
+    if (token != null) {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const MainPage()), (Route<dynamic> route) => false);
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const LoginScreen()), (Route<dynamic> route) => false);
+    }
+
     // sharedPreferences = await SharedPreferences.getInstance();
     // username = sharedPreferences.getString('session_username');
     // email = sharedPreferences.getString('session_email');
