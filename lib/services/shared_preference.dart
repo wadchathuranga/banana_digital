@@ -28,7 +28,7 @@ class UserSharedPreference {
   static String? getLastName() => prefs!.getString('lastname');
 
   // set lastname
-  static Future setProPic(String pro_pic) async => await prefs!.setString('prop_ic', pro_pic);
+  static Future setProPic(String proPic) async => await prefs!.setString('prop_ic', proPic);
   static String? getProPic() => prefs!.getString('prop_ic');
 
 
