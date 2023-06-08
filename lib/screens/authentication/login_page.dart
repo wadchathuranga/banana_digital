@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
        UserSharedPreference.setAccessToken(decodedData['access_token']);
        print('========== Access Token: ${decodedData['access_token']} ==========');
 
-       var url = Uri.parse(USER_PROFILE);
+       var url = Uri.parse(USER_PROFILE_GET);
        final userRes = await http.get(
            url,
            headers: {
