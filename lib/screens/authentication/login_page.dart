@@ -1,11 +1,16 @@
 import 'dart:convert';
 
+import 'package:banana_digital/services/auth_api_service.dart';
+import 'package:banana_digital/services/shared_preference.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
+import '../../models/User.dart';
+import '../../utils/app_configs.dart';
 import '../../utils/app_images.dart';
 import '../../main.dart';
 import './signup_page.dart';
@@ -38,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   /*----------------------------------------- Icon Animation --------------------------------------------------*/
 
 
-  TextEditingController emailController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   bool _isLoading = false;
@@ -55,13 +60,79 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   void _login() async {
-    showToast('login success');
-    setState(() {
-      _isLoading = false;
-    });
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const MainPage()), (Route<dynamic> route) => false);
-    print(emailController.text.trim());
-    print(passwordController.text.trim());
+   try {
+     var url = Uri.parse(USER_SIGN_IN);
+     final response = await http.post(
+         url,
+         headers: {
+           "Content-Type": "application/json"
+         },
+         body: jsonEncode({
+           "client_id": CLIENT_ID,
+           "client_secret": CLIENT_SECRET,
+           "grant_type": GRANT_TYPE,
+           "username": usernameController.text.trim(),
+           "password": passwordController.text.trim(),
+         }));
+
+     if (response.statusCode == 200) {
+       final decodedData = jsonDecode(response.body);
+       UserSharedPreference.setAccessToken(decodedData['access_token']);
+       print('========== Access Token: ${decodedData['access_token']} ==========');
+
+       var url = Uri.parse(USER_PROFILE);
+       final userRes = await http.get(
+           url,
+           headers: {
+             "Content-Type": "application/json",
+             "Authorization": "Bearer ${decodedData['access_token']}",
+           });
+
+       if (userRes.statusCode == 200) {
+         final decodedUserData = User.fromJson(jsonDecode(userRes.body));
+         await UserSharedPreference.setUserName(decodedUserData.userName!);
+         await UserSharedPreference.setEmail(decodedUserData.email!);
+         await UserSharedPreference.setFirstName(decodedUserData.firstName!);
+         await UserSharedPreference.setLastName(decodedUserData.lastName!);
+         if (decodedUserData.profilePic != null) {
+           await UserSharedPreference.setProPic(decodedUserData.profilePic!);
+         }
+
+         setState(() {
+           _isLoading = false;
+         });
+         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const MainPage()), (Route<dynamic> route) => false);
+         showToast('login success');
+       } else {
+          final error = jsonDecode(userRes.body);
+          setState(() {
+            _isLoading = false;
+          });
+          showToast(error['detail'].toString());
+       }
+     } else if (response.statusCode == 400) {
+       final res = jsonDecode(response.body);
+       setState(() {
+         _isLoading = false;
+       });
+       showToast(res['error_description'].toString());
+     } else {
+       setState(() {
+         _isLoading = false;
+       });
+       showToast('System Error!');
+     }
+   } catch (err) {
+     setState(() {
+       _isLoading = false;
+     });
+     showToast(err.toString());
+     if (kDebugMode) {
+       print("================= Catch Error ====================");
+       print(err);
+       print("==================================================");
+     }
+   }
   }
 
 
@@ -119,9 +190,16 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           TextFormField(
-                            controller: emailController,
+                            controller: usernameController,
                             keyboardType: TextInputType.text,
-                            validator: (val) => validateEmail(val!),
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Username Required!";
+                              }
+                              else {
+                                return null;
+                              }
+                            },
                             decoration: const InputDecoration(
                               labelText: "Email",
                             ),
@@ -141,22 +219,22 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               ),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ResetPasswordScreen()));
-                                  },
-                                  child: const Text("Forgot Password?",
-                                    style: TextStyle(
-//                                  fontSize: 20.0,
-                                      color: Colors.teal,
-                                    ),
-                                  ),
-                              ),
-                            ],
-                          ),
+//                           Row(
+//                             mainAxisAlignment: MainAxisAlignment.end,
+//                             children: <Widget>[
+//                               TextButton(
+//                                   onPressed: () {
+//                                     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ResetPasswordScreen()));
+//                                   },
+//                                   child: const Text("Forgot Password?",
+//                                     style: TextStyle(
+// //                                  fontSize: 20.0,
+//                                       color: Colors.teal,
+//                                     ),
+//                                   ),
+//                               ),
+//                             ],
+//                           ),
                           const Padding(
                             padding: EdgeInsets.only(top: 25.0),
                           ),
@@ -172,12 +250,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               ),
                             ),
                             onPressed: () {
-                              // if (_formKey.currentState!.validate()) {
-                              //   setState(() {
-                              //     _isLoading = true;
-                              //   });
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
                                 _login();
-                              // }
+                              }
                             },
                           ),
                           const Padding(

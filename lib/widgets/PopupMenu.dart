@@ -1,4 +1,5 @@
 import 'package:banana_digital/screens/authentication/login_page.dart';
+import 'package:banana_digital/services/shared_preference.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
@@ -12,13 +13,8 @@ class PopupMenu extends StatelessWidget {
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        PopupMenuItem<String>(
-          value: "about",
-          enabled: route == '/about' ? false : true,
-          child: const Text("About"),
-        ),
         const PopupMenuItem<String>(
-          value: "reset",
+          value: "restart",
           child: Text("Restart App"),
         ),
         const PopupMenuItem(
@@ -27,17 +23,15 @@ class PopupMenu extends StatelessWidget {
         ),
       ],
       onSelected: (value) async {
-        if (value == 'about') {
-          Navigator.pushNamed(context, '/about');
-        }
-        if (value == 'reset') {
+        if (value == 'restart') {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (_) => const MyApp()),
                   (Route<dynamic> route) => false);
         }
         if (value == 'logout') {
           // logout logic here
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginScreen()), (Route<dynamic> route) => false);
+          UserSharedPreference.userLogOut();
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const LoginScreen()), (Route<dynamic> route) => false);
         }
       },
     );

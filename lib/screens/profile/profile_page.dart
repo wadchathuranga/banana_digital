@@ -1,3 +1,4 @@
+import 'package:banana_digital/services/shared_preference.dart';
 import 'package:banana_digital/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  @override
+  void initState() {
+    print('======================================================');
+    print(UserSharedPreference.getFirstName());
+    print(UserSharedPreference.getLastName());
+    print(UserSharedPreference.getEmail());
+    print(UserSharedPreference.getProPic());
+    print(UserSharedPreference.getUserName());
+    print('======================================================');
+    super.initState();
+  }
 
   //update user details
   Future _updateProfile() async {
