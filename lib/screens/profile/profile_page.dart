@@ -181,10 +181,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  // suffixIcon: const Icon(
-                                  //   Icons.edit,
-                                  //   color: AppColors.primaryColor,
-                                  // ),
                                 ),
                                 controller: usernameController,
                               ),
@@ -213,10 +209,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  // suffixIcon: const Icon(
-                                  //   Icons.edit,
-                                  //   color: AppColors.primaryColor,
-                                  // ),
                                 ),
                                 controller: emailController,
                               ),
