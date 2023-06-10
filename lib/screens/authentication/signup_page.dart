@@ -1,12 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
+import '../../models/User.dart';
+import '../../services/shared_preference.dart';
+import '../../utils/app_colors.dart';
+import '../../utils/app_configs.dart';
 import '../../utils/app_images.dart';
+import '../../widgets/TextWidget.dart';
 import './login_page.dart';
 import '../screenHome/homeScreen.dart';
 
@@ -34,6 +40,8 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
   }
   /*--------------------------------------------- Animation ---------------------------------------------*/
 
+  TextEditingController firstnameController = TextEditingController();
+  TextEditingController lastnameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -44,7 +52,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
   //form key
   final _formKey = GlobalKey<FormState>();
 
-  //password visible method
+  //password hide method
   bool _obSecureText = true;
   void _toggle() {
     setState(() {
@@ -53,84 +61,75 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
   }
 
   void _signup() async {
-      showToast('sign up success');
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const MainPage()), (Route<dynamic> route) => false);
-      // var jsonData = null;
-      // SharedPreferences sharedPreferences = await SharedPreferences.getInstance(); //local url is http://192.168.43.206/flutter/signupUser.php
-      // final response = await http.post("https://pastpaperssusl.000webhostapp.com/mobile_app_config/flutter/signupUser.php", body: {
-      //   'username': usernameController.text.trim(),
-      //   'email': emailController.text.trim(),
-      //   'password': passwordController.text.trim(),
-      // });
-      //
-      // if (response.statusCode == 200) {
-      //   jsonData = json.decode(response.body);
-      //   print(jsonData);
-      //   if(jsonData[0]['msg'] == 'UserExist') {
-      //     setState(() {
-      //       _isLoading = false;
-      //       msg = 'User Already Exist!';
-      //       showToast();
-      //       //should clear all data fields
-      //     });
-      //   }else if(jsonData[0]['msg'] == 'false'){
-      //     _isLoading = false;
-      //     msg = 'Server Connection Error!';
-      //     showToast();
-      //   }else{
-      //     setState(() {
-      //       _isLoading = false;
-      //       sharedPreferences.setString('session_username', jsonData[0]['username']);
-      //       sharedPreferences.setString('session_email', jsonData[0]['email']);
-      //       msg = 'SignUp & LogIn Successful';
-      //       showToast();
-      //     });
-      //     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => NavigationDrawer()), (Route<dynamic> route) => false);
-      //   }
-      // }else{
-      //   setState(() {
-      //     _isLoading = false;
-      //   });
-      //   msg = 'System Error!';
-      //   showToast();
-      //   print(response.body);
-      // }
+      try {
+        var url = Uri.parse(USER_SIGN_UP);
+        final response = await http.post(
+            url,
+            body: {
+              "username": usernameController.text.trim(),
+              "email": emailController.text.trim(),
+              "first_name": firstnameController.text.trim(),
+              "last_name": lastnameController.text.trim(),
+              "password": passwordController.text.trim(),
+              "re_password": confirmPasswordController.text.trim(),
+            });
+
+        if (response.statusCode == 201) {
+          final decodedData = jsonDecode(response.body);
+          UserSharedPreference.setAccessToken(decodedData['access_token']);
+          print('========== Access Token: ${decodedData['access_token']} ==========');
+
+          var url = Uri.parse(USER_PROFILE_GET);
+          final userRes = await http.get(
+              url,
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer ${decodedData['access_token']}",
+              });
+
+          if (userRes.statusCode == 200) {
+            final decodedUserData = User.fromJson(jsonDecode(userRes.body));
+            await UserSharedPreference.setUserName(decodedUserData.userName!);
+            await UserSharedPreference.setEmail(decodedUserData.email!);
+            await UserSharedPreference.setFirstName(decodedUserData.firstName!);
+            await UserSharedPreference.setLastName(decodedUserData.lastName!);
+            if (decodedUserData.profilePic != null) {
+              await UserSharedPreference.setProPic(decodedUserData.profilePic!);
+            }
+            setState(() {
+              _isLoading = false;
+            });
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const MainPage()), (Route<dynamic> route) => false);
+            showToast('User created & logged In');
+          }
+        } else {
+          final resData = jsonDecode(response.body);
+          setState(() {
+            _isLoading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: TextWidget(label: resData.toString()),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (err) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: TextWidget(label: err.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+        if (kDebugMode) {
+          print("================= Catch Error ====================");
+          print(err);
+          print("==================================================");
+        }
+      }
   }
 
-  //lording dialog method
-  Future<void> loadingDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-//          title: Text('AlertDialog Title'),
-          content: SingleChildScrollView(
-            child: Row(
-              children: const <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                ),
-                Text('  Please wait...'),
-              ],
-            ),
-          ),
-          /*actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],*/
-        );
-      },
-    );
-  }
 
   //toast msg method
   void showToast(msg) {
@@ -179,54 +178,117 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                       ),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.all(40.0),
+                      padding: const EdgeInsets.all(25.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          TextFormField(
-                            controller: usernameController,
-                            decoration: const InputDecoration(
-                              labelText: "User Name",
-                            ),
-                            keyboardType: TextInputType.text,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: usernameController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: "User Name",
+                                  ),
+                                  keyboardType: TextInputType.text,
 //                            maxLength: 12,
-                            validator: (val) => validateUsername(val!),
-                          ),
-                          TextFormField(
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              labelText: "Email",
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (val) => validateEmail(val!),
-                          ),
-                          TextFormField(
-                            controller: passwordController,
-                            decoration: InputDecoration(
-                              labelText: "Password",
-                              suffixIcon: GestureDetector(
-                                onTap: () {
-                                  _toggle();
-                                },
-                                child: _obSecureText ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
+                                  validator: (val) => validateUsername(val!),
+                                ),
                               ),
-                            ),
-                            keyboardType: TextInputType.text,
-                            obscureText: _obSecureText,
-                            validator: (val) => validatePassword(val!),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: emailController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: "Email",
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: (val) => validateEmail(val!),
+                                ),
+                              ),
+                            ],
                           ),
-                          TextFormField(
-                            controller: confirmPasswordController,
-                            decoration: const InputDecoration(
-                              labelText: "Confirm Password",
-                            ),
-                            keyboardType: TextInputType.text,
-                            obscureText: true,
-                            validator: (val) => validateConfirmPassword(val!),
+                          const SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'First Name',
+                                  ),
+                                  controller: firstnameController,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: TextFormField(
+                                  validator: (val) {
+                                    if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                                  },
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Last Name',
+                                  ),
+                                  controller: lastnameController,
+                                ),
+                              ),
+                            ],
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 40.0),
+                          const SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: passwordController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: "Password",
+                                    suffixIcon: GestureDetector(
+                                      onTap: () {
+                                        _toggle();
+                                      },
+                                      child: _obSecureText ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  obscureText: _obSecureText,
+                                  validator: (val) => validatePassword(val!),
+                                ),
+                              ),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: confirmPasswordController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: "Confirm Password",
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  obscureText: true,
+                                  validator: (val) => validateConfirmPassword(val!),
+                                ),
+                              ),
+                            ],
                           ),
+                          const SizedBox(height: 30),
                           MaterialButton(
                             height: 50.0,
                             minWidth: 1000.0,
@@ -247,9 +309,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                               }
                             },
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 60.0),
-                          ),
+                          const SizedBox(height: 30),
                           GestureDetector(
                             child: const Text(
                               "Already SignUp? LogIn",
@@ -336,18 +396,19 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
 //      RegExp hasLowercase = RegExp(r'[a-z]');
 //      RegExp hasDigit = RegExp(r'[0-9]');
 //      RegExp hasSpecialCharacter = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
-//      if (!hasUppercase.hasMatch(password)) {
-//        return "Uppercase Required!";
-//      }else if (!hasLowercase.hasMatch(password)) {
+        if (password.trim().length < 8) {
+          return "Length should be >= 8";
+        }
+//      else if (!hasLowercase.hasMatch(password)) {
 //        return "Lowercase Required!";
-//      }else if (!hasDigit.hasMatch(password)) {
+//      } else if (!hasDigit.hasMatch(password)) {
 //        return "Digit Required!";
-//      }else if (!hasSpecialCharacter.hasMatch(password)) {
+//      } else if (!hasSpecialCharacter.hasMatch(password)) {
 //        return "Special Character Required!";
-//      }else if (password.trim().length < 6) {
-//        return "6 Characters Required Minimum!";
-//      }else {
-        return null;
+//      } else if (!hasUppercase.hasMatch(password)) {
+//        return "Uppercase Required!";
+//      } else {
+//        return null;
 //      }
     }
   }

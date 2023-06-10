@@ -13,6 +13,7 @@ import '../../models/User.dart';
 import '../../utils/app_configs.dart';
 import '../../utils/app_images.dart';
 import '../../main.dart';
+import '../../widgets/TextWidget.dart';
 import './signup_page.dart';
 import './reset_password.dart';
 import '../screenHome/homeScreen.dart';
@@ -120,13 +121,17 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
        setState(() {
          _isLoading = false;
        });
-       showToast('System Error!');
+       showToast('${jsonDecode(response.body)['error']}');
      }
    } catch (err) {
      setState(() {
        _isLoading = false;
      });
-     showToast(err.toString());
+     ScaffoldMessenger.of(context).showSnackBar(
+       SnackBar(content: TextWidget(label: err.toString()),
+         backgroundColor: Colors.red,
+       ),
+     );
      if (kDebugMode) {
        print("================= Catch Error ====================");
        print(err);
@@ -185,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       ),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.all(40.0),
+                      padding: const EdgeInsets.all(25.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -200,16 +205,22 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 return null;
                               }
                             },
-                            decoration: const InputDecoration(
-                              labelText: "Email",
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              labelText: "Email or Username",
                             ),
                           ),
+                          const SizedBox(height: 15),
                           TextFormField(
                             controller: passwordController,
                             keyboardType: TextInputType.text,
                             obscureText: _obSecureText,
                             validator: (val) => validatePassword(val!),
-                            decoration: InputDecoration(
+                            decoration: InputDecoration(border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
                               labelText: "Password",
                               suffixIcon: GestureDetector(
                                 onTap: () {
@@ -235,9 +246,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 //                               ),
 //                             ],
 //                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 25.0),
-                          ),
+                          const SizedBox(height: 20),
                           MaterialButton(
                             height: 50.0,
                             minWidth: 1000.0,
@@ -258,9 +267,47 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               }
                             },
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 60.0),
+                          const SizedBox(height: 30),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: MaterialButton(
+                                  height: 50.0,
+                                  minWidth: 1000.0,
+                                  color: Colors.blueAccent,
+                                  textColor: Colors.white,
+                                  child: const Text(
+                                    "Facebook Login",
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                   // TODO: code here
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: MaterialButton(
+                                  height: 50.0,
+                                  minWidth: 1000.0,
+                                  color: Colors.red,
+                                  textColor: Colors.white,
+                                  child: const Text(
+                                    "Google Login",
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    // TODO: code here
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
+                          const SizedBox(height: 30),
                           GestureDetector(
                             child: const Text(
                               "New User? SignUp",
