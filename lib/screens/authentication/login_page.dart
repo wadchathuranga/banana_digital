@@ -209,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              labelText: "Email or Username",
+                              labelText: "Username",
                             ),
                           ),
                           const SizedBox(height: 15),

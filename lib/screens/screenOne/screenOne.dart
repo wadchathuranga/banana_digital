@@ -17,11 +17,12 @@ class ScreenOne extends StatefulWidget {
 
 class _ScreenOneState extends State<ScreenOne> {
   CroppedFile? _croppedImg;
-
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+
+    // function
     Future pickImage(ImageSource source) async {
       //get image from camera or gallery
       final pickedImage = await ImagePicker().pickImage(source: source);
