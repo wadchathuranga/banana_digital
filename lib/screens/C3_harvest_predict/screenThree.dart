@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:banana_digital/models/HarvestPredictionHistoryModel.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:banana_digital/utils/app_configs.dart';
@@ -7,9 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../models/HarvestPredictionModel.dart';
 import '../../services/shared_preference.dart';
 import '../../widgets/LanguagePicker.dart';
 import '../../widgets/Loading.dart';
+import '../../widgets/TextWidget.dart';
+import 'HarvestPredictResultScreen.dart';
 
 
 class ScreenThree extends StatefulWidget {
@@ -81,46 +86,71 @@ class _ScreenThreeState extends State<ScreenThree> {
 
   // predict harvest
   Future estimateHarvest() async {
-    var url = Uri.parse('$HARVEST_PREDICTION/predict');
-    final response = await http.post(
-        url,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $accessToken",
-        },
-        body: jsonEncode({
-          "variety": selectedVariety,
-          "agro_climatic_region": selectedClimaticRegion,
-          "plant_density": selectedPlantDensity,
-          "pesticides_used": selectedPesticide,
-          "plant_generation": selectedPlantGeneration,
-          "fertilizer_type": selectedFertilizerType,
-          "amount_of_sunlight": selectedSunlightReceived,
-          "watering_schedule": selectedWateringSchedule,
-          "spacing_between_plants": spaceController.text,
-          "number_of_leaves": leavesController.text,
-          "soil_ph": phController.text,
-          "height": heightController.text,
-        }));
+    try {
+      final bodyData = {
+        "variety": selectedVariety,
+        "agro_climatic_region": selectedClimaticRegion,
+        "plant_density": int.parse(selectedPlantDensity),
+        "pesticides_used": selectedPesticide,
+        "plant_generation": selectedPlantGeneration,
+        "fertilizer_type": selectedFertilizerType,
+        "amount_of_sunlight": selectedSunlightReceived,
+        "watering_schedule": selectedWateringSchedule.toString().toLowerCase(),
+        "spacing_between_plants": spaceController.text,
+        "number_of_leaves": leavesController.text,
+        "soil_ph": double.parse(phController.text),
+        "height": double.parse(heightController.text),
+      };
 
-    if (response.statusCode == 200) {
+      var url = Uri.parse('$HARVEST_PREDICTION/predict');
+      final response = await http.post(
+          url,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $accessToken",
+          },
+          body: jsonEncode(bodyData));
+
       final resData = jsonDecode(response.body);
-      print('=========== resData ============');
-      print(resData);
-      print('================================');
+      if (response.statusCode == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        final result = HarvestPredictionModel.fromJson(resData);
+        if (kDebugMode) {
+          print('============== 200 ==============');
+          print(resData);
+          print('=================================');
+        }
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => HarvestPredictResultScreen(result: result)));
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        if (kDebugMode) {
+          print(resData['error']);
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: TextWidget(label: resData['error']),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (err) {
       setState(() {
         isLoading = false;
       });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: TextWidget(label: err.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+      if (kDebugMode) {
+        print("================= Catch Error ====================");
+        print(err);
+        print("==================================================");
+      }
     }
-    // Timer(const Duration(seconds: 8), () {
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    // });
   }
 
 
@@ -393,7 +423,7 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   validator: (val) {
                                     if (val!.trim().isEmpty) {
                                       return 'Required!';
-                                    } else if (double.parse(val) > 0.0 || double.parse(val) <= 14.0) {
+                                    } else if (double.parse(val) < 0.0 || double.parse(val) > 14.0) {
                                       return 'It should between 1 and 14';
                                     } else {
                                       return null;
@@ -499,10 +529,6 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   controller: heightController,
                                 ),
                               ),
-
-                              /// Land Size (in perch) =========> should add as new one to the form
-                              /// TODO: add new input here
-
                             ],
                           ),
                         ],
