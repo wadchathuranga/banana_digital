@@ -1,10 +1,13 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:banana_digital/utils/app_configs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../services/shared_preference.dart';
 import '../../widgets/LanguagePicker.dart';
 import '../../widgets/Loading.dart';
 
@@ -20,7 +23,14 @@ class _ScreenThreeState extends State<ScreenThree> {
 
   final _qaFormKey = GlobalKey<FormState>();
 
+  TextEditingController heightController = TextEditingController();
+  TextEditingController leavesController = TextEditingController();
+  TextEditingController phController = TextEditingController();
+  TextEditingController spaceController = TextEditingController();
+
   bool isLoading = false;
+
+  String? accessToken;
 
   final List varieties = ["Anamalu Banana", "Mysore Banana", "Pisang Awak Banana", "Silk Banana", "Amban Banana"];
   var selectedVariety;
@@ -45,49 +55,87 @@ class _ScreenThreeState extends State<ScreenThree> {
   final List sunlightReceived = ["Low", "Moderate", "High"];
   var selectedSunlightReceived;
 
+  // TextFormField common InputDecoration function
+  InputDecoration buildInputDecoration(String hintText) {
+    return InputDecoration(
+      labelText: hintText,
+      // labelStyle: const TextStyle(fontSize: 18),
+      contentPadding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+    );
+  }
+
+  SizedBox buildSizedBox() {
+    return const SizedBox(
+      height: 15,
+    );
+  }
+
+  @override
+  void initState() {
+    accessToken = UserSharedPreference.getAccessToken().toString();
+    super.initState();
+  }
+
+  // predict harvest
+  Future estimateHarvest() async {
+    var url = Uri.parse('$HARVEST_PREDICTION/predict');
+    final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $accessToken",
+        },
+        body: jsonEncode({
+          "variety": selectedVariety,
+          "agro_climatic_region": selectedClimaticRegion,
+          "plant_density": selectedPlantDensity,
+          "pesticides_used": selectedPesticide,
+          "plant_generation": selectedPlantGeneration,
+          "fertilizer_type": selectedFertilizerType,
+          "amount_of_sunlight": selectedSunlightReceived,
+          "watering_schedule": selectedWateringSchedule,
+          "spacing_between_plants": spaceController.text,
+          "number_of_leaves": leavesController.text,
+          "soil_ph": phController.text,
+          "height": heightController.text,
+        }));
+
+    if (response.statusCode == 200) {
+      final resData = jsonDecode(response.body);
+      print('=========== resData ============');
+      print(resData);
+      print('================================');
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+    // Timer(const Duration(seconds: 8), () {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-
-    // TextFormField common InputDecoration function
-    InputDecoration buildInputDecoration(String hintText) {
-      return InputDecoration(
-        labelText: hintText,
-        // labelStyle: const TextStyle(fontSize: 18),
-        contentPadding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      );
-    }
-
-    SizedBox buildSizedBox() {
-      return const SizedBox(
-        height: 15,
-      );
-    }
-
-
-    //update user details
-    Future _estimatHarvest() async {
-      // var data = {
-      //   "username": usernameController.text,
-      //   "email": emailController.text,
-      // };
-
-      Timer(const Duration(seconds: 8), () {
-        setState(() {
-          isLoading = false;
-        });
-      });
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Estimate Harvest of Banana'),
-        actions: const [
-          LanguagePicker(),
-          SizedBox(
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.pushNamed(context, '/history'),
+              icon: const Icon(Icons.history),
+          ),
+          const LanguagePicker(),
+          const SizedBox(
             width: 15,
           ),
         ],
@@ -232,6 +280,7 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   },
                                   decoration: buildInputDecoration('Spacing between plants'), // The distance between adjacent banana plants
                                   keyboardType: TextInputType.number,
+                                  controller: spaceController,
                                 ),
                               ),
                             ],
@@ -352,6 +401,7 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   },
                                   decoration: buildInputDecoration('Soil pH'),
                                   keyboardType: TextInputType.number,
+                                  controller: phController,
                                 ),
                               ),
                             ],
@@ -435,6 +485,7 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   },
                                   decoration: buildInputDecoration('Number of Leaves'),
                                   keyboardType: TextInputType.number,
+                                  controller: leavesController,
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -445,6 +496,7 @@ class _ScreenThreeState extends State<ScreenThree> {
                                   },
                                   decoration: buildInputDecoration('Height (in feet)'),
                                   keyboardType: TextInputType.number,
+                                  controller: heightController,
                                 ),
                               ),
 
@@ -496,7 +548,7 @@ class _ScreenThreeState extends State<ScreenThree> {
                               setState(() {
                                 isLoading = true;
                               });
-                              _estimatHarvest();
+                              estimateHarvest();
                             }
                           },
                         ),

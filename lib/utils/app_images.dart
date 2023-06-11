@@ -5,6 +5,7 @@ class AppImages {
   static String backgroundImg = "$imagePath/blue_background.jpg";
   static String background1 = "$imagePath/bckgrnd.jpg";
   static String background2 = "$imagePath/bckgrnd1.jpg";
+  static String deProPic = "$imagePath/dePro.png";
 
   // chat bot related images
   static String userImage = "$imagePath/person.png";

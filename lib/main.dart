@@ -1,3 +1,4 @@
+import 'package:banana_digital/screens/C3_harvest_predict/prediction_history_screen.dart';
 import 'package:banana_digital/services/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,7 +19,7 @@ import '../screens/screenHome/homeScreen.dart';
 import '../screens/screenFour/screenFour.dart';
 import '../screens/screenOne/oneResultScreen.dart';
 import '../screens/screenOne/screenOne.dart';
-import '../screens/screenThree/screenThree.dart';
+import '../screens/C3_harvest_predict/screenThree.dart';
 import '../screens/screenTwo/screenTwo.dart';
 import '../screens/splash_screen.dart';
 import './l10n/l10n.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
             '/four': (context) => const ScreenFour(),
             '/about': (context) => const AboutScreen(),
             '/chat': (context) => const ChatScreen(),
+            '/history': (context) => const PredictionHistoryScreen(),
           },
         );
       }

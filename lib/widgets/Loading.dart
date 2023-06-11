@@ -2,9 +2,14 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({Key? key}) : super(key: key);
+class LoadingWidget extends StatefulWidget {
+  const LoadingWidget({Key? key, this.msg}) : super(key: key);
+  final String? msg;
+  @override
+  State<LoadingWidget> createState() => _LoadingWidgetState();
+}
 
+class _LoadingWidgetState extends State<LoadingWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,7 +27,9 @@ class LoadingWidget extends StatelessWidget {
             child: AnimatedTextKit(
               animatedTexts: [
                 RotateAnimatedText(
-                  'Processing...',
+                 widget.msg != null
+                     ? widget.msg.toString()
+                     : 'Processing...',
                   textStyle: const TextStyle(color: Colors.white),
                 ),
                 RotateAnimatedText(

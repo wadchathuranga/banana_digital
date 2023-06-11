@@ -1,11 +1,15 @@
 import 'dart:convert';
-
-import 'package:banana_digital/services/shared_preference.dart';
-import 'package:banana_digital/utils/app_colors.dart';
-import 'package:banana_digital/utils/app_configs.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../../services/shared_preference.dart';
+import '../../utils/app_colors.dart';
+import '../../utils/app_configs.dart';
+import '../../widgets/Loading.dart';
 import '../../widgets/PopupMenu.dart';
 import '../../utils/app_images.dart';
 import '../../widgets/TextWidget.dart';
@@ -20,6 +24,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
+  CroppedFile? _croppedImg;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController firstnameController = TextEditingController();
@@ -32,14 +38,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? accessToken;
   String? proPic;
 
-  @override
-  void initState() {
+  void refreshState() {
     firstnameController.text = UserSharedPreference.getFirstName().toString();
     lastnameController.text = UserSharedPreference.getLastName().toString();
     emailController.text = UserSharedPreference.getEmail().toString();
     proPic = UserSharedPreference.getProPic().toString();
     usernameController.text = UserSharedPreference.getUserName().toString();
     accessToken = UserSharedPreference.getAccessToken().toString();
+  }
+
+  @override
+  void initState() {
+    refreshState();
     super.initState();
   }
 
@@ -69,12 +79,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (response.statusCode == 200) {
       await UserSharedPreference.setFirstName(firstnameController.text);
       await UserSharedPreference.setLastName(lastnameController.text);
+      setState(() {
+        isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: TextWidget(label: "User Updated."),
           backgroundColor: Colors.green,
         ),
       );
     } else {
+      setState(() {
+        isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: TextWidget(label: "Something went wrong!"),
           backgroundColor: Colors.red,
@@ -86,6 +102,111 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    Future pickImage(ImageSource source) async {
+      //get image from camera or gallery
+      final pickedImage = await ImagePicker().pickImage(source: source);
+
+      //crop & compress image
+      final croppedSelectedImg = await ImageCropper().cropImage(
+        sourcePath: pickedImage!.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        compressQuality: 100,
+        compressFormat: ImageCompressFormat.jpg,
+        maxHeight: 700,
+        maxWidth: 700,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: "Cropper Tool",
+            toolbarColor: Colors.blue,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+          ),
+        ],
+      );
+      setState(() {
+        _croppedImg = croppedSelectedImg;
+      });
+    }
+
+    // Upload image
+    Future uploadProfileImage(imageFile) async {
+      try {
+        // string to uri
+        var uri = Uri.parse(USER_PROFILE_UPDATE);
+
+        // create multipart request
+        var request = http.MultipartRequest("PATCH", uri);
+
+        // multipart that takes file
+        var multipartFile = await http.MultipartFile.fromPath('profile_pic', imageFile.path, filename: '${UserSharedPreference.getUserName().toString()}.jpg');
+
+        // add file to multipart
+        request.files.add(multipartFile);
+
+        // herders
+        var headers = {
+          'Authorization': 'Bearer $accessToken'
+        };
+
+        // set headers to request
+        request.headers.addAll(headers);
+
+        // send request
+        http.StreamedResponse response = await request.send();
+
+        setState(() {
+          isLoading = false;
+        });
+
+        if (response.statusCode == 200) {
+          final resString = await response.stream.bytesToString();
+          final resData = await jsonDecode(resString);
+          UserSharedPreference.setProPic(resData['profile_pic']);
+          refreshState();
+          setState(() {
+            isLoading = false;
+            _croppedImg = null;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: TextWidget(label: "User Profile Updated."),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+        else {
+          setState(() {
+            isLoading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (err) {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: TextWidget(label: err.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+        if (kDebugMode) {
+          print("================= Catch Error ====================");
+          print(err);
+          print("==================================================");
+        }
+      }
+    }
+
+
     return Scaffold(
       appBar: AppBar(
         leading: const MenuWidget(),
@@ -98,72 +219,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
         fit: StackFit.expand,
         children: [
           SingleChildScrollView(
-            child:  Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.black,
-                          radius: 80,
+            child:  Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(30.0),
+                          child: CircleAvatar(
+                            radius: 80,
 //                            backgroundColor: Colors.blue,
-//                            backgroundImage: AssetImage('assets/ashe_logo.png'),
-                          child: ClipOval(
-                            child: SizedBox(
-                              height: 100,
-                              width: 100,
-                              child: Image(
-                                // height: 50,
-                                image: AssetImage(AppImages.logoTW),
-                              )
+//                            backgroundImage: AssetImage(AppImages.deProPic),
+                            child: ClipOval(
+                              child: SizedBox(
+                                height: 155,
+                                width: 155,
+                                child: _imageWidget(),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      right: 130,
-                      bottom: 40,
-                      child: CircleAvatar(
-                        backgroundColor: AppColors.primaryColor,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.camera_alt,
-                            size: 25,
-                            color: Colors.white,
+                      Positioned(
+                        right: 110,
+                        bottom: 40,
+                        child: CircleAvatar(
+                          backgroundColor: AppColors.primaryColor,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.camera_alt,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              pickImage(ImageSource.camera);
+                            },
                           ),
-                          onPressed: () {
-                            // changeImage(ImageSource.camera);
-                          },
                         ),
                       ),
-                    ),
-                    Positioned(
-                      right: 240,
-                      bottom: 40,
-                      child: CircleAvatar(
-                        backgroundColor: AppColors.primaryColor,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.image,
-                            size: 25,
-                            color: Colors.white,
+                      Positioned(
+                        right: 230,
+                        bottom: 40,
+                        child: CircleAvatar(
+                          backgroundColor: AppColors.primaryColor,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.image,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              pickImage(ImageSource.gallery);
+                            },
                           ),
-                          onPressed: () {
-                            // changeImage(ImageSource.gallery);
-                          },
                         ),
                       ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 55,
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                        // if (_croppedImg!.length() != null) onPressed: null else onPressed: () {},
+                        onPressed: _croppedImg == null
+                            ? null
+                            : () {
+                                  if (_formKey.currentState!.validate()) {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    uploadProfileImage(_croppedImg);
+                                  }
+                                },
+                        child: Text('Update Image'),
                     ),
-                  ],
-                ),
-                const Padding(padding: EdgeInsets.only(top: 15)),
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Form(
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 50)),
+                  Form(
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
@@ -263,7 +398,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 25),
+                        const SizedBox(height: 15),
                         SizedBox(
                           height: 55,
                           width: MediaQuery.of(context).size.width,
@@ -281,12 +416,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+          ),
+          SizedBox(
+            child: !isLoading
+                ? null
+                : const LoadingWidget(msg: 'Updating...'),
           ),
         ],
       ),
     );
   }
+
+  // image widget
+  _imageWidget() {
+    if (_croppedImg != null) {
+      final imgPath = _croppedImg!.path;
+      return Image.file(File(imgPath));
+    } else {
+      return proPic != 'null'
+          ? Image(
+        fit: BoxFit.cover,
+        image: NetworkImage(proPic!),
+      )
+          : Image(
+        fit: BoxFit.cover,
+        image: AssetImage(AppImages.deProPic),
+      );
+    }
+  }
+
 }
