@@ -52,6 +52,9 @@ dependencies:
   url_launcher: ^6.1.10
   flutter_zoom_drawer: ^3.0.4+1
   geolocator: ^9.0.2
+  syncfusion_flutter_charts: ^20.4.54
+  expandable: ^5.0.1
+  flutter_markdown: ^0.6.15
 
 
 
