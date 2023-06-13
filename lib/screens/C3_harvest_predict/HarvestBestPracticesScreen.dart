@@ -46,18 +46,6 @@ class _HarvestBestPracticesScreenState extends State<HarvestBestPracticesScreen>
                   child: Text('Data not available'),
               ),
             ),
-          const MarkdownBody(
-            data: """
-  # Heading 1
-  ## Heading 2
-  
-  This is some **bold** and *italic* text.
-  
-  - Item 1
-  - Item 2
-  - Item 3
-                  """,
-          )
         ],
       ),
     );
@@ -122,6 +110,10 @@ class _HarvestBestPracticesScreenState extends State<HarvestBestPracticesScreen>
                             child: Column(
                               children: [
                                 Text(postHarvestPractices.description.toString()),
+                                // TODO: Modify code to render markdown text
+                                // MarkdownBody(
+                                //   data: postHarvestPractices.description.toString(),
+                                // )
                               ],
                             ),
                           ),
