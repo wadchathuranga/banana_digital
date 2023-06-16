@@ -14,7 +14,7 @@ import '../../services/shared_preference.dart';
 import '../../widgets/LanguagePicker.dart';
 import '../../widgets/Loading.dart';
 import '../../widgets/TextWidget.dart';
-import 'HarvestPredictResultScreen.dart';
+import './HarvestPredictionResultScreen.dart';
 
 
 class ScreenThree extends StatefulWidget {
@@ -117,12 +117,7 @@ class _ScreenThreeState extends State<ScreenThree> {
           isLoading = false;
         });
         final result = HarvestPredictionModel.fromJson(resData);
-        if (kDebugMode) {
-          print('============== 200 ==============');
-          print(resData);
-          print('=================================');
-        }
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => HarvestPredictResultScreen(result: result)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => HarvestPredictionResultScreen(result: result)));
       } else {
         setState(() {
           isLoading = false;
@@ -161,8 +156,9 @@ class _ScreenThreeState extends State<ScreenThree> {
         title: const Text('Estimate Harvest of Banana'),
         actions: [
           IconButton(
-              onPressed: () => Navigator.pushNamed(context, '/history'),
+              onPressed: () => Navigator.pushNamed(context, '/C3_history'),
               icon: const Icon(Icons.history),
+
           ),
           const LanguagePicker(),
           const SizedBox(

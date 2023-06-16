@@ -1,4 +1,4 @@
-import 'package:banana_digital/screens/C3_harvest_predict/HarvestBestPracticesScreen.dart';
+import 'package:banana_digital/screens/C3_harvest_predict/PostHarvestBestPracticesScreen.dart';
 import 'package:banana_digital/utils/app_colors.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -6,16 +6,16 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../models/HarvestPredictionModel.dart';
 
-class HarvestPredictResultScreen extends StatefulWidget {
-  const HarvestPredictResultScreen({Key? key, required this.result}) : super(key: key);
+class HarvestPredictionResultScreen extends StatefulWidget {
+  const HarvestPredictionResultScreen({Key? key, required this.result}) : super(key: key);
 
   final HarvestPredictionModel result;
 
   @override
-  State<HarvestPredictResultScreen> createState() => _HarvestPredictResultScreenState();
+  State<HarvestPredictionResultScreen> createState() => _HarvestPredictionResultScreenState();
 }
 
-class _HarvestPredictResultScreenState extends State<HarvestPredictResultScreen> {
+class _HarvestPredictionResultScreenState extends State<HarvestPredictionResultScreen> {
 
   late List<TopPrediction> _chartData;
   late TooltipBehavior _tooltipBehavior;
@@ -117,7 +117,7 @@ class _HarvestPredictResultScreenState extends State<HarvestPredictResultScreen>
                     child: ElevatedButton(
                       // TODO
                       // onPressed: widget.result.postHarvestPractices!.isEmpty ? null : () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HarvestBestPracticesScreen(data: widget.result.postHarvestPractices!))),
-                      onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HarvestBestPracticesScreen(data: widget.result.postHarvestPractices!))),
+                      onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => PostHarvestBestPracticesScreen(data: widget.result.postHarvestPractices!))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
