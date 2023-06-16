@@ -1,5 +1,6 @@
-import 'package:banana_digital/screens/C3_harvest_predict/prediction_history_screen.dart';
-import 'package:banana_digital/services/shared_preference.dart';
+import 'package:banana_digital/screens/C1_deseas_detect/DiseaseDetectionHistoryScreen.dart';
+import 'package:banana_digital/screens/C1_deseas_detect/DiseaseDetectionScreen.dart';
+import 'package:banana_digital/screens/C1_deseas_detect/screenOne.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_zoom_drawer/config.dart';
@@ -8,6 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../services/shared_preference.dart';
+import '../screens/C3_harvest_predict/HarvestPredictionHistoryScreen.dart';
 import '../screens/chatScreen.dart';
 import '../screens/zoom_drawer_menu/menu_item.dart';
 import '../screens/zoom_drawer_menu/menu_page.dart';
@@ -17,8 +20,6 @@ import '../screens/AboutScreen.dart';
 import '../screens/profile/profile_page.dart';
 import '../screens/screenHome/homeScreen.dart';
 import '../screens/screenFour/screenFour.dart';
-import '../screens/screenOne/oneResultScreen.dart';
-import '../screens/screenOne/screenOne.dart';
 import '../screens/C3_harvest_predict/screenThree.dart';
 import '../screens/screenTwo/screenTwo.dart';
 import '../screens/splash_screen.dart';
@@ -65,13 +66,13 @@ class MyApp extends StatelessWidget {
             '/': (context) => const SplashScreen(),
             '/main': (context) => const MainPage(),
             '/one': (context) => const ScreenOne(),
-            '/oneResult': (context) => const OneResultScreen(),
             '/two': (context) => const ScreenTwo(),
             '/three': (context) => const ScreenThree(),
             '/four': (context) => const ScreenFour(),
             '/about': (context) => const AboutScreen(),
             '/chat': (context) => const ChatScreen(),
-            '/history': (context) => const PredictionHistoryScreen(),
+            '/C1_history': (context) => const DiseaseDetectionHistoryScreen(),
+            '/C3_history': (context) => const HarvestPredictionHistoryScreen(),
           },
         );
       }

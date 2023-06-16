@@ -283,7 +283,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 55,
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
-                        // if (_croppedImg!.length() != null) onPressed: null else onPressed: () {},
                         onPressed: _croppedImg == null
                             ? null
                             : () {
@@ -294,7 +293,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     uploadProfileImage(_croppedImg);
                                   }
                                 },
-                        child: Text('Update Image'),
+                        child: const Text('Update Image'),
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 50)),

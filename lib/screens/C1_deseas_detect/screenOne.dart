@@ -1,12 +1,19 @@
 import 'dart:async';
-
-import 'package:banana_digital/utils/app_colors.dart';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import '../../models/DiseaseDetectionModel.dart';
+import '../../services/shared_preference.dart';
+import '../../utils/app_colors.dart';
+import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
+import '../../widgets/TextWidget.dart';
+import './DiseaseDetectionScreen.dart';
 
 class ScreenOne extends StatefulWidget {
   const ScreenOne({Key? key}) : super(key: key);
@@ -16,8 +23,17 @@ class ScreenOne extends StatefulWidget {
 }
 
 class _ScreenOneState extends State<ScreenOne> {
+
   CroppedFile? _croppedImg;
   bool isLoading = false;
+
+  String? accessToken;
+
+  @override
+  void initState() {
+    accessToken = UserSharedPreference.getAccessToken().toString();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +73,21 @@ class _ScreenOneState extends State<ScreenOne> {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('One'),
+        title: const Text('Disease Detection'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _croppedImg = null;
+              });
+              Navigator.pushNamed(context, '/C1_history');
+            },
+            icon: const Icon(Icons.history),
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+        ],
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -147,7 +177,7 @@ class _ScreenOneState extends State<ScreenOne> {
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  _proceedToClassification();
+                                  _proceedToClassification(_croppedImg);
                                 },
                           child: const Text(
                             'Proceed to Classification',
@@ -194,14 +224,65 @@ class _ScreenOneState extends State<ScreenOne> {
     }
   }
 
-  _proceedToClassification() {
-    // api call here
+  Future _proceedToClassification(imageFile) async {
+    try {
+      // string to uri
+      var uri = Uri.parse(DISEASE_DETECTION);
 
-    Timer(const Duration(seconds: 8), () {
+      // create multipart request
+      var request = http.MultipartRequest("POST", uri);
+
+      // multipart that takes file
+      var multipartFile = await http.MultipartFile.fromPath('image', imageFile.path);
+
+      // add file to multipart
+      request.files.add(multipartFile);
+
+      // herders
+      var headers = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer $accessToken'
+      };
+
+      // set headers to request
+      request.headers.addAll(headers);
+
+      // send request
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        final resString = await response.stream.bytesToString();
+       Map<String, dynamic> resData = await jsonDecode(resString);
+        setState(() {
+          isLoading = false;
+        });
+        final diseaseDetection = DiseaseDetectionModel.fromJson(resData);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DiseaseDetectionScreen(data: diseaseDetection)));
+      }
+      else {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (err) {
       setState(() {
         isLoading = false;
       });
-      Navigator.pushNamed(context, '/oneResult');
-    });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: TextWidget(label: err.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+      if (kDebugMode) {
+        print("================= Catch Error ====================");
+        print(err);
+        print("==================================================");
+      }
+    }
   }
 }

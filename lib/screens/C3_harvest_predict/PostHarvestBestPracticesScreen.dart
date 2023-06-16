@@ -5,21 +5,21 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../models/HarvestPredictionModel.dart';
 import '../../utils/app_colors.dart';
 
-class HarvestBestPracticesScreen extends StatefulWidget {
-  const HarvestBestPracticesScreen({Key? key, required this.data}) : super(key: key);
+class PostHarvestBestPracticesScreen extends StatefulWidget {
+  const PostHarvestBestPracticesScreen({Key? key, required this.data}) : super(key: key);
 
   final List<PostHarvestPractices> data;
 
   @override
-  State<HarvestBestPracticesScreen> createState() => _HarvestBestPracticesScreenState();
+  State<PostHarvestBestPracticesScreen> createState() => _PostHarvestBestPracticesScreenState();
 }
 
-class _HarvestBestPracticesScreenState extends State<HarvestBestPracticesScreen> {
+class _PostHarvestBestPracticesScreenState extends State<PostHarvestBestPracticesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Harvest Prediction'),
+        title: const Text('Post Harvest Practices'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
