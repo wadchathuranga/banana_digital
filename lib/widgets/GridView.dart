@@ -39,13 +39,13 @@ class _GridViewCardState extends State<GridViewCard> {
           child: InkWell(
             onTap: (){
               if (widget.value == '1') {
-                Navigator.pushNamed(context, '/one');
+                Navigator.pushNamed(context, '/C1_main');
               } else if (widget.value == '2') {
-                Navigator.pushNamed(context, '/two');
+                Navigator.pushNamed(context, '/C2_main');
               } else if (widget.value == '3') {
-                Navigator.pushNamed(context, '/three');
+                Navigator.pushNamed(context, '/C3_main');
               } else if (widget.value == '4') {
-                Navigator.pushNamed(context, '/four');
+                Navigator.pushNamed(context, '/C4_main');
               }
             },
             child: Padding(
