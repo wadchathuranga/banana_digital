@@ -115,9 +115,7 @@ class _HarvestPredictionResultScreenState extends State<HarvestPredictionResultS
                     height: 50,
                     width: MediaQuery.of(context).size.width*3/4,
                     child: ElevatedButton(
-                      // TODO
-                      // onPressed: widget.result.postHarvestPractices!.isEmpty ? null : () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => HarvestBestPracticesScreen(data: widget.result.postHarvestPractices!))),
-                      onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => PostHarvestBestPracticesScreen(data: widget.result.postHarvestPractices!))),
+                      onPressed: widget.result.postHarvestPractices!.isEmpty ? null : () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => PostHarvestBestPracticesScreen(data: widget.result.postHarvestPractices!))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [

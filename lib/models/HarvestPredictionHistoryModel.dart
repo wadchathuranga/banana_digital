@@ -1,3 +1,5 @@
+import 'HarvestPredictionModel.dart';
+
 class HarvestPredictionHistoryModel {
   int? id;
   String? predictedHarvest;
@@ -65,14 +67,14 @@ class HarvestPredictionHistoryModel {
   }
 }
 
-class PostHarvestPractices {
-  String? practiceName;
-  String? description;
-
-  PostHarvestPractices({this.practiceName, this.description});
-
-  PostHarvestPractices.fromJson(Map<String, dynamic> json) {
-    practiceName = json['practice_name'];
-    description = json['description'];
-  }
-}
+// class PostHarvestPractices {
+//   String? practiceName;
+//   String? description;
+//
+//   PostHarvestPractices({this.practiceName, this.description});
+//
+//   PostHarvestPractices.fromJson(Map<String, dynamic> json) {
+//     practiceName = json['practice_name'];
+//     description = json['description'];
+//   }
+// }

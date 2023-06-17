@@ -341,7 +341,7 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                     children: const [
                                       Text('Cures for Disease'),
                                       SizedBox(width: 10),
-                                      Icon(Icons.arrow_forward),
+                                      Icon(Icons.arrow_circle_right_outlined),
                                     ],
                                   ),
                                 ),

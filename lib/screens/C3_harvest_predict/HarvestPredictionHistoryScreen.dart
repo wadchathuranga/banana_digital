@@ -12,6 +12,7 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
 import '../../widgets/TextWidget.dart';
+import 'PostHarvestBestPracticesScreen.dart';
 
 /// NOTE: In the history screen, post-harvest best practices will not be displayed, even if there are available on the response.
 /// TODO: If you need that also, you can pass those data to the best practices screen using Button to navigate to it.
@@ -363,6 +364,20 @@ class _HarvestPredictionHistoryScreenState extends State<HarvestPredictionHistor
                                           ),
                                         ],
                                       ),
+                                      const SizedBox(height: 10),
+                                      SizedBox(
+                                        child:  ElevatedButton(
+                                          onPressed: harvestPredictedHistory.postHarvestPractices!.isEmpty ? null : () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => PostHarvestBestPracticesScreen(data: harvestPredictedHistory.postHarvestPractices!))),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: const [
+                                              Text('Post Harvest Best Practices'),
+                                              SizedBox(width: 10),
+                                              Icon(Icons.arrow_circle_right_outlined)
+                                            ],
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
