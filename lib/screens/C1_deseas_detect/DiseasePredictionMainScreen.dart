@@ -15,14 +15,14 @@ import '../../widgets/Loading.dart';
 import '../../widgets/TextWidget.dart';
 import './DiseaseDetectionScreen.dart';
 
-class ScreenOne extends StatefulWidget {
-  const ScreenOne({Key? key}) : super(key: key);
+class DiseasePredictionMainScreen extends StatefulWidget {
+  const DiseasePredictionMainScreen({Key? key}) : super(key: key);
 
   @override
-  State<ScreenOne> createState() => _ScreenOneState();
+  State<DiseasePredictionMainScreen> createState() => _DiseasePredictionMainScreenState();
 }
 
-class _ScreenOneState extends State<ScreenOne> {
+class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScreen> {
 
   CroppedFile? _croppedImg;
   bool isLoading = false;

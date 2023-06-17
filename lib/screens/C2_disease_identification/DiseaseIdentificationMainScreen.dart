@@ -1,27 +1,21 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:banana_digital/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 
-import '../../providers/chat_provider.dart';
-import '../../widgets/ChatWidget.dart';
 import '../../widgets/LanguagePicker.dart';
 import '../../widgets/Loading.dart';
-import '../../widgets/TextWidget.dart';
 
 
-class ScreenTwo extends StatefulWidget {
-  const ScreenTwo({Key? key}) : super(key: key);
+class DiseaseIdentificationMainScreen extends StatefulWidget {
+  const DiseaseIdentificationMainScreen({Key? key}) : super(key: key);
 
   @override
-  State<ScreenTwo> createState() => _ScreenTwoState();
+  State<DiseaseIdentificationMainScreen> createState() => _DiseaseIdentificationMainScreenState();
 }
 
-class _ScreenTwoState extends State<ScreenTwo> {
+class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationMainScreen> {
 
   final _qaFormKey = GlobalKey<FormState>();
   bool isLoading = false;
@@ -95,7 +89,7 @@ class _ScreenTwoState extends State<ScreenTwo> {
       // backgroundColor: chatScaffoldBackgroundColor,
       appBar: AppBar(
         // backgroundColor: chatScaffoldBackgroundColor,
-        title: const Text('Two'),
+        title: const Text('Disease Identification'),
         actions: const <Widget>[
           // Center(
           //   child: Text(
@@ -203,38 +197,6 @@ class _ScreenTwoState extends State<ScreenTwo> {
                                 isExpanded: false,
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: DropdownButtonFormField<String>(
-                                validator: (val) {
-                                  if (val == null) {return 'Required!';} else {return null;}
-                                },
-                                itemHeight: 50,
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  labelText: 'Leaf Wilting',
-                                ),
-                                items: leafWilting.map((value) {
-                                  return DropdownMenuItem(
-                                    value: value
-                                        .toString(),
-                                    child: Text(value
-                                        .toString()),
-                                  );
-                                }).toList(),
-                                onChanged: (newValueSelected) {
-                                  FocusScope.of(context).requestFocus(FocusNode());
-                                  setState(() {
-                                    selectedLeafWilting = newValueSelected!;
-                                  });
-                                },
-                                value: selectedLeafWilting,
-                                isExpanded: false,
-                              ),
-                            ),
                           ],
                         ),
                         buildSizedBox(),
@@ -283,9 +245,9 @@ class _ScreenTwoState extends State<ScreenTwo> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  labelText: 'Stunted Growth',
+                                  labelText: 'Leaf Wilting',
                                 ),
-                                items: stuntedGrowth.map((value) {
+                                items: leafWilting.map((value) {
                                   return DropdownMenuItem(
                                     value: value
                                         .toString(),
@@ -296,10 +258,10 @@ class _ScreenTwoState extends State<ScreenTwo> {
                                 onChanged: (newValueSelected) {
                                   FocusScope.of(context).requestFocus(FocusNode());
                                   setState(() {
-                                    selectedstuntedGrowth = newValueSelected!;
+                                    selectedLeafWilting = newValueSelected!;
                                   });
                                 },
-                                value: selectedstuntedGrowth,
+                                value: selectedLeafWilting,
                                 isExpanded: false,
                               ),
                             ),
@@ -441,6 +403,43 @@ class _ScreenTwoState extends State<ScreenTwo> {
                             ),
                           ],
                         ),
+                        buildSizedBox(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                validator: (val) {
+                                  if (val == null) {return 'Required!';} else {return null;}
+                                },
+                                itemHeight: 50,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  labelText: 'Stunted Growth',
+                                ),
+                                items: stuntedGrowth.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value
+                                        .toString(),
+                                    child: Text(value
+                                        .toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (newValueSelected) {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  setState(() {
+                                    selectedstuntedGrowth = newValueSelected!;
+                                  });
+                                },
+                                value: selectedstuntedGrowth,
+                                isExpanded: false,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -450,15 +449,19 @@ class _ScreenTwoState extends State<ScreenTwo> {
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 2,
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           child: SizedBox(
                             height: 55,
                             width: MediaQuery.of(context).size.width,
                             child: const Center(
                               child: Text(
                                 'Clear Form',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 16),
                               ),
                             ),
                           ),
@@ -467,15 +470,19 @@ class _ScreenTwoState extends State<ScreenTwo> {
                       ),
                       const SizedBox(width: 10),
                       Expanded(
-                        flex: 3,
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           child: SizedBox(
                             height: 55,
                             width: MediaQuery.of(context).size.width,
                             child: const Center(
                               child: Text(
                                 'Identify the Disease',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 16),
                               ),
                             ),
                           ),

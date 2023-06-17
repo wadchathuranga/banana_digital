@@ -7,7 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/C1_deseas_detect/DiseaseDetectionHistoryScreen.dart';
-import '../screens/C1_deseas_detect/screenOne.dart';
+import '../screens/C1_deseas_detect/DiseasePredictionMainScreen.dart';
+import '../screens/C2_disease_identification/DiseaseIdentificationMainScreen.dart';
 import '../screens/C3_harvest_predict/HarvestPredictionMainScreen.dart';
 import '../screens/C3_harvest_predict/HarvestPredictionHistoryScreen.dart';
 import '../services/shared_preference.dart';
@@ -20,7 +21,6 @@ import '../screens/AboutScreen.dart';
 import '../screens/profile/profile_page.dart';
 import '../screens/screenHome/homeScreen.dart';
 import '../screens/screenFour/screenFour.dart';
-import '../screens/screenTwo/screenTwo.dart';
 import '../screens/splash_screen.dart';
 import './l10n/l10n.dart';
 
@@ -64,14 +64,14 @@ class MyApp extends StatelessWidget {
           routes: {
             '/': (context) => const SplashScreen(),
             '/main': (context) => const MainPage(),
-            '/one': (context) => const ScreenOne(),
-            '/two': (context) => const ScreenTwo(),
-            '/three': (context) => const HarvestPredictionMainScreen(),
-            '/four': (context) => const ScreenFour(),
-            '/about': (context) => const AboutScreen(),
-            '/chat': (context) => const ChatScreen(),
+            '/C1_main': (context) => const DiseasePredictionMainScreen(),
             '/C1_history': (context) => const DiseaseDetectionHistoryScreen(),
+            '/C2_main': (context) => const DiseaseIdentificationMainScreen(),
+            '/C3_main': (context) => const HarvestPredictionMainScreen(),
             '/C3_history': (context) => const HarvestPredictionHistoryScreen(),
+            '/C4_main': (context) => const ScreenFour(),
+            '/chat': (context) => const ChatScreen(),
+            '/about': (context) => const AboutScreen(),
           },
         );
       }

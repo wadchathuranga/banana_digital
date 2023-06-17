@@ -199,16 +199,27 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
         setState(() {
           varietiesForDay = resData;
         });
-        if (kDebugMode) {
-          print(varietiesForDay);
-        }
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
         if (kDebugMode) {
           print(response.reasonPhrase);
         }
       }
     } catch (err) {
-      print(err.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: TextWidget(label: err.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+      if (kDebugMode) {
+        print("================= Catch Error ====================");
+        print(err);
+        print("==================================================");
+      }
     }
   }
 
@@ -674,7 +685,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10), // Border radius
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: SizedBox(
