@@ -19,16 +19,16 @@ class _PostHarvestBestPracticesScreenState extends State<PostHarvestBestPractice
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Post Harvest Practices'),
+        title: const Text('Post Harvest Best Practices'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 15),
-          const Text(
-              'Post Harvest Best Practices',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
+          // const SizedBox(height: 15),
+          // const Text(
+          //     'Post Harvest Best Practices',
+          //   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          // ),
          if (widget.data.isNotEmpty)
            Expanded(
             child: ListView.builder(

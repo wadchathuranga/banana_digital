@@ -1,6 +1,3 @@
-import 'package:banana_digital/screens/C1_deseas_detect/DiseaseDetectionHistoryScreen.dart';
-import 'package:banana_digital/screens/C1_deseas_detect/DiseaseDetectionScreen.dart';
-import 'package:banana_digital/screens/C1_deseas_detect/screenOne.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_zoom_drawer/config.dart';
@@ -9,8 +6,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import '../services/shared_preference.dart';
+import '../screens/C1_deseas_detect/DiseaseDetectionHistoryScreen.dart';
+import '../screens/C1_deseas_detect/screenOne.dart';
+import '../screens/C3_harvest_predict/HarvestPredictionMainScreen.dart';
 import '../screens/C3_harvest_predict/HarvestPredictionHistoryScreen.dart';
+import '../services/shared_preference.dart';
 import '../screens/chatScreen.dart';
 import '../screens/zoom_drawer_menu/menu_item.dart';
 import '../screens/zoom_drawer_menu/menu_page.dart';
@@ -20,7 +20,6 @@ import '../screens/AboutScreen.dart';
 import '../screens/profile/profile_page.dart';
 import '../screens/screenHome/homeScreen.dart';
 import '../screens/screenFour/screenFour.dart';
-import '../screens/C3_harvest_predict/screenThree.dart';
 import '../screens/screenTwo/screenTwo.dart';
 import '../screens/splash_screen.dart';
 import './l10n/l10n.dart';
@@ -67,7 +66,7 @@ class MyApp extends StatelessWidget {
             '/main': (context) => const MainPage(),
             '/one': (context) => const ScreenOne(),
             '/two': (context) => const ScreenTwo(),
-            '/three': (context) => const ScreenThree(),
+            '/three': (context) => const HarvestPredictionMainScreen(),
             '/four': (context) => const ScreenFour(),
             '/about': (context) => const AboutScreen(),
             '/chat': (context) => const ChatScreen(),
