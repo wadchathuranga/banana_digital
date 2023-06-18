@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:banana_digital/services/auth_api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -64,17 +65,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   //update user details
   Future _updateProfile() async {
-    var url = Uri.parse(USER_PROFILE_UPDATE);
-    final response = await http.patch(
-        url,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $accessToken",
-        },
-        body: jsonEncode({
-          "first_name": firstnameController.text,
-          "last_name": lastnameController.text,
-        }));
+    // var url = Uri.parse(USER_PROFILE_UPDATE);
+    // final response = await http.patch(
+    //     url,
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "Authorization": "Bearer $accessToken",
+    //     },
+    //     body: jsonEncode({
+    //       "first_name": firstnameController.text,
+    //       "last_name": lastnameController.text,
+    //     }));
+    final response = await AuthApiService.updateUserProfile(firstnameController.text.trim(), lastnameController.text.trim(), accessToken!);
 
     if (response.statusCode == 200) {
       await UserSharedPreference.setFirstName(firstnameController.text);
@@ -137,28 +139,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Upload image
     Future uploadProfileImage(imageFile) async {
       try {
-        // string to uri
-        var uri = Uri.parse(USER_PROFILE_UPDATE);
-
-        // create multipart request
-        var request = http.MultipartRequest("PATCH", uri);
-
-        // multipart that takes file
-        var multipartFile = await http.MultipartFile.fromPath('profile_pic', imageFile.path, filename: '${UserSharedPreference.getUserName().toString()}.jpg');
-
-        // add file to multipart
-        request.files.add(multipartFile);
-
-        // herders
-        var headers = {
-          'Authorization': 'Bearer $accessToken'
-        };
-
-        // set headers to request
-        request.headers.addAll(headers);
-
-        // send request
-        http.StreamedResponse response = await request.send();
+        // // string to uri
+        // var uri = Uri.parse(USER_PROFILE_UPDATE);
+        //
+        // // create multipart request
+        // var request = http.MultipartRequest("PATCH", uri);
+        //
+        // // multipart that takes file
+        // var multipartFile = await http.MultipartFile.fromPath('profile_pic', imageFile.path, filename: '${UserSharedPreference.getUserName().toString()}.jpg');
+        //
+        // // add file to multipart
+        // request.files.add(multipartFile);
+        //
+        // // herders
+        // var headers = {
+        //   'Authorization': 'Bearer $accessToken'
+        // };
+        //
+        // // set headers to request
+        // request.headers.addAll(headers);
+        //
+        // // send request
+        // http.StreamedResponse response = await request.send();
+        final response = await AuthApiService.updateUserProfilePicture(accessToken!, imageFile);
 
         setState(() {
           isLoading = false;
