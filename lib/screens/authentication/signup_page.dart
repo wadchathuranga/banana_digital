@@ -288,14 +288,14 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                               ),
                             ],
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 20),
                           MaterialButton(
                             height: 50.0,
                             minWidth: 1000.0,
                             color: Colors.teal,
                             textColor: Colors.white,
                             child: const Text(
-                              "SIGNUP",
+                              "Sign Up",
                               style: TextStyle(
                                 fontSize: 20.0,
                               ),
@@ -308,6 +308,64 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                                 _signup();
                               }
                             },
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: MaterialButton(
+                                  height: 50.0,
+                                  minWidth: 1000.0,
+                                  color: Colors.blueAccent,
+                                  textColor: Colors.white,
+                                  onPressed: facebookSignUp,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Sign Up with",
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Image(
+                                        width: 25,
+                                        height: 25,
+                                        image: AssetImage(AppImages.facebook),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: MaterialButton(
+                                  height: 50.0,
+                                  minWidth: 1000.0,
+                                  color: Colors.red,
+                                  textColor: Colors.white,
+                                  onPressed: googleSignUp,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Sign Up with",
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Image(
+                                        width: 25,
+                                        height: 25,
+                                        image: AssetImage(AppImages.google),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 30),
                           GestureDetector(
@@ -356,6 +414,14 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
         ],
       ),
     );
+  }
+
+  Future googleSignUp() async {
+    // TODO
+  }
+
+  Future facebookSignUp() async {
+    // TODO
   }
 
   //username validate method
