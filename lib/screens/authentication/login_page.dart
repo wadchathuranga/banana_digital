@@ -63,32 +63,36 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   void _login() async {
    try {
-     var url = Uri.parse(USER_SIGN_IN);
-     final response = await http.post(
-         url,
-         headers: {
-           "Content-Type": "application/json"
-         },
-         body: jsonEncode({
-           "client_id": CLIENT_ID,
-           "client_secret": CLIENT_SECRET,
-           "grant_type": GRANT_TYPE,
-           "username": usernameController.text.trim(),
-           "password": passwordController.text.trim(),
-         }));
+     // var url = Uri.parse(USER_SIGN_IN);
+     // final response = await http.post(
+     //     url,
+     //     headers: {
+     //       "Content-Type": "application/json"
+     //     },
+     //     body: jsonEncode({
+     //       "client_id": CLIENT_ID,
+     //       "client_secret": CLIENT_SECRET,
+     //       "grant_type": GRANT_TYPE,
+     //       "username": usernameController.text.trim(),
+     //       "password": passwordController.text.trim(),
+     //     }));
+     final response = await AuthApiService.userLogin(usernameController.text.trim(), passwordController.text.trim());
 
      if (response.statusCode == 200) {
        final decodedData = jsonDecode(response.body);
        UserSharedPreference.setAccessToken(decodedData['access_token']);
-       print('========== Access Token: ${decodedData['access_token']} ==========');
+       if (kDebugMode) {
+         print('========== Access Token: ${decodedData['access_token']} ==========');
+       }
 
-       var url = Uri.parse(USER_PROFILE_GET);
-       final userRes = await http.get(
-           url,
-           headers: {
-             "Content-Type": "application/json",
-             "Authorization": "Bearer ${decodedData['access_token']}",
-           });
+       // var url = Uri.parse(USER_PROFILE_GET);
+       // final userRes = await http.get(
+       //     url,
+       //     headers: {
+       //       "Content-Type": "application/json",
+       //       "Authorization": "Bearer ${decodedData['access_token']}",
+       //     });
+       final userRes = await AuthApiService.userProfile(decodedData['access_token']);
 
        if (userRes.statusCode == 200) {
          final decodedUserData = User.fromJson(jsonDecode(userRes.body));
@@ -267,6 +271,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 _login();
                               }
                             },
+                            onLongPress: () {
+                              setState(() {
+                                _formKey.currentState!.reset();
+                                usernameController.clear();
+                                passwordController.clear();
+                              });
+                            },
                           ),
                           const SizedBox(height: 30),
                           Row(
@@ -277,9 +288,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   minWidth: 1000.0,
                                   color: Colors.blueAccent,
                                   textColor: Colors.white,
-                                  onPressed: () {
-                                   // TODO: code here
-                                  },
+                                  onPressed:facebookSignIn,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -383,9 +392,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   Future googleSignIn() async {
     final user = await GoogleSignInApi.login();
-    print('User Logged In: $user');
+    print('User Details: $user');
     final res = await GoogleSignInApi.logout();
-    print('User Logged Out: $res');
+    print('User Disconnect: $res');
+  }
+
+  Future facebookSignIn() async {
+    // TODO
   }
 
   //email validate method
