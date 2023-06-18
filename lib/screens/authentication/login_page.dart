@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import '../../models/User.dart';
+import '../../services/google_api_service.dart';
 import '../../utils/app_configs.dart';
 import '../../utils/app_images.dart';
 import '../../main.dart';
@@ -294,15 +295,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   minWidth: 1000.0,
                                   color: Colors.red,
                                   textColor: Colors.white,
+                                  onPressed: googleSignIn,
                                   child: const Text(
                                     "Google Login",
                                     style: TextStyle(
                                       fontSize: 20.0,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    // TODO: code here
-                                  },
                                 ),
                               ),
                             ],
@@ -358,6 +357,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         ],
       ),
     );
+  }
+
+  Future googleSignIn() async {
+    final user = await GoogleSignInApi.login();
+    print('User Logged In: $user');
+    final res = await GoogleSignInApi.logout();
+    print('User Logged Out: $res');
   }
 
   //email validate method
