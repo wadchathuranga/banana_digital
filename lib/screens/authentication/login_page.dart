@@ -277,15 +277,26 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   minWidth: 1000.0,
                                   color: Colors.blueAccent,
                                   textColor: Colors.white,
-                                  child: const Text(
-                                    "Facebook Login",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                    ),
-                                  ),
                                   onPressed: () {
                                    // TODO: code here
                                   },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Login with",
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Image(
+                                        width: 25,
+                                        height: 25,
+                                        image: AssetImage(AppImages.facebook),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -296,11 +307,22 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   color: Colors.red,
                                   textColor: Colors.white,
                                   onPressed: googleSignIn,
-                                  child: const Text(
-                                    "Google Login",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                    ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        "Login with",
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                     Image(
+                                       width: 25,
+                                       height: 25,
+                                       image: AssetImage(AppImages.google),
+                                     ),
+                                    ],
                                   ),
                                 ),
                               ),
