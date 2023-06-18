@@ -55,6 +55,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.4.54
   expandable: ^5.0.1
   flutter_markdown: ^0.6.15
+  google_sign_in: ^6.1.4
 
 
 
