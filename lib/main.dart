@@ -1,6 +1,7 @@
+import 'package:banana_digital/screens/C4_watering_fertilizer_plan/FertilizerPlanHistoryScreen.dart';
+import 'package:banana_digital/screens/C4_watering_fertilizer_plan/WateringPlanHistoryScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,6 +12,7 @@ import '../screens/C1_deseas_detect/DiseasePredictionMainScreen.dart';
 import '../screens/C2_disease_identification/DiseaseIdentificationMainScreen.dart';
 import '../screens/C3_harvest_predict/HarvestPredictionMainScreen.dart';
 import '../screens/C3_harvest_predict/HarvestPredictionHistoryScreen.dart';
+import '../screens/C4_watering_fertilizer_plan/WateringFertilizerPlanMainScreen.dart';
 import '../services/shared_preference.dart';
 import '../screens/chatScreen.dart';
 import '../screens/zoom_drawer_menu/menu_item.dart';
@@ -20,7 +22,6 @@ import '../providers/local_provider.dart';
 import '../screens/AboutScreen.dart';
 import '../screens/profile/profile_page.dart';
 import '../screens/screenHome/homeScreen.dart';
-import '../screens/screenFour/screenFour.dart';
 import '../screens/splash_screen.dart';
 import './l10n/l10n.dart';
 
@@ -65,11 +66,13 @@ class MyApp extends StatelessWidget {
             '/': (context) => const SplashScreen(),
             '/main': (context) => const MainPage(),
             '/C1_main': (context) => const DiseasePredictionMainScreen(),
-            '/C1_history': (context) => const DiseaseDetectionHistoryScreen(),
+            '/C1_disease_history': (context) => const DiseaseDetectionHistoryScreen(),
             '/C2_main': (context) => const DiseaseIdentificationMainScreen(),
             '/C3_main': (context) => const HarvestPredictionMainScreen(),
-            '/C3_history': (context) => const HarvestPredictionHistoryScreen(),
-            '/C4_main': (context) => const ScreenFour(),
+            '/C3_harvest_history': (context) => const HarvestPredictionHistoryScreen(),
+            '/C4_main': (context) => const WateringFertilizerPlanMainScreen(),
+            '/C4_watering_history': (context) => const WateringPlanHistoryScreen(),
+            '/C4_fertilizer_history': (context) => const FertilizerPlanHistoryScreen(),
             '/chat': (context) => const ChatScreen(),
             '/about': (context) => const AboutScreen(),
           },

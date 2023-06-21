@@ -1,8 +1,10 @@
 import 'package:banana_digital/screens/authentication/login_page.dart';
 import 'package:banana_digital/services/shared_preference.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
+import '../services/google_api_service.dart';
 
 class PopupMenu extends StatelessWidget {
   const PopupMenu({Key? key}) : super(key: key);
@@ -30,6 +32,13 @@ class PopupMenu extends StatelessWidget {
         }
         if (value == 'logout') {
           // logout logic here
+          final loginType = UserSharedPreference.getLoginType();
+          if (kDebugMode) {
+            print('===== User Logged Out [TYPE]: $loginType =====');
+          }
+          if (loginType == 'google') {
+            await GoogleSignInApi.logout();
+          }
           UserSharedPreference.userLogOut();
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const LoginScreen()), (Route<dynamic> route) => false);
         }

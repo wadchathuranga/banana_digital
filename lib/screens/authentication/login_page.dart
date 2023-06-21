@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -63,35 +64,15 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   void _login() async {
    try {
-     // var url = Uri.parse(USER_SIGN_IN);
-     // final response = await http.post(
-     //     url,
-     //     headers: {
-     //       "Content-Type": "application/json"
-     //     },
-     //     body: jsonEncode({
-     //       "client_id": CLIENT_ID,
-     //       "client_secret": CLIENT_SECRET,
-     //       "grant_type": GRANT_TYPE,
-     //       "username": usernameController.text.trim(),
-     //       "password": passwordController.text.trim(),
-     //     }));
      final response = await AuthApiService.userLogin(usernameController.text.trim(), passwordController.text.trim());
 
      if (response.statusCode == 200) {
        final decodedData = jsonDecode(response.body);
        UserSharedPreference.setAccessToken(decodedData['access_token']);
        if (kDebugMode) {
-         print('========== Access Token: ${decodedData['access_token']} ==========');
+         print('========== Login Access Token: ${decodedData['access_token']} ==========');
        }
 
-       // var url = Uri.parse(USER_PROFILE_GET);
-       // final userRes = await http.get(
-       //     url,
-       //     headers: {
-       //       "Content-Type": "application/json",
-       //       "Authorization": "Bearer ${decodedData['access_token']}",
-       //     });
        final userRes = await AuthApiService.userProfile(decodedData['access_token']);
 
        if (userRes.statusCode == 200) {
@@ -364,9 +345,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               color: Colors.black54,
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
+                children: <Widget>[
                   // CircularProgressIndicator(),
                   SpinKitRing(
                     color: Colors.white,
@@ -391,10 +372,67 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   Future googleSignIn() async {
-    final user = await GoogleSignInApi.login();
-    print('User Details: $user');
-    final res = await GoogleSignInApi.logout();
-    print('User Disconnect: $res');
+    try {
+      GoogleSignInAccount?  user = await GoogleSignInApi.login();
+      setState(() {
+        _isLoading = true;
+      });
+      GoogleSignInAuthentication? googleSignInAuthentication = await user!.authentication;
+      if (kDebugMode) {
+        print('========== Access Token by Google: ${googleSignInAuthentication.accessToken} ==========');
+      }
+      final response = await AuthApiService.userSignInWithGoogle(googleSignInAuthentication.accessToken!);
+
+      final decodeRes = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print('========== Login Access Token: ${decodeRes['access_token']} ==========');
+        }
+        UserSharedPreference.setAccessToken(decodeRes['access_token']);
+        UserSharedPreference.setLoginType('google');
+
+        final userRes = await AuthApiService.userProfile(decodeRes['access_token']);
+
+        if (userRes.statusCode == 200) {
+          final decodedUserData = User.fromJson(jsonDecode(userRes.body));
+          await UserSharedPreference.setUserName(decodedUserData.userName!);
+          await UserSharedPreference.setEmail(decodedUserData.email!);
+          await UserSharedPreference.setFirstName(decodedUserData.firstName!);
+          await UserSharedPreference.setLastName(decodedUserData.lastName!);
+          if (decodedUserData.profilePic != null) {
+            await UserSharedPreference.setProPic(decodedUserData.profilePic!);
+          }
+
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const MainPage()), (Route<dynamic> route) => false);
+          showToast('login success');
+        } else {
+          final error = jsonDecode(userRes.body);
+          setState(() {
+            _isLoading = false;
+          });
+          showToast(error['detail'].toString());
+        }
+      } else if (response.statusCode == 400) {
+        setState(() {
+          _isLoading = false;
+        });
+        showToast(decodeRes['error_description'].toString());
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        showToast('${decodeRes['error']}');
+      }
+    } catch (err) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: TextWidget(label: err.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   Future facebookSignIn() async {

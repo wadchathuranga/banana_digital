@@ -15,14 +15,39 @@ class AuthApiService {
       var url = Uri.parse(USER_SIGN_UP);
       final response = await http.post(
           url,
-          body: {
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: jsonEncode({
             "username": username,
             "email": email,
             "first_name": firstname,
             "last_name": lastname,
             "password": password,
             "re_password": rePassword,
-          });
+          }));
+      return response;
+    } catch (err) {
+      throw Exception(err);
+    }
+  }
+
+  // POST: User sign in with google
+  static Future userSignInWithGoogle(String accessTokenByGoogle) async {
+    try {
+      var url = Uri.parse(USER_SIGNIN_WITH_SOCIAL);
+      final response = await http.post(
+          url,
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: jsonEncode({
+            "token": accessTokenByGoogle,
+            "backend": BACKEND_GOOGLE,
+            "grant_type": GRANT_TYPE_SOCIAL,
+            "client_id": CLIENT_ID,
+            "client_secret": CLIENT_SECRET,
+          }));
       return response;
     } catch (err) {
       throw Exception(err);

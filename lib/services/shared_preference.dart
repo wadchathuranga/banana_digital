@@ -11,6 +11,10 @@ class UserSharedPreference {
   static Future setAccessToken(String token) async => await prefs!.setString('access_token', token);
   static String? getAccessToken() => prefs!.getString('access_token');
 
+  // set login type
+  static Future setLoginType(String type) async => await prefs!.setString('login_type', type);
+  static String? getLoginType() => prefs!.getString('login_type');
+
   // set username
   static Future setUserName(String username) async => await prefs!.setString('username', username);
   static String? getUserName() => prefs!.getString('username');
@@ -28,8 +32,8 @@ class UserSharedPreference {
   static String? getLastName() => prefs!.getString('lastname');
 
   // set lastname
-  static Future setProPic(String proPic) async => await prefs!.setString('prop_ic', proPic);
-  static String? getProPic() => prefs!.getString('prop_ic');
+  static Future setProPic(String proPic) async => await prefs!.setString('prop_pic', proPic);
+  static String? getProPic() => prefs!.getString('prop_pic');
 
 
 
@@ -39,7 +43,8 @@ class UserSharedPreference {
     prefs!.remove('email');
     prefs!.remove('firstname');
     prefs!.remove('lastname');
-    prefs!.remove('prop_ic');
+    prefs!.remove('prop_pic');
+    prefs!.remove('login_type');
   }
 
 
