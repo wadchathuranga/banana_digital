@@ -174,7 +174,7 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  widget.data.probabilities![index].totalArea.toString(),
+                                  '${widget.data.probabilities![index].totalArea.toString()} px',
                                   style: const TextStyle(fontSize: 16),
                                 ),
                               ],

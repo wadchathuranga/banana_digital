@@ -80,7 +80,7 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
               setState(() {
                 _croppedImg = null;
               });
-              Navigator.pushNamed(context, '/C1_history');
+              Navigator.pushNamed(context, '/C1_disease_history');
             },
             icon: const Icon(Icons.history),
           ),
@@ -240,7 +240,6 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
 
       // herders
       var headers = {
-        "Content-Type": "application/json",
         'Authorization': 'Bearer $accessToken'
       };
 
@@ -252,17 +251,21 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
 
       if (response.statusCode == 200) {
         final resString = await response.stream.bytesToString();
-       Map<String, dynamic> resData = await jsonDecode(resString);
-        setState(() {
-          isLoading = false;
-        });
+        Map<String, dynamic> resData = await jsonDecode(resString);
         final diseaseDetection = DiseaseDetectionModel.fromJson(resData);
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => DiseaseDetectionScreen(data: diseaseDetection)));
       }
       else {
-        setState(() {
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
             backgroundColor: Colors.red,
@@ -270,9 +273,11 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
         );
       }
     } catch (err) {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: TextWidget(label: err.toString()),
           backgroundColor: Colors.red,

@@ -236,15 +236,21 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
 
       final resData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        setState(() {
-          varietyHarvestDayRes = resData['estimated_harvesting_time'];
-          isFetchinData = false;
-        });
+        if (mounted) {
+          setState(() {
+            varietyHarvestDayRes = resData['estimated_harvesting_time'];
+            isFetchinData = false;
+          });
+        }
       } else {
-        print(response.reasonPhrase);
-        setState(() {
-          isFetchinData = true;
-        });
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
+        if (mounted) {
+          setState(() {
+            isFetchinData = true;
+          });
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
             backgroundColor: Colors.red,
@@ -252,9 +258,11 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
         );
       }
     } catch (err) {
-      setState(() {
-        isFetchinData = true;
-      });
+      if (mounted) {
+        setState(() {
+          isFetchinData = true;
+        });
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: TextWidget(label: err.toString()),
           backgroundColor: Colors.red,
@@ -273,7 +281,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
     return WillPopScope(
       onWillPop: () {
         if (tabController.index != 0) {
-          setState(() => {tabController.index = 0});
+          setState(() => tabController.index = 0);
           return Future.value(false);
         } else {
           return Future.value(true);
@@ -284,7 +292,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
             title: const Text('Harvest Prediction'),
             actions: [
               IconButton(
-                onPressed: () => Navigator.pushNamed(context, '/C3_history'),
+                onPressed: () => Navigator.pushNamed(context, '/C3_harvest_history'),
                 icon: const Icon(Icons.history),
               ),
               const LanguagePicker(),
