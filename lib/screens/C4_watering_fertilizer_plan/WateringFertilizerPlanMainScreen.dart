@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:banana_digital/models/FertilizerPlanModel.dart';
 import 'package:banana_digital/models/WateringPlanHistoryModel.dart';
 import 'package:banana_digital/screens/C4_watering_fertilizer_plan/WateringPlanResultScreen.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +19,7 @@ import '../../services/shared_preference.dart';
 import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
 import '../../widgets/TextWidget.dart';
+import 'FertilizerPlanResultScreen.dart';
 
 class WateringFertilizerPlanMainScreen extends StatefulWidget {
   const WateringFertilizerPlanMainScreen({Key? key}) : super(key: key);
@@ -72,6 +74,26 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
   final List soilColor = ["Red", "Brown", "Yellow", "Dark", "Black"];
   var selectedSoilColor;
 
+  // final List<String> stage = [
+  //   "vegetative", "pseudostem_formation", "shooting", "inflorescence_initiation", "flowering", "fruit_development", "harvest"];
+  final List<Map<String, String>> stage = [
+    {"name": "Vegetative", "value": "vegetative"},
+    {"name": "Pseudostem formation", "value": "pseudostem_formation"},
+    {"name": "Shooting", "value": "shooting"},
+    {"name": "Inflorescence initiation", "value": "inflorescence_initiation"},
+    {"name": "Flowering", "value": "flowering"},
+    {"name": "Fruit development", "value": "fruit_development"},
+    {"name": "Harvest", "value": "harvest"}];
+  // final List<Map<String, String>> stage = [
+  //   {"Vegetative": "vegetative"}, {"Pseudostem formation": "pseudostem_formation"},
+  //   {"Shooting": "shooting"}, {"Inflorescence initiation": "inflorescence_initiation"},
+  //   {"Flowering": "flowering"}, {"Fruit development": "fruit_development"},
+  //   {"Harvest": "harvest"}];
+  var selectedStage;
+
+  late List<dynamic> varietyList = [];
+  var selectedVariety;
+
   String? locationRegion;
   String? localTime;
   String? name;
@@ -79,6 +101,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
   int? humidity;
   double? avgTemperature;
   double? rainfall;
+  String? soilMoisture;
 
   String? accessToken;
 
@@ -89,7 +112,9 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
     tabController.addListener(() {
       setState(() { });
     });
+    getAllVarieties();
     getWeatherData();
+    getSoilMoistureData();
     super.initState();
   }
 
@@ -112,17 +137,70 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       selectedFertilizerUsedLastSeason = null;
       selectedSoilTexture = null;
       selectedSoilColor = null;
+      selectedVariety = null;
+      selectedStage = null;
     });
+  }
+
+  Future getAllVarieties() async {
+    try {
+      var url = Uri.parse(HARVEST_PREDICTION_GET_ALL_VARITIES);
+      final response = await http.get(
+        url,
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          varietyList = jsonDecode(response.body);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+        if (kDebugMode) {
+          print(response.reasonPhrase);
+        }
+      }
+    } catch (err) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: TextWidget(label: err.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+      if (kDebugMode) {
+        print("================= Catch Error ====================");
+        print(err);
+        print("==================================================");
+      }
+    }
+  }
+
+  Future getSoilMoistureData() async {
+    try {
+      final soilMoistureRes = await WeatherApiService.getSoilMoistureData();
+      if (soilMoistureRes.statusCode == 200) {
+        soilMoisture = jsonDecode(soilMoistureRes.body)['feeds'][0]['field1'];
+      }
+    } catch (err) {
+      if (kDebugMode) {
+        print("================= Catch Error: (getSoilMoistureData) ====================");
+        print(err);
+        print("==================================================");
+      }
+    }
   }
 
   Future getWeatherData() async {
     try {
       final response = await WeatherApiService.getWeatherData();
       final resData = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
         weatherData = WeatherApiModel.fromJson(resData);
-        if (mounted) {
           setState(() {
             locationRegion = weatherData!.location!.region;
             localTime = weatherData!.location!.localtime;
@@ -132,7 +210,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
             avgTemperature = weatherData!.current!.tempC;
             rainfall = weatherData!.current!.precipMm;
           });
-        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
@@ -142,52 +219,52 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       }
     } catch (err) {
       if (kDebugMode) {
-        print("================= Catch Error ====================");
+        print("================= Catch Error: (getWeatherData) ====================");
         print(err);
         print("==================================================");
       }
     }
   }
 
-
-  Future makeThePlans() async {
+  Future makeRequestBody() async {
     Map<String, String> dataBody = {
       'pH': soilPhController.text.trim(),
       'organic_matter_content': selectedOrganicMatterContent.toString().toLowerCase(),
       'avg_temperature': avgTemperature.toString(),
       'avg_rainfall': rainfall.toString(),
       'plant_height': plantDensityController.text.trim(),
-      'leaf_color': selectedLeafColor,
+      'leaf_color': selectedLeafColor.toString(),
       'stem_diameter': stemDimeterController.text.trim(),
       'plant_density': plantDensityController.text.trim(),
-      'soil_moisture': '25',
-      'soil_texture': selectedSoilTexture,
-      'soil_color': selectedSoilColor,
+      'soil_moisture': soilMoisture.toString(),
+      'soil_texture': selectedSoilTexture.toString(),
+      'soil_color': selectedSoilColor.toString(),
       'temperature': avgTemperature.toString(),
       'humidity': humidity.toString(),
       'rainfall': rainfall.toString(),
-      'water_source': selectedWaterSource,
-      'irrigation_method': selectedIrrigationMethod,
+      'water_source': selectedWaterSource.toString(),
+      'irrigation_method': selectedIrrigationMethod.toString(),
       'fertilizer_used_last_season': selectedFertilizerUsedLastSeason.toString().toLowerCase(),
       'crop_rotation': selectedCropRotation.toString().toLowerCase(),
       'pest_disease_infestation': selectedPestDiseaseInfestation.toString().toLowerCase(),
       'slope': selectedSlope.toString().toLowerCase(),
+      "stage": selectedStage.toString(),
+      "variety": selectedVariety.toString(),
     };
 
     if (tabController.index == 0) {
-      await wateringPlan(dataBody, croppedImg);
+      await callToMakeThePlans(WATERING_PLAN, dataBody, croppedImg);
     } else {
-      await fertilizerPlan(dataBody, croppedImg);
+      await callToMakeThePlans(FERTILIZER_PLAN, dataBody, croppedImg);
     }
   }
 
-
-  Future wateringPlan(dataBody, croppedImg) async {
+  Future callToMakeThePlans(urlConst, dataBody, croppedImg) async {
     try {
       var headers = {
         'Authorization': 'Bearer $accessToken'
       };
-      var url = Uri.parse(WATERING_PLAN); // url define
+      var url = Uri.parse(urlConst); // url define
       var request = http.MultipartRequest(
           'POST', url); // create multipart request
       var multipartFile = await http.MultipartFile.fromPath(
@@ -202,21 +279,23 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       if (response.statusCode == 200) {
         final resString = await response.stream.bytesToString();
         Map<String, dynamic> data = await jsonDecode(resString);
-        final wateringPlan = WateringPlanModel.fromJson(data);
-        if (mounted) {
           setState(() {
             isLoading = false;
           });
+        if (tabController.index == 0) {
+          final wateringPlan = WateringPlanModel.fromJson(data);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+              WateringPlanResultScreen(wateringPlan: wateringPlan)));
+        } else {
+          final fertilizerPlan = FertilizerPlanModel.fromJson(data);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+              FertilizerPlanResultScreen(fertilizerPlan: fertilizerPlan)));
         }
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-            WateringPlanResultScreen(wateringPlan: wateringPlan)));
       }
       else {
-        if (mounted) {
           setState(() {
             isLoading = false;
           });
-        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
             backgroundColor: Colors.red,
@@ -301,7 +380,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       onWillPop: () {
         if (tabController.index != 0) {
           setState(() {
-            isLoading = false;
             tabController.index = 0;
           });
           return Future.value(false);
@@ -377,7 +455,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                                 ),
                               ),
                               Expanded(
-                                child: (weatherData != null) ? Column(
+                                child: (weatherData != null && soilMoisture != null) ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(':  ${locationRegion.toString()}/${name.toString()}'),
@@ -388,7 +466,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                                     const SizedBox(height: 5),
                                     Text(':  ${rainfall.toString()}'),
                                     const SizedBox(height: 5),
-                                    Text(':  ${0.toString()}'),
+                                    Text(':  ${soilMoisture.toString()}'),
                                   ],
                                 ) : const SpinKitRing(color: Colors.white),
                               ),
@@ -404,7 +482,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                       key: _qaFormKey,
                       child: Column(
                         children: [
-                          if (weatherData != null)
+                          if (weatherData != null && soilMoisture != null)
                             const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -419,7 +497,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                               ],
                             ),
                           const SizedBox(height: 10),
-                          if (weatherData != null)
+                          if (weatherData != null && soilMoisture != null)
                             Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -466,9 +544,75 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                             ],
                           ),
                           buildSizedBox(),
-                          if (weatherData != null)
+                          if (weatherData != null && soilMoisture != null)
                             Column(
                             children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: DropdownButtonFormField<String>(
+                                      validator: (val) {
+                                        if (val == null) {return 'Required!';} else {return null;}
+                                      },
+                                      itemHeight: 50,
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        labelText: 'Variety',
+                                      ),
+                                      items: varietyList.map((variety) {
+                                        return DropdownMenuItem(
+                                          value: variety['id']
+                                              .toString(),
+                                          child: Text(variety['variety']
+                                              .toString()),
+                                        );
+                                      }).toList(),
+                                      onChanged: (newValueSelected) {
+                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        setState(() {
+                                          selectedVariety = newValueSelected!;
+                                        });
+                                      },
+                                      value: selectedVariety,
+                                      isExpanded: false,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: DropdownButtonFormField<String>(
+                                      validator: (val) {
+                                        if (val == null) {return 'Required!';} else {return null;}
+                                      },
+                                      itemHeight: 50,
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        labelText: 'Stage',
+                                      ),
+                                      items: stage.map((item) {
+                                        return DropdownMenuItem(
+                                          value: item['value'].toString(),
+                                          child: Text(item['name'].toString()),
+                                        );
+                                      }).toList(),
+                                      onChanged: (newValueSelected) {
+                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        setState(() {
+                                          selectedStage = newValueSelected!;
+                                        });
+                                      },
+                                      value: selectedStage,
+                                      isExpanded: false,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              buildSizedBox(),
                               Row(
                                 children: [
                                   Expanded(
@@ -883,7 +1027,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                                         child: const Center(
                                           child: Text(
                                             'Clear Form',
-                                            style: TextStyle(fontSize: 20),
                                           ),
                                         ),
                                       ),
@@ -902,10 +1045,9 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                                       child: SizedBox(
                                         height: 55,
                                         width: MediaQuery.of(context).size.width,
-                                        child: const Center(
+                                        child: Center(
                                           child: Text(
-                                            'Proceed',
-                                            style: TextStyle(fontSize: 20),
+                                           tabController.index == 0 ? 'Watering Plan' : 'Fertilizer Plan',
                                           ),
                                         ),
                                       ),
@@ -914,7 +1056,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                                           setState(() {
                                             isLoading = true;
                                           });
-                                          makeThePlans();
+                                          makeRequestBody();
                                         }
                                       },
                                     ),
@@ -980,50 +1122,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
         ),
       );
     }
-  }
-
-  void bottomSheet(String name, String desc) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (builder) {
-          return SizedBox(
-            // height: MediaQuery.of(context).size.height * 0.20,
-            width: MediaQuery.of(context).size.width,
-            // color: Colors.deepPurple.shade300,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            desc,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
   }
 
 }

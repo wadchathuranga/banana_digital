@@ -37,13 +37,15 @@ class TopProbabilities {
 class FertilizerPlan {
   int? id;
   String? fertilizerType;
+  String? variety;
   String? description;
 
-  FertilizerPlan({this.id, this.fertilizerType, this.description});
+  FertilizerPlan({this.id, this.fertilizerType, this.variety, this.description});
 
   FertilizerPlan.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     fertilizerType = json['fertilizer_type'];
+    variety = json['variety'];
     description = json['description'];
   }
 }

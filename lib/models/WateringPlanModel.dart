@@ -37,15 +37,15 @@ class TopProbabilities {
 class WateringPlan {
   int? id;
   String? wateringPlan;
-  String? stage;
+  String? variety;
   String? description;
 
-  WateringPlan({this.id, this.wateringPlan, this.stage, this.description});
+  WateringPlan({this.id, this.wateringPlan, this.variety, this.description});
 
   WateringPlan.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     wateringPlan = json['watering_plan'];
-    stage = json['stage'];
+    variety = json['variety'];
     description = json['description'];
   }
 }
