@@ -22,12 +22,12 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
+            const Padding(
+              padding: EdgeInsets.only(
                   top: 20.0, left: 20, right: 20, bottom: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Text(
                     'Detection Results',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -49,9 +49,9 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Column(
+                      const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'Disease Name:',
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -82,8 +82,8 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Expanded(
                         child: Text('Original Image', textAlign: TextAlign.center,),
                       ),
@@ -102,13 +102,13 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                     endIndent: 100,
                     thickness: 2,
                   ),
-                  Row(
+                  const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
+                          children: [
                             Text(
                               'Disease Name',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -119,7 +119,7 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                       Expanded(
                         child: Column( 
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
+                          children: [
                             Text(
                               'Probability',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -130,7 +130,7 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
+                          children: [
                             Text(
                               'Total Areas',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -187,9 +187,9 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                   const SizedBox(height: 50),
                   ElevatedButton(
                       onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: widget.data.disease!))),
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Text('Cures for Disease'),
                           SizedBox(width: 10),
                           Icon(Icons.arrow_forward),

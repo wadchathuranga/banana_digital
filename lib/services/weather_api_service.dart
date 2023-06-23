@@ -45,4 +45,15 @@ class WeatherApiService {
 
     return await Geolocator.getCurrentPosition();
   }
+
+  // get soil moisture data
+  static Future getSoilMoistureData() async {
+    try {
+      var url = Uri.parse(SOIL_MOISTURE_API);
+      final response = await http.get(url);
+      return response;
+    } catch (err) {
+      throw Exception(err);
+    }
+  }
 }

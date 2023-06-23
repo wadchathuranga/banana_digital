@@ -84,7 +84,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
          if (decodedUserData.profilePic != null) {
            await UserSharedPreference.setProPic(decodedUserData.profilePic!);
          }
-
          setState(() {
            _isLoading = false;
          });
@@ -402,7 +401,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           if (decodedUserData.profilePic != null) {
             await UserSharedPreference.setProPic(decodedUserData.profilePic!);
           }
-
           setState(() {
             _isLoading = false;
           });
@@ -432,6 +430,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           backgroundColor: Colors.red,
         ),
       );
+      if (kDebugMode) {
+        print("================= Catch Error ====================");
+        print(err);
+        print("==================================================");
+      }
     }
   }
 

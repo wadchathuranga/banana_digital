@@ -17,6 +17,12 @@ class AppImages {
   static String userImage = "$imagePath/person.png";
   static String botImage = "$imagePath/chat_icon.png";
   static String chatLogo = "$imagePath/chat_logo.png";
+
+  // dashboard images
+  static String watering = "$imagePath/watering.png";
+  static String harvest = "$imagePath/harvest.png";
+  static String camera = "$imagePath/camera.png";
+  static String analysis = "$imagePath/analysis.png";
 }
 
 

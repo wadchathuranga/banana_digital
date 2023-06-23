@@ -46,18 +46,14 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
 
       if (response.statusCode == 200) {
         List<dynamic> resData = jsonDecode(response.body);
-        if (mounted) {
           setState(() {
             historyList = resData.map((history) => WateringPlanHistoryModel.fromJson(history)).toList();
             isLoading = false;
           });
-        }
       } else {
-        if (mounted) {
           setState(() {
             isLoading = false;
           });
-        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
             backgroundColor: Colors.red,
@@ -65,11 +61,9 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
         );
       }
     } catch (err) {
-      if (mounted) {
         setState(() {
           isLoading = false;
         });
-      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: TextWidget(label: err.toString()),
           backgroundColor: Colors.red,
