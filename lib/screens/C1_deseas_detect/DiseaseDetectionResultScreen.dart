@@ -3,16 +3,16 @@ import 'package:banana_digital/screens/C1_deseas_detect/CuresForDiseaseScreen.da
 import 'package:banana_digital/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class DiseaseDetectionScreen extends StatefulWidget {
-  const DiseaseDetectionScreen({Key? key, required this.data}) : super(key: key);
+class DiseaseDetectionResultScreen extends StatefulWidget {
+  const DiseaseDetectionResultScreen({Key? key, required this.data}) : super(key: key);
 
   final DiseaseDetectionModel data;
 
   @override
-  State<DiseaseDetectionScreen> createState() => _DiseaseDetectionScreenState();
+  State<DiseaseDetectionResultScreen> createState() => _DiseaseDetectionResultScreenState();
 }
 
-class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
+class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,7 +192,7 @@ class _DiseaseDetectionScreenState extends State<DiseaseDetectionScreen> {
                         children: [
                           Text('Cures for Disease'),
                           SizedBox(width: 10),
-                          Icon(Icons.arrow_forward),
+                          Icon(Icons.arrow_circle_right_outlined),
                         ],
                       ),
                   ),

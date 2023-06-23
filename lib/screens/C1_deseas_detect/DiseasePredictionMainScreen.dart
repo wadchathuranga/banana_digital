@@ -13,7 +13,7 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
 import '../../widgets/TextWidget.dart';
-import './DiseaseDetectionScreen.dart';
+import './DiseaseDetectionResultScreen.dart';
 
 class DiseasePredictionMainScreen extends StatefulWidget {
   const DiseasePredictionMainScreen({Key? key}) : super(key: key);
@@ -171,6 +171,11 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
                         width: MediaQuery.of(context).size.width / 6 * 4,
                         height: 50,
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
                           onPressed: _croppedImg == null
                               ? null
                               : () {
@@ -213,7 +218,10 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
         height: 250,
         width: MediaQuery.of(context).size.width / 6 * 4,
         child: Container(
-          color: Colors.black12,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.black12,
+          ),
           child: const Icon(
             Icons.image_sharp,
             size: 250,
@@ -258,7 +266,7 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
             isLoading = false;
           });
         }
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DiseaseDetectionScreen(data: diseaseDetection)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DiseaseDetectionResultScreen(data: diseaseDetection)));
       }
       else {
         if (mounted) {
