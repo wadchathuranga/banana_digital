@@ -286,6 +286,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 55,
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
                         onPressed: _croppedImg == null
                             ? null
                             : () {
@@ -311,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 enabled: false,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(15.0),
                                   ),
                                   labelText: 'User Name',
                                   labelStyle: const TextStyle(
@@ -339,7 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(15.0),
                                   ),
                                   labelText: 'Email',
                                   labelStyle: const TextStyle(
@@ -362,7 +367,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(15.0),
                                   ),
                                   labelText: 'First Name',
                                   labelStyle: const TextStyle(
@@ -384,7 +389,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(15.0),
                                   ),
                                   labelText: 'Last Name',
                                   labelStyle: const TextStyle(
@@ -405,6 +410,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 55,
                           width: MediaQuery.of(context).size.width,
                           child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
                               child: const Text('Update Details'),
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
