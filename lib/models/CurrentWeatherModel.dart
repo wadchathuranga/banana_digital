@@ -1,10 +1,10 @@
-class WeatherApiModel {
+class CurrentWeatherModel {
   Location? location;
   Current? current;
 
-  WeatherApiModel({this.location, this.current});
+  CurrentWeatherModel({this.location, this.current});
 
-  WeatherApiModel.fromJson(Map<String, dynamic> json) {
+  CurrentWeatherModel.fromJson(Map<String, dynamic> json) {
     location = json['location'] != null
         ? Location.fromJson(json['location'])
         : null;
@@ -16,18 +16,13 @@ class WeatherApiModel {
 class Location {
   String? name;
   String? region;
-  String? country;
-  String? tzId;
-  String? localtime;
 
-  Location({this.name, this.region, this.country, this.tzId, this.localtime});
+
+  Location({this.name, this.region});
 
   Location.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     region = json['region'];
-    country = json['country'];
-    tzId = json['tz_id'];
-    localtime = json['localtime'];
   }
 }
 

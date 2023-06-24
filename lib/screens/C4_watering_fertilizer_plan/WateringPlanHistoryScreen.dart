@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:expandable/expandable.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:http/http.dart' as http;
-import 'package:banana_digital/models/WateringPlanHistoryModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../models/WateringPlanHistoryModel.dart';
 import '../../services/shared_preference.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_configs.dart';
@@ -39,21 +40,21 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
       final response = await http.get(
         url,
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $accessToken",
+          "Authorization": "Bearer HfwGdcWHpiaHF1BnujmUEPbOZmrnvz",
+           // "Authorization": "Bearer $accessToken",
         },
       );
 
       if (response.statusCode == 200) {
         List<dynamic> resData = jsonDecode(response.body);
-          setState(() {
-            historyList = resData.map((history) => WateringPlanHistoryModel.fromJson(history)).toList();
-            isLoading = false;
-          });
+        historyList = resData.map((history) => WateringPlanHistoryModel.fromJson(history)).toList();
+        setState(() {
+          isLoading = false;
+        });
       } else {
-          setState(() {
-            isLoading = false;
-          });
+        setState(() {
+          isLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
             backgroundColor: Colors.red,
@@ -61,9 +62,9 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
         );
       }
     } catch (err) {
-        setState(() {
-          isLoading = false;
-        });
+      setState(() {
+        isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: TextWidget(label: err.toString()),
           backgroundColor: Colors.red,
@@ -119,32 +120,28 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
     );
   }
 
-  Widget _expandableTile(WateringPlanHistoryModel harvestPredictedHistory) {
+  Widget _expandableTile(WateringPlanHistoryModel wateringPlanHistory) {
     return Padding(
-      padding: const EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
+      padding: const EdgeInsets.only(top: 10.0),
       child: Column(
         children: [
           ExpandableNotifier(
             initialExpanded: false,
             child: Stack(
               children: [
-                Column(
-                  children: [
-                    Container(
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                  ],
+                Container(
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                    color: AppColors.primaryColor,
+                  ),
                 ),
                 ScrollOnExpand(
                   child: ExpandablePanel(
                     header: Padding(
                       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                       child: Text(
-                        DateFormat('MMM d, yyyy hh:mm:ss a').format(DateTime.parse(harvestPredictedHistory.createdAt!)).toString(),
+                        DateFormat('MMM d, yyyy hh:mm:ss a').format(DateTime.parse(wateringPlanHistory.createdAt!)).toString(),
                         style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -163,16 +160,34 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Text(
-                              'Predicted Watering Plan',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Variety',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  'Watering Plan',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'harvestPredictedHistory.predictedHarvest.toString()',
-                              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  ':  ${wateringPlanHistory.wateringPlan!.variety.toString()}',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  ':  ${wateringPlanHistory.wateringPlan!.wateringPlan.toString()}',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -187,196 +202,427 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                         ),
                         borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                       ),
-                      child: const Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
-                            child: Column(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
+                        child: Column(
+                          children: [
+                            Column(
                               children: [
-                                Text(
-                                  'Predicted Fertilizer Plan',
-                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  'fertilizerPlanHistory.predictedHarvest.toString()',
-                                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
-                                ),
-                                // PIE CHART
-                                // topPredictionPieChart(harvestPredictedHistory.topProbabilities),
-                                SizedBox(height: 10),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        'User Input Data',
-                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(height: 15),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Agro climatic region'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.agroClimaticRegion.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Plant density'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.plantDensity.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Spacing between plants'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.spacingBetweenPlants.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Pesticides used'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.pesticidesUsed.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Plant generation'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.plantGeneration.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Fertilizer type'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.fertilizerType.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Soil pH'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.soilPH.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Amount of sunlight received'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.amountOfSunlightReceived.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Watering schedule'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.wateringSchedule.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Number of leaves'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.numberOfLeaves.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Height'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.height.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      Divider(),
-                                      // const SizedBox(height: 5),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text('Variety'),
-                                          ),
-                                          // Expanded(
-                                          //   child: Text(':   ${harvestPredictedHistory.variety.toString()}'),
-                                          // ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      SizedBox(
-                                        child:  ElevatedButton(
-                                          onPressed: null, // () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => PostHarvestBestPracticesScreen(data: harvestPredictedHistory.postHarvestPractices!))),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Text('Watering Plans'),
-                                              SizedBox(width: 10),
-                                              Icon(Icons.arrow_circle_right_outlined)
-                                            ],
-                                          ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    const Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Variety',
+                                          style: TextStyle(fontSize: 16),
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                        Text(
+                                          'Watering Plan',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          ':  ${wateringPlanHistory.wateringPlan!.variety.toString()}',
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                        Text(
+                                          ':  ${wateringPlanHistory.wateringPlan!.wateringPlan.toString()}',
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                MarkdownBody(
+                                  data: wateringPlanHistory.wateringPlan!.description.toString(),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 15),
+                            const Text(
+                              'Top Predicted Watering Plans',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 15),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: AppColors.primaryColor,
+                                ),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Column(
+                                children: [
+                                  const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Plan',
+                                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Probability',
+                                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: wateringPlanHistory.topProbabilities!.length,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        children: [
+                                          const Divider(),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      wateringPlanHistory.topProbabilities![index].plan.toString(),
+                                                      style: const TextStyle(fontSize: 16),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      '${(double.parse(wateringPlanHistory.topProbabilities![index].probability!) * 100).toStringAsFixed(2)}%',
+                                                      style: const TextStyle(fontSize: 16),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            Column(
+                              children: [
+                                const Text(
+                                  'User Input Data',
+                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Variety'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.variety.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Stage'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.stage.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Plant density'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.plantDensity.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                // const SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Fertilizer used last season'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.fertilizerUsedLastSeason.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Leaf color'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.leafColor.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('water source'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.waterSource.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Soil pH'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.soilPh.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Organic matter content'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.organicMatterContent.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Crop rotation'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.cropRotation.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Pest disease infection'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.pestDiseaseInfestation.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Plant height'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.plantHeight.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Plant density'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.plantDensity.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Stem diameter'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.stemDiameter.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Slope of the land'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.slope.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Irrigation method'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.irrigationMethod.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Soil texture'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.soilTexture.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Soil color'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.soilColor.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                const SizedBox(height: 15),
+                                const Text(
+                                  'Api Given Data',
+                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Temperature'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.temperature.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Avg temperature'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.avgTemperature.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Rainfall'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.rainfall.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Avg rainfall'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.avgRainfall.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Humidity'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.humidity.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Soil moisture'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.soilMoisture.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                const SizedBox(height: 15),
+                                const Text(
+                                  'Model Identified Data',
+                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text('Soil Type'),
+                                    ),
+                                    Expanded(
+                                      child: Text(':   ${wateringPlanHistory.soilType.toString()}'),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 5),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     theme: const ExpandableThemeData(
@@ -394,6 +640,7 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
       ),
     );
   }
+
 
   // Widget topPredictionPieChart(topProbabilities) {
   //   return SizedBox(
