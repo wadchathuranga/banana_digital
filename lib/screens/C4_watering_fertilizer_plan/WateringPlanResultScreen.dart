@@ -225,7 +225,7 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
                                 style: TextStyle(fontSize: 16),
                               ),
                               Text(
-                                'Watering plan',
+                                'Watering Plan',
                                 style: TextStyle(fontSize: 16),
                               ),
                             ],
@@ -293,7 +293,6 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
                                   ),
                                 ],
                               ),
-                              // const SizedBox(height: 10),
                               const Divider(),
                               MarkdownBody(
                                 data: wateringPlan.description.toString(),

@@ -1,25 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:banana_digital/models/FertilizerPlanModel.dart';
-import 'package:banana_digital/models/WateringPlanHistoryModel.dart';
-import 'package:banana_digital/screens/C4_watering_fertilizer_plan/WateringPlanResultScreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:banana_digital/models/WeatherApiModel.dart';
-import 'package:banana_digital/services/weather_api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../models/FertilizerPlanModel.dart';
+import '../../services/weather_api_service.dart';
+import '../../models/CurrentWeatherModel.dart';
+import '../../screens/C4_watering_fertilizer_plan/WateringPlanResultScreen.dart';
 import '../../models/WateringPlanModel.dart';
 import '../../services/shared_preference.dart';
 import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
 import '../../widgets/TextWidget.dart';
-import 'FertilizerPlanResultScreen.dart';
+import './FertilizerPlanResultScreen.dart';
 
 class WateringFertilizerPlanMainScreen extends StatefulWidget {
   const WateringFertilizerPlanMainScreen({Key? key}) : super(key: key);
@@ -34,7 +32,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
 
   CroppedFile? croppedImg;
 
-  WeatherApiModel? weatherData;
+  CurrentWeatherModel? weatherData;
 
   final _qaFormKey = GlobalKey<FormState>();
   TextEditingController plantDensityController = TextEditingController();
@@ -99,8 +97,10 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
   String? name;
   String? tzId;
   int? humidity;
+  double? temperature;
   double? avgTemperature;
   double? rainfall;
+  double? avgRainfall;
   String? soilMoisture;
 
   String? accessToken;
@@ -112,8 +112,9 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
     tabController.addListener(() {
       setState(() { });
     });
+    getAvgWeatherData();
     getAllVarieties();
-    getWeatherData();
+    getCurrentWeatherData();
     getSoilMoistureData();
     super.initState();
   }
@@ -187,6 +188,11 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
         soilMoisture = jsonDecode(soilMoistureRes.body)['feeds'][0]['field1'];
       }
     } catch (err) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: TextWidget(label: err.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
       if (kDebugMode) {
         print("================= Catch Error: (getSoilMoistureData) ====================");
         print(err);
@@ -195,19 +201,40 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
     }
   }
 
-  Future getWeatherData() async {
+  Future getAvgWeatherData() async {
     try {
-      final response = await WeatherApiService.getWeatherData();
+      final response = await WeatherApiService.getAvgWeatherData();
+      setState(() {
+        avgTemperature = response['avgTemperature'];
+        avgRainfall = response['avgRainfall'];
+      });
+    } catch (err) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: TextWidget(label: err.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+      if (kDebugMode) {
+        print("================= Catch Error: (getAvgWeatherData) ====================");
+        print(err);
+        print("==================================================");
+      }
+    }
+  }
+
+  Future getCurrentWeatherData() async {
+    try {
+      final response = await WeatherApiService.getCurrentWeatherData();
       final resData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        weatherData = WeatherApiModel.fromJson(resData);
+        weatherData = CurrentWeatherModel.fromJson(resData);
           setState(() {
             locationRegion = weatherData!.location!.region;
-            localTime = weatherData!.location!.localtime;
+            // localTime = weatherData!.location!.localtime;
             name = weatherData!.location!.name;
-            tzId = weatherData!.location!.tzId;
+            // tzId = weatherData!.location!.tzId;
             humidity = weatherData!.current!.humidity;
-            avgTemperature = weatherData!.current!.tempC;
+            temperature = weatherData!.current!.tempC;
             rainfall = weatherData!.current!.precipMm;
           });
       } else {
@@ -230,8 +257,11 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
     Map<String, String> dataBody = {
       'pH': soilPhController.text.trim(),
       'organic_matter_content': selectedOrganicMatterContent.toString().toLowerCase(),
-      'avg_temperature': avgTemperature.toString(),
-      'avg_rainfall': rainfall.toString(),
+      'avg_temperature': avgTemperature!.toStringAsFixed(2),
+      'temperature': temperature.toString(),
+      'avg_rainfall': avgRainfall!.toStringAsFixed(2),
+      'rainfall': rainfall.toString(),
+      'humidity': humidity.toString(),
       'plant_height': plantDensityController.text.trim(),
       'leaf_color': selectedLeafColor.toString(),
       'stem_diameter': stemDimeterController.text.trim(),
@@ -239,9 +269,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       'soil_moisture': soilMoisture.toString(),
       'soil_texture': selectedSoilTexture.toString(),
       'soil_color': selectedSoilColor.toString(),
-      'temperature': avgTemperature.toString(),
-      'humidity': humidity.toString(),
-      'rainfall': rainfall.toString(),
       'water_source': selectedWaterSource.toString(),
       'irrigation_method': selectedIrrigationMethod.toString(),
       'fertilizer_used_last_season': selectedFertilizerUsedLastSeason.toString().toLowerCase(),
@@ -432,41 +459,41 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Current Region ',
+                                    Text('Current Region',
                                       style: TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 5),
-                                    Text('Avg Temperature (in Celsius) ',
+                                    Text('Temperature (avg) ',
                                       style: TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 5),
-                                    Text('Avg Humidity (%) ',
+                                    Text('Rainfall (avg)',
                                       style: TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 5),
-                                    Text('Avg Rainfall (in mm) ',
+                                    Text('Humidity',
                                       style: TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 5),
-                                    Text('Avg Soil Moisture (%) ',
+                                    Text('Soil Moisture',
                                       style: TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
                               ),
                               Expanded(
-                                child: (weatherData != null && soilMoisture != null) ? Column(
+                                child: (weatherData != null && soilMoisture != null && avgTemperature != null && avgRainfall != null) ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(':  ${locationRegion.toString()}/${name.toString()}'),
                                     const SizedBox(height: 5),
-                                    Text(':  ${avgTemperature.toString()}'),
+                                    Text(':  ${temperature!.toStringAsFixed(2)} (${avgTemperature!.toStringAsFixed(2)}) °C'),
                                     const SizedBox(height: 5),
-                                    Text(':  ${humidity.toString()}'),
+                                    Text(':  ${rainfall!.toStringAsFixed(2)} (${avgRainfall!.toStringAsFixed(2)}) mm'),
                                     const SizedBox(height: 5),
-                                    Text(':  ${rainfall.toString()}'),
+                                    Text(':  ${humidity.toString()} %'),
                                     const SizedBox(height: 5),
-                                    Text(':  ${soilMoisture.toString()}'),
+                                    Text(':  ${soilMoisture.toString()} m³/m³'),
                                   ],
                                 ) : const SpinKitRing(color: Colors.white),
                               ),

@@ -1,7 +1,6 @@
 class WateringPlanHistoryModel {
-  int? id;
   WateringPlan? wateringPlan;
-  String? pH;
+  String? soilPh;
   String? organicMatterContent;
   String? soilType;
   String? soilMoisture;
@@ -16,20 +15,20 @@ class WateringPlanHistoryModel {
   int? temperature;
   int? humidity;
   int? rainfall;
+  String? variety;
   String? waterSource;
   String? irrigationMethod;
   String? fertilizerUsedLastSeason;
   String? cropRotation;
   String? pestDiseaseInfestation;
   String? slope;
+  String? stage;
   List<TopProbabilities>? topProbabilities;
   String? createdAt;
-  int? user;
 
   WateringPlanHistoryModel(
-      {this.id,
-        this.wateringPlan,
-        this.pH,
+      {this.wateringPlan,
+        this.soilPh,
         this.organicMatterContent,
         this.soilType,
         this.soilMoisture,
@@ -39,6 +38,8 @@ class WateringPlanHistoryModel {
         this.leafColor,
         this.stemDiameter,
         this.plantDensity,
+        this.variety,
+        this.stage,
         this.soilTexture,
         this.soilColor,
         this.temperature,
@@ -51,15 +52,13 @@ class WateringPlanHistoryModel {
         this.pestDiseaseInfestation,
         this.slope,
         this.topProbabilities,
-        this.createdAt,
-        this.user});
+        this.createdAt});
 
   WateringPlanHistoryModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
     wateringPlan = json['watering_plan'] != null
         ? WateringPlan.fromJson(json['watering_plan'])
         : null;
-    pH = json['pH'];
+    soilPh = json['pH'];
     organicMatterContent = json['organic_matter_content'];
     soilType = json['soil_type'];
     soilMoisture = json['soil_moisture'];
@@ -67,6 +66,8 @@ class WateringPlanHistoryModel {
     avgRainfall = json['avg_rainfall'];
     plantHeight = json['plant_height'];
     leafColor = json['leaf_color'];
+    variety = json['variety'];
+    stage = json['stage'];
     stemDiameter = json['stem_diameter'];
     plantDensity = json['plant_density'];
     soilTexture = json['soil_texture'];
@@ -87,22 +88,19 @@ class WateringPlanHistoryModel {
       });
     }
     createdAt = json['created_at'];
-    user = json['user'];
   }
 }
 
 class WateringPlan {
-  int? id;
   String? wateringPlan;
-  String? stage;
+  String? variety;
   String? description;
 
-  WateringPlan({this.id, this.wateringPlan, this.stage, this.description});
+  WateringPlan({this.wateringPlan, this.variety, this.description});
 
   WateringPlan.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
     wateringPlan = json['watering_plan'];
-    stage = json['stage'];
+    variety = json['variety'];
     description = json['description'];
   }
 }
