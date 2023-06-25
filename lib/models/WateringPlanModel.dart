@@ -1,7 +1,7 @@
 class WateringPlanModel {
   String? prediction;
   List<TopProbabilities>? topProbabilities;
-  List<WateringPlan>? wateringPlan;
+  WateringPlan? wateringPlan;
 
   WateringPlanModel({this.prediction, this.topProbabilities, this.wateringPlan});
 
@@ -13,12 +13,9 @@ class WateringPlanModel {
         topProbabilities!.add(TopProbabilities.fromJson(v));
       });
     }
-    if (json['watering_plan'] != null) {
-      wateringPlan = <WateringPlan>[];
-      json['watering_plan'].forEach((v) {
-        wateringPlan!.add(WateringPlan.fromJson(v));
-      });
-    }
+    wateringPlan = json['watering_plan'] != null
+        ? WateringPlan.fromJson(json['watering_plan'])
+        : null;
   }
 }
 
@@ -35,17 +32,17 @@ class TopProbabilities {
 }
 
 class WateringPlan {
-  int? id;
   String? wateringPlan;
   String? variety;
+  String? stage;
   String? description;
 
-  WateringPlan({this.id, this.wateringPlan, this.variety, this.description});
+  WateringPlan({this.wateringPlan, this.variety, this.stage, this.description});
 
   WateringPlan.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
     wateringPlan = json['watering_plan'];
     variety = json['variety'];
+    stage = json['stage'];
     description = json['description'];
   }
 }

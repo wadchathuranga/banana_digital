@@ -40,18 +40,19 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
       final response = await http.get(
         url,
         headers: {
-          "Authorization": "Bearer HfwGdcWHpiaHF1BnujmUEPbOZmrnvz",
-           // "Authorization": "Bearer $accessToken",
+           "Authorization": "Bearer $accessToken",
         },
       );
 
       if (response.statusCode == 200) {
         List<dynamic> resData = jsonDecode(response.body);
         historyList = resData.map((history) => WateringPlanHistoryModel.fromJson(history)).toList();
+        if (!mounted) return;
         setState(() {
           isLoading = false;
         });
       } else {
+        if (!mounted) return;
         setState(() {
           isLoading = false;
         });
@@ -62,6 +63,7 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
         );
       }
     } catch (err) {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });
@@ -171,7 +173,11 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 Text(
-                                  'Watering Plan',
+                                  'Stage',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  'Plan',
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ],
@@ -181,6 +187,10 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                               children: [
                                 Text(
                                   ':  ${wateringPlanHistory.wateringPlan!.variety.toString()}',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  ':  ${wateringPlanHistory.wateringPlan!.stage.toString()}',
                                   style: const TextStyle(fontSize: 16),
                                 ),
                                 Text(
@@ -219,7 +229,11 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                                           style: TextStyle(fontSize: 16),
                                         ),
                                         Text(
-                                          'Watering Plan',
+                                          'Stage',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        Text(
+                                          'Plan',
                                           style: TextStyle(fontSize: 16),
                                         ),
                                       ],
@@ -229,6 +243,10 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                                       children: [
                                         Text(
                                           ':  ${wateringPlanHistory.wateringPlan!.variety.toString()}',
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                        Text(
+                                          ':  ${wateringPlanHistory.wateringPlan!.stage.toString()}',
                                           style: const TextStyle(fontSize: 16),
                                         ),
                                         Text(
@@ -348,7 +366,7 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                                       child: Text('Variety'),
                                     ),
                                     Expanded(
-                                      child: Text(':   ${wateringPlanHistory.variety.toString()}'),
+                                      child: Text(':   ${wateringPlanHistory.wateringPlan!.variety.toString()}'),
                                     ),
                                   ],
                                 ),
@@ -359,7 +377,7 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                                       child: Text('Stage'),
                                     ),
                                     Expanded(
-                                      child: Text(':   ${wateringPlanHistory.stage.toString()}'),
+                                      child: Text(':   ${wateringPlanHistory.wateringPlan!.stage.toString()}'),
                                     ),
                                   ],
                                 ),
@@ -530,7 +548,7 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                                   ],
                                 ),
                                 const Divider(),
-                                const SizedBox(height: 15),
+                                const SizedBox(height: 10),
                                 const Text(
                                   'Api Given Data',
                                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -602,7 +620,7 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
                                   ],
                                 ),
                                 const Divider(),
-                                const SizedBox(height: 15),
+                                const SizedBox(height: 10),
                                 const Text(
                                   'Model Identified Data',
                                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -640,32 +658,5 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
       ),
     );
   }
-
-
-  // Widget topPredictionPieChart(topProbabilities) {
-  //   return SizedBox(
-  //     width: 250,
-  //     height: 200,
-  //     child: SfCircularChart(
-  //       margin: const EdgeInsets.only(top: 20.0),
-  //       title: ChartTitle(
-  //         text: 'Top 03 Predictions',
-  //         textStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 13),
-  //       ),
-  //       legend: Legend(isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
-  //       tooltipBehavior: _tooltipBehavior,
-  //       series: <CircularSeries>[
-  //         PieSeries<TopPrediction, String>(
-  //           radius: '55',
-  //           dataSource: getChartData(topProbabilities),
-  //           xValueMapper: (TopPrediction data, _) => data.weightRange,
-  //           yValueMapper: (TopPrediction data, _) => data.probability,
-  //           dataLabelSettings: const DataLabelSettings(isVisible: true),
-  //           enableTooltip: true,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
 }

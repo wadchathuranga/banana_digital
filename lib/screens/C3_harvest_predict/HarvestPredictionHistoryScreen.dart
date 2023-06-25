@@ -52,21 +52,24 @@ class _HarvestPredictionHistoryScreenState extends State<HarvestPredictionHistor
 
       if (response.statusCode == 200) {
         List<dynamic> resData = jsonDecode(response.body);
+        if (!mounted) return;
         setState(() {
           historyList = resData.map((history) => HarvestPredictionHistoryModel.fromJson(history)).toList();
           isLoading = false;
         });
       } else {
+        if (!mounted) return;
+        setState(() {
+          isLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: TextWidget(label: 'Something went wrong!'),
             backgroundColor: Colors.red,
           ),
         );
-        setState(() {
-          isLoading = false;
-        });
       }
     } catch (err) {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });

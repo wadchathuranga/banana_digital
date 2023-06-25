@@ -36,36 +36,7 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: AppColors.primaryColor,
-                        width: 2.0,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Predicted Watering Plan',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            widget.wateringPlan.prediction.toString().toUpperCase(),
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _expandableTile(widget.wateringPlan.wateringPlan!),
               const SizedBox(height: 30),
               const Text(
                 'Top Prediction Watering Plan Probabilities',
@@ -155,20 +126,7 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
-              const Text(
-                'Watering Plans',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
               const SizedBox(height: 10),
-              if (widget.wateringPlan.wateringPlan!.isNotEmpty)
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.wateringPlan.wateringPlan!.length,
-                  itemBuilder: (context, index) {
-                    return  _expandableTile(widget.wateringPlan.wateringPlan![index], index);
-                  },
-                ),
             ],
           ),
         ),
@@ -176,11 +134,11 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
     );
   }
 
-  Widget _expandableTile(WateringPlan wateringPlan, index) {
+  Widget _expandableTile(WateringPlan wateringPlan) {
     return Column(
       children: [
         ExpandableNotifier(
-          initialExpanded: false,
+          initialExpanded: true,
           child: Stack(
             children: [
               Container(
@@ -192,11 +150,11 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
               ),
               ScrollOnExpand(
                 child: ExpandablePanel(
-                  header: Padding(
-                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                  header: const Padding(
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
                     child: Text(
-                      'Plan ${index+1}',
-                      style: const TextStyle(
+                      'Predicted Plan',
+                      style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white
@@ -225,7 +183,11 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
                                 style: TextStyle(fontSize: 16),
                               ),
                               Text(
-                                'Watering Plan',
+                                'Stage',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                'Plan',
                                 style: TextStyle(fontSize: 16),
                               ),
                             ],
@@ -235,6 +197,10 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
                             children: [
                               Text(
                                 ':  ${wateringPlan.variety.toString()}',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                ':  ${wateringPlan.stage.toString()}',
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
@@ -273,7 +239,11 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
-                                        'Watering plan',
+                                        'Stage',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      Text(
+                                        'Plan',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                     ],
@@ -283,6 +253,10 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
                                     children: [
                                       Text(
                                         ':  ${wateringPlan.variety.toString()}',
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      Text(
+                                        ':  ${wateringPlan.stage.toString()}',
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                       Text(
@@ -304,8 +278,9 @@ class _WateringPlanResultScreenState extends State<WateringPlanResultScreen> {
                     ),
                   ),
                   theme: const ExpandableThemeData(
-                      tapBodyToExpand: true,
-                      tapBodyToCollapse: true,
+                      tapHeaderToExpand: false,
+                      tapBodyToExpand: false,
+                      tapBodyToCollapse: false,
                       iconColor: Colors.white,
                       headerAlignment: ExpandablePanelHeaderAlignment.center
                   ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -23,6 +24,9 @@ class WeatherApiService {
           });
       return response;
     } catch (err) {
+      if (kDebugMode) {
+        print('================ Catch Error: (getCurrentWeatherData) ================');
+      }
       throw Exception(err);
     }
   }
@@ -52,6 +56,9 @@ class WeatherApiService {
         throw Exception(resData['reason'].toString());
       }
     } catch (err) {
+      if (kDebugMode) {
+        print('================ Catch Error: (getAvgWeatherData) ================');
+      }
       throw Exception(err);
     }
   }
@@ -99,6 +106,9 @@ class WeatherApiService {
       final response = await http.get(url);
       return response;
     } catch (err) {
+      if (kDebugMode) {
+        print('================ Catch Error: (getSoilMoistureData) ================');
+      }
       throw Exception(err);
     }
   }

@@ -261,19 +261,17 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
         final resString = await response.stream.bytesToString();
         Map<String, dynamic> resData = await jsonDecode(resString);
         final diseaseDetection = DiseaseDetectionModel.fromJson(resData);
-        if (mounted) {
+        if (!mounted) return;
           setState(() {
             isLoading = false;
           });
-        }
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => DiseaseDetectionResultScreen(data: diseaseDetection)));
       }
       else {
-        if (mounted) {
+        if (!mounted) return;
           setState(() {
             isLoading = false;
           });
-        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
             backgroundColor: Colors.red,
@@ -281,11 +279,10 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
         );
       }
     } catch (err) {
-      if (mounted) {
+      if (!mounted) return;
         setState(() {
           isLoading = false;
         });
-      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: TextWidget(label: err.toString()),
           backgroundColor: Colors.red,

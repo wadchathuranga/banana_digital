@@ -148,12 +148,14 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
 
       final resData = jsonDecode(response.body);
       if (response.statusCode == 200) {
+        if (!mounted) return;
         setState(() {
           isLoading = false;
         });
         final result = HarvestPredictionModel.fromJson(resData);
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => HarvestPredictionResultScreen(result: result)));
       } else {
+        if (!mounted) return;
         setState(() {
           isLoading = false;
         });
@@ -167,6 +169,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
         );
       }
     } catch (err) {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });
@@ -189,13 +192,13 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
       final response = await http.get(
         url,
         headers: {
-          "Content-Type": "application/json",
           "Authorization": "Bearer $accessToken",
         },
       );
 
       final resData = jsonDecode(response.body);
       if (response.statusCode == 200) {
+        if (!mounted) return;
         setState(() {
           varietiesForDay = resData;
         });
@@ -229,28 +232,25 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
       final response = await http.get(
         url,
         headers: {
-          "Content-Type": "application/json",
           "Authorization": "Bearer $accessToken",
         },
       );
 
       final resData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        if (mounted) {
+        if (!mounted) return;
           setState(() {
             varietyHarvestDayRes = resData['estimated_harvesting_time'];
             isFetchinData = false;
           });
-        }
       } else {
         if (kDebugMode) {
           print(response.reasonPhrase);
         }
-        if (mounted) {
+        if (!mounted) return;
           setState(() {
             isFetchinData = true;
           });
-        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
             backgroundColor: Colors.red,
@@ -258,11 +258,10 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
         );
       }
     } catch (err) {
-      if (mounted) {
+      if (!mounted) return;
         setState(() {
           isFetchinData = true;
         });
-      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: TextWidget(label: err.toString()),
           backgroundColor: Colors.red,

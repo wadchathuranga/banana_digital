@@ -84,6 +84,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
          if (decodedUserData.profilePic != null) {
            await UserSharedPreference.setProPic(decodedUserData.profilePic!);
          }
+         if (!mounted) return;
          setState(() {
            _isLoading = false;
          });
@@ -91,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
          showToast('login success');
        } else {
           final error = jsonDecode(userRes.body);
+          if (!mounted) return;
           setState(() {
             _isLoading = false;
           });
@@ -98,17 +100,20 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
        }
      } else if (response.statusCode == 400) {
        final res = jsonDecode(response.body);
+       if (!mounted) return;
        setState(() {
          _isLoading = false;
        });
        showToast(res['error_description'].toString());
      } else {
+       if (!mounted) return;
        setState(() {
          _isLoading = false;
        });
        showToast('${jsonDecode(response.body)['error']}');
      }
    } catch (err) {
+     if (!mounted) return;
      setState(() {
        _isLoading = false;
      });
