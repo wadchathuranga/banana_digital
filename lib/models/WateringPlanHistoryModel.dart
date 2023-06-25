@@ -22,7 +22,6 @@ class WateringPlanHistoryModel {
   String? cropRotation;
   String? pestDiseaseInfestation;
   String? slope;
-  String? stage;
   List<TopProbabilities>? topProbabilities;
   String? createdAt;
 
@@ -39,7 +38,6 @@ class WateringPlanHistoryModel {
         this.stemDiameter,
         this.plantDensity,
         this.variety,
-        this.stage,
         this.soilTexture,
         this.soilColor,
         this.temperature,
@@ -67,7 +65,6 @@ class WateringPlanHistoryModel {
     plantHeight = json['plant_height'];
     leafColor = json['leaf_color'];
     variety = json['variety'];
-    stage = json['stage'];
     stemDiameter = json['stem_diameter'];
     plantDensity = json['plant_density'];
     soilTexture = json['soil_texture'];
@@ -94,13 +91,15 @@ class WateringPlanHistoryModel {
 class WateringPlan {
   String? wateringPlan;
   String? variety;
+  String? stage;
   String? description;
 
-  WateringPlan({this.wateringPlan, this.variety, this.description});
+  WateringPlan({this.wateringPlan, this.variety, this.stage, this.description});
 
   WateringPlan.fromJson(Map<String, dynamic> json) {
     wateringPlan = json['watering_plan'];
     variety = json['variety'];
+    stage = json['stage'];
     description = json['description'];
   }
 }

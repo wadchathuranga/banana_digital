@@ -27,39 +27,10 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
           child: Column(
             children: [
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: AppColors.primaryColor,
-                        width: 2.0,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Predicted Fertilizer Plan',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            widget.fertilizerPlan.prediction.toString().toUpperCase(),
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _expandableTile(widget.fertilizerPlan.fertilizerPlan!),
               const SizedBox(height: 30),
               const Text(
-                'Top Prediction Fertilizer Plan Probabilities',
+                'Top Predicted Fertilizer Plans',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
@@ -83,7 +54,7 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'Plan',
+                                'Dosage',
                                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -119,7 +90,7 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        widget.fertilizerPlan.topProbabilities![index].plan.toString(),
+                                        widget.fertilizerPlan.topProbabilities![index].dose.toString(),
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                     ],
@@ -146,20 +117,7 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
-              const Text(
-                'Fertilizer Plans',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
               const SizedBox(height: 10),
-              if (widget.fertilizerPlan.fertilizerPlan!.isNotEmpty)
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.fertilizerPlan.fertilizerPlan!.length,
-                  itemBuilder: (context, index) {
-                    return  _expandableTile(widget.fertilizerPlan.fertilizerPlan![index], index);
-                  },
-                ),
             ],
           ),
         ),
@@ -167,11 +125,11 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
     );
   }
 
-  Widget _expandableTile(FertilizerPlan fertilizerPlan, index) {
+  Widget _expandableTile(FertilizerPlan fertilizerPlan) {
     return Column(
       children: [
         ExpandableNotifier(
-          initialExpanded: false,
+          initialExpanded: true,
           child: Stack(
             children: [
               Container(
@@ -183,11 +141,11 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
               ),
               ScrollOnExpand(
                 child: ExpandablePanel(
-                  header: Padding(
-                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                  header: const Padding(
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
                     child: Text(
-                      'Plan ${index+1}',
-                      style: const TextStyle(
+                      'Predicted Plan',
+                      style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white
@@ -216,7 +174,15 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
                                 style: TextStyle(fontSize: 16),
                               ),
                               Text(
-                                'Fertilizer plan',
+                                'Stage',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                'Type',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                'Dose',
                                 style: TextStyle(fontSize: 16),
                               ),
                             ],
@@ -229,7 +195,15 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
+                                ':  ${fertilizerPlan.stage.toString()}',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              Text(
                                 ':  ${fertilizerPlan.fertilizerType.toString()}',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                ':  ${widget.fertilizerPlan.dose.toString()}',
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
@@ -264,7 +238,15 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Text(
-                                        'Fertilizer plan',
+                                        'Stage',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      Text(
+                                        'Type',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      Text(
+                                        'Dose',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                     ],
@@ -277,7 +259,15 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                       Text(
+                                        ':  ${fertilizerPlan.stage.toString()}',
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      Text(
                                         ':  ${fertilizerPlan.fertilizerType.toString()}',
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      Text(
+                                        ':  ${widget.fertilizerPlan.dose.toString()}',
                                         style: const TextStyle(fontSize: 16),
                                       ),
                                     ],
@@ -296,8 +286,9 @@ class _FertilizerPlanResultScreenState extends State<FertilizerPlanResultScreen>
                     ),
                   ),
                   theme: const ExpandableThemeData(
-                      tapBodyToExpand: true,
-                      tapBodyToCollapse: true,
+                      tapHeaderToExpand: false,
+                      tapBodyToExpand: false,
+                      tapBodyToCollapse: false,
                       iconColor: Colors.white,
                       headerAlignment: ExpandablePanelHeaderAlignment.center
                   ),

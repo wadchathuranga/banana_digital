@@ -81,6 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (response.statusCode == 200) {
       await UserSharedPreference.setFirstName(firstnameController.text);
       await UserSharedPreference.setLastName(lastnameController.text);
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });
@@ -90,6 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     } else {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });

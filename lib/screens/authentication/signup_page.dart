@@ -100,6 +100,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
             if (decodedUserData.profilePic != null) {
               await UserSharedPreference.setProPic(decodedUserData.profilePic!);
             }
+            if (!mounted) return;
             setState(() {
               _isLoading = false;
             });
@@ -108,6 +109,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
           }
         } else {
           final resData = jsonDecode(response.body);
+          if (!mounted) return;
           setState(() {
             _isLoading = false;
           });
@@ -118,6 +120,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
           );
         }
       } catch (err) {
+        if (!mounted) return;
         setState(() {
           _isLoading = false;
         });

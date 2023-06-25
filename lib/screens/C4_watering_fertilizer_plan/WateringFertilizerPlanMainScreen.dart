@@ -72,8 +72,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
   final List soilColor = ["Red", "Brown", "Yellow", "Dark", "Black"];
   var selectedSoilColor;
 
-  // final List<String> stage = [
-  //   "vegetative", "pseudostem_formation", "shooting", "inflorescence_initiation", "flowering", "fruit_development", "harvest"];
   final List<Map<String, String>> stage = [
     {"name": "Vegetative", "value": "vegetative"},
     {"name": "Pseudostem formation", "value": "pseudostem_formation"},
@@ -82,11 +80,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
     {"name": "Flowering", "value": "flowering"},
     {"name": "Fruit development", "value": "fruit_development"},
     {"name": "Harvest", "value": "harvest"}];
-  // final List<Map<String, String>> stage = [
-  //   {"Vegetative": "vegetative"}, {"Pseudostem formation": "pseudostem_formation"},
-  //   {"Shooting": "shooting"}, {"Inflorescence initiation": "inflorescence_initiation"},
-  //   {"Flowering": "flowering"}, {"Fruit development": "fruit_development"},
-  //   {"Harvest": "harvest"}];
   var selectedStage;
 
   late List<dynamic> varietyList = [];
@@ -154,6 +147,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       );
 
       if (response.statusCode == 200) {
+        if (!mounted) return;
         setState(() {
           varietyList = jsonDecode(response.body);
         });
@@ -174,7 +168,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
         ),
       );
       if (kDebugMode) {
-        print("================= Catch Error ====================");
+        print("================= Catch Error: (getAllVarieties) ====================");
         print(err);
         print("==================================================");
       }
@@ -185,7 +179,10 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
     try {
       final soilMoistureRes = await WeatherApiService.getSoilMoistureData();
       if (soilMoistureRes.statusCode == 200) {
-        soilMoisture = jsonDecode(soilMoistureRes.body)['feeds'][0]['field1'];
+        if (!mounted) return;
+        setState(() {
+          soilMoisture = jsonDecode(soilMoistureRes.body)['feeds'][0]['field1'];
+        });
       }
     } catch (err) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -204,6 +201,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
   Future getAvgWeatherData() async {
     try {
       final response = await WeatherApiService.getAvgWeatherData();
+      if (!mounted) return;
       setState(() {
         avgTemperature = response['avgTemperature'];
         avgRainfall = response['avgRainfall'];
@@ -228,11 +226,10 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       final resData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         weatherData = CurrentWeatherModel.fromJson(resData);
+        if (!mounted) return;
           setState(() {
             locationRegion = weatherData!.location!.region;
-            // localTime = weatherData!.location!.localtime;
             name = weatherData!.location!.name;
-            // tzId = weatherData!.location!.tzId;
             humidity = weatherData!.current!.humidity;
             temperature = weatherData!.current!.tempC;
             rainfall = weatherData!.current!.precipMm;
@@ -305,11 +302,12 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
 
       if (response.statusCode == 200) {
         final resString = await response.stream.bytesToString();
-        Map<String, dynamic> data = await jsonDecode(resString);
+        final data = await jsonDecode(resString);
+        if (!mounted) return;
           setState(() {
             isLoading = false;
           });
-        if (tabController.index == 0) {
+        if ( tabController.index == 0) {
           final wateringPlan = WateringPlanModel.fromJson(data);
           Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
               WateringPlanResultScreen(wateringPlan: wateringPlan)));
@@ -320,6 +318,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
         }
       }
       else {
+        if (!mounted) return;
           setState(() {
             isLoading = false;
           });
@@ -336,15 +335,11 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
         ),
       );
       if (kDebugMode) {
-        print("================= Catch Error ====================");
+        print("================= Catch Error: (callToMakeThePlans) ====================");
         print(err);
         print("==================================================");
       }
     }
-  }
-
-  Future fertilizerPlan(dataBody, croppedImg) async {
-    print("F=====> $dataBody");
   }
 
 
@@ -407,6 +402,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       onWillPop: () {
         if (tabController.index != 0) {
           setState(() {
+            isLoading = false;
             tabController.index = 0;
           });
           return Future.value(false);
@@ -509,7 +505,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                       key: _qaFormKey,
                       child: Column(
                         children: [
-                          if (weatherData != null && soilMoisture != null)
+                          if (weatherData != null && soilMoisture != null && avgTemperature != null && avgRainfall != null)
                             const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -524,7 +520,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                               ],
                             ),
                           const SizedBox(height: 10),
-                          if (weatherData != null && soilMoisture != null)
+                          if (weatherData != null && soilMoisture != null && avgTemperature != null && avgRainfall != null)
                             Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -571,7 +567,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                             ],
                           ),
                           buildSizedBox(),
-                          if (weatherData != null && soilMoisture != null)
+                          if (weatherData != null && soilMoisture != null && avgTemperature != null && avgRainfall != null)
                             Column(
                             children: [
                               Row(
