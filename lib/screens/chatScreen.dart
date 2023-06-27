@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:banana_digital/screens/zoom_drawer_menu/menu_widget.dart';
@@ -11,6 +12,7 @@ import '../../providers/chat_provider.dart';
 import '../../widgets/ChatWidget.dart';
 import '../../widgets/LanguagePicker.dart';
 import '../../widgets/TextWidget.dart';
+import '../widgets/PopupMenu.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -27,8 +29,11 @@ class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController textEditingController;
   late FocusNode focusNode;
 
+  var selectedValue;
+
   @override
   void initState() {
+    _isTyping = false;
     _listScrollController = ScrollController();
     textEditingController = TextEditingController();
     focusNode = FocusNode();
@@ -49,33 +54,25 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: AppColors.chatScaffoldBackgroundColor,
       appBar: AppBar(
-        // backgroundColor: AppColors.chatScaffoldBackgroundColor,
         leading: const MenuWidget(),
         title: const Text('Chat'),
         actions: const <Widget>[
-          // Center(
-          //   child: Text(
-          //       AppLocalizations.of(context)!.language,
-          //       style: const TextStyle(fontSize: 20),
-          //   ),
-          // ),
-          LanguagePicker(),
-          SizedBox(
-            width: 15,
-          ),
+          // LanguagePicker(),
+          PopupMenu(),
         ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            Flexible(
+              Flexible(
               child: ListView.builder(
                 controller: _listScrollController,
-                itemCount: chatProvider.getChatList.length, //chatList.length,
+                itemCount: chatProvider.getChatList.length,
                 itemBuilder: (context, index) {
                   return ChatWidget(
-                    msg: chatProvider.getChatList[index].msg, //chatList[index].msg,
-                    chatIndex: chatProvider.getChatList[index].chatIndex, //chatList[index].chatIndex,
+                    msg: chatProvider.getChatList[index].response!,
+                    chatIndex: chatProvider.getChatList[index].chatIndex!,
+                    dropdownData:  chatProvider.getChatList[index].diseases == null ? [] : chatProvider.getChatList[index].diseases!,
                   );
                 },
               ),
@@ -90,32 +87,85 @@ class _ChatScreenState extends State<ChatScreen> {
             Material(
               color: AppColors.cardColor,
               child: SizedBox(
-                height: 60,
+                height: 65,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 15.0, right: 5.0),
-                  child: Row(
+                  padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: TextField(
-                          style: const TextStyle(color: Colors.white),
-                          controller: textEditingController,
-                          onSubmitted: (value) async {
-                            await sendMessageFCT(chatProvider: chatProvider);
-                          },
-                          decoration: const InputDecoration.collapsed(
-                            hintText: 'How can I help you..?',
-                            hintStyle: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
+                    if (chatProvider.getChatList.isNotEmpty && chatProvider.getChatList.last.chatIndex == 1 && chatProvider.getChatList.last.diseases != null)
+                      Row(
+                        children: [
+                            Expanded(
+                              child: Material(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                child: DropdownButtonFormField<String>(
+                                  validator: (val) {
+                                    if (val == null) {return 'Required!';} else {return null;}
+                                  },
+                                  itemHeight: 50,
+                                  decoration: InputDecoration(
+                                    iconColor: Colors.white,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    labelText: 'Select your choice',
+                                    labelStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  items: chatProvider.getChatList.last.diseases!.map((value) {
+                                    return DropdownMenuItem(
+                                      value: value.name
+                                          .toString(),
+                                      child: Text(value.nameDisplay
+                                          .toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValueSelected) async {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    setState(() {
+                                      selectedValue = newValueSelected!;
+                                    });
+                                    await sendChooseddMsgForBot(newValueSelected, chatProvider);
+                                  },
+                                  value: selectedValue,
+                                  isExpanded: false,
+                                ),
+                              ),
                             ),
+                        ],
+                      )
+                      else
+                        Row(
+                        children: [
+                            Expanded(
+                              child: TextField(
+                                style: const TextStyle(color: Colors.white),
+                                controller: textEditingController,
+                                onSubmitted: (value) async {
+                                  // await sendMessageFCT(chatProvider: chatProvider);
+                                },
+                                decoration: const InputDecoration.collapsed(
+                                  hintText: 'How can I help you..?',
+                                  hintStyle: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          IconButton(
+                            icon: const Icon(Icons.send, color: Colors.white),
+                            onPressed: () async {
+                              await sendMessageFCT(chatProvider: chatProvider);
+                            },
                           ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.send, color: Colors.white),
-                        onPressed: () async {
-                          await sendMessageFCT(chatProvider: chatProvider);
-                        },
+                        ],
                       ),
                     ],
                   ),
@@ -130,6 +180,32 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void scrollListToEND() {
     _listScrollController.animateTo(_listScrollController.position.maxScrollExtent, duration: const Duration(seconds: 1), curve: Curves.easeInOut);
+  }
+
+  Future<void> sendChooseddMsgForBot(value, chatProvider) async {
+    try {
+      String msg = textEditingController.text;
+      setState(() {
+        _isTyping = true;
+        chatProvider.addUserMessage(msg: value);
+        focusNode.unfocus();
+      });
+      chatProvider.sendMessageAndGetAnswers(msg: msg, accessToken: 'HfwGdcWHpiaHF1BnujmUEPbOZmrnvz', tag: 'greating', lang: 'en')
+          .then((value) => {
+        scrollListToEND(),
+        setState(() {
+          _isTyping = false;
+        }),
+      });
+      setState(() {});
+    } catch (error) {
+      log("Error $error");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: TextWidget(label: error.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   Future<void> sendMessageFCT({required ChatProvider chatProvider}) async {
@@ -152,20 +228,22 @@ class _ChatScreenState extends State<ChatScreen> {
       );
       return;
     }
+
     try {
       String msg = textEditingController.text;
       setState(() {
         _isTyping = true;
-        // chatList.add(ChatModel(msg: textEditingController.text, chatIndex: 0));
         chatProvider.addUserMessage(msg: msg);
         textEditingController.clear();
         focusNode.unfocus();
       });
-      // chatList.addAll(await ApiServices.sendMessage(
-      //   message: textEditingController.text,
-      //   modelId: modelsProvider.getCurrentModel,
-      // ));
-      chatProvider.sendMessageAndGetAnswers(msg: msg, chosenModelId: "gpt-3.5-turbo-0301");
+      chatProvider.sendMessageAndGetAnswers(msg: msg, accessToken: 'HfwGdcWHpiaHF1BnujmUEPbOZmrnvz', tag: 'greating', lang: 'en')
+          .then((value) => {
+                scrollListToEND(),
+                setState(() {
+                  _isTyping = false;
+                }),
+              });
       setState(() {});
     } catch (error) {
       log("Error $error");
@@ -174,11 +252,7 @@ class _ChatScreenState extends State<ChatScreen> {
           backgroundColor: Colors.red,
         ),
       );
-    } finally {
-      scrollListToEND();
-      setState(() {
-        _isTyping = false;
-      });
     }
   }
+
 }
