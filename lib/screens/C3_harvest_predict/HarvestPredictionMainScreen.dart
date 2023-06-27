@@ -294,9 +294,9 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
                 onPressed: () => Navigator.pushNamed(context, '/C3_harvest_history'),
                 icon: const Icon(Icons.history),
               ),
-              const LanguagePicker(),
+              // const LanguagePicker(),
               const SizedBox(
-                width: 15,
+                width: 10,
               ),
             ],
             bottom: TabBar(
