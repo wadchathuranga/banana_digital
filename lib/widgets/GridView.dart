@@ -56,7 +56,7 @@ class _GridViewCardState extends State<GridViewCard> {
                 children: <Widget>[
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    height: 100,
+                    height: 120,
                     child: Container(
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor,

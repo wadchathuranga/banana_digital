@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:banana_digital/services/shared_preference.dart';
 import 'package:http/http.dart' as http;
 import '../models/BananaChatModel.dart';
 import '../models/chat_model.dart';
@@ -11,8 +12,9 @@ import '../utils/app_configs.dart';
 class ChatApiServices {
 
   // send message
-  static Future sendMessage({ required String accessToken, required String message, required String tag, required String lang }) async {
+  static Future sendMessage({ required String accessToken, required String message, required String? tag, required String lang }) async {
     try {
+      print('SEND MSG TAG ==================>>>>>>> $tag');
       var response = await http.post(
         Uri.parse("$BASE_URI/chatbot?language=$lang"),
         headers: {
@@ -26,10 +28,47 @@ class ChatApiServices {
       );
 
       Map<String, dynamic> jsonDecRes = jsonDecode(response.body);
+      await UserSharedPreference.setTagValue(jsonDecRes['tag']);
 
-      print('jsonDecRes: $jsonDecRes');
+      print('RESPONSE MSG TAG ==================>>>>>>> ${jsonDecRes['tag']}');
 
       return BananaChatModel.fromJson(jsonDecRes);
+    } catch (error) {
+      log("Error [sendMessage()]: $error");
+      rethrow;
+    }
+  }
+
+  // send msg get answers from diseases
+  static Future sendMessageToGetDiseasesOrCuresById({ required String accessToken, required String message, required String? tag, required String lang, required int diseaseId }) async {
+    try {
+      final Map<String, dynamic> res;
+      if (UserSharedPreference.getTagValue() == "management_strategies") {
+        var response = await http.get(
+          Uri.parse("$BASE_URI/disease/$diseaseId/cure?language=$lang"),
+          headers: {"Authorization": "Bearer $accessToken"},
+        );
+
+        dynamic jsonDecRes = jsonDecode(response.body);
+        res = {
+          "response": jsonDecRes,
+        };
+      } else {
+        var response = await http.get(
+          Uri.parse("$BASE_URI/disease/$diseaseId?language=$lang"),
+          headers: {"Authorization": "Bearer $accessToken"},
+        );
+
+        dynamic jsonDecRes = jsonDecode(response.body);
+        res = {
+          "response": [jsonDecRes],
+        };
+      }
+
+      // tag clear because of flow completed here
+      UserSharedPreference.clearTag();
+
+      return BananaChatModel.fromJson(res);
     } catch (error) {
       log("Error $error");
       rethrow;
