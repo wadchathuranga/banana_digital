@@ -35,8 +35,18 @@ class UserSharedPreference {
   static Future setProPic(String proPic) async => await prefs!.setString('prop_pic', proPic);
   static String? getProPic() => prefs!.getString('prop_pic');
 
+  // set tag value for chat bot
+  static Future setTagValue(String tag) async => await prefs!.setString('tag', tag);
+  static String? getTagValue() => prefs!.getString('tag');
+  static void clearTag() => prefs!.remove('tag');
+
+  // set language for chat bot
+  static Future setLanguage(String language) async => await prefs!.setString('language', language);
+  static String? getLanguage() => prefs!.getString('language');
+  static void clearLanguage() => prefs!.remove('language');
 
 
+  // clear all the preference/temp memory
   static void userLogOut() async {
     prefs!.remove('username');
     prefs!.remove('access_token');
@@ -45,6 +55,7 @@ class UserSharedPreference {
     prefs!.remove('lastname');
     prefs!.remove('prop_pic');
     prefs!.remove('login_type');
+    prefs!.remove('tag');
   }
 
 

@@ -1,4 +1,3 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 
 import '../models/BananaChatModel.dart';
@@ -9,7 +8,7 @@ import './TextWidget.dart';
 class ChatWidget extends StatefulWidget {
   const ChatWidget({Key? key, required this.msg, required this.chatIndex, required this.dropdownData}) : super(key: key);
 
-  final String msg;
+  final dynamic msg;
   final int chatIndex;
   final List<Diseases> dropdownData;
 
@@ -40,9 +39,74 @@ class _ChatWidgetState extends State<ChatWidget> {
                   child: widget.chatIndex == 0
                       ? TextWidget(label: widget.msg)
                       : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextWidget(label: widget.msg.trim()),
+                          if (widget.msg.runtimeType == String)
+                            TextWidget(label: widget.msg.trim())
+                          else
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: widget.msg.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.msg[index]['name_display'],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.msg[index]['description'],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 150,
+                                      height: 150,
+                                      child:  widget.msg[index]['img'] != null
+                                          ?  Image(image: NetworkImage(widget.msg[index]['img']))
+                                          : Image.asset(AppImages.logoTW),
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.start,
+                            //   children: [
+                            //     Text(
+                            //       widget.msg['name_display'],
+                            //       style: const TextStyle(
+                            //         color: Colors.white,
+                            //         fontSize: 16,
+                            //         fontWeight: FontWeight.w500,
+                            //       ),
+                            //     ),
+                            //     Text(
+                            //       widget.msg['description'],
+                            //       style: const TextStyle(
+                            //         color: Colors.white,
+                            //         fontSize: 16,
+                            //         fontWeight: FontWeight.w500,
+                            //       ),
+                            //     ),
+                            //     SizedBox(
+                            //       width: 150,
+                            //       height: 150,
+                            //       child: Image(
+                            //         image: NetworkImage(widget.msg['img']),
+                            //       ),
+                            //     )
+                            //   ],
+                            // ),
+                          /// showing dynamic data ===================
                           if (widget.dropdownData.isNotEmpty)
                             ListView.builder(
                               shrinkWrap: true,

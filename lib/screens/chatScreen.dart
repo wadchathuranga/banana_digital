@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:banana_digital/screens/zoom_drawer_menu/menu_widget.dart';
+import 'package:banana_digital/services/shared_preference.dart';
 import 'package:banana_digital/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../providers/chat_provider.dart';
 import '../../widgets/ChatWidget.dart';
@@ -22,18 +24,21 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+
+  String? accessToken;
+
   bool _isTyping = false;
 
-  // List<ChatModel> chatList = [];
   late ScrollController _listScrollController;
   late TextEditingController textEditingController;
   late FocusNode focusNode;
 
   var selectedValue;
+  var displayName;
 
   @override
   void initState() {
-    _isTyping = false;
+    accessToken = UserSharedPreference.getAccessToken().toString();
     _listScrollController = ScrollController();
     textEditingController = TextEditingController();
     focusNode = FocusNode();
@@ -56,9 +61,19 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         leading: const MenuWidget(),
         title: const Text('Chat'),
-        actions: const <Widget>[
+        actions: <Widget>[
           // LanguagePicker(),
-          PopupMenu(),
+          IconButton(
+            onPressed: () {
+              UserSharedPreference.clearTag();
+              chatProvider.chatList.clear();
+              _isTyping = false;
+              selectedValue = null;
+              setState(() { });
+            },
+            icon: const Icon(Icons.clear_sharp),
+          ),
+          const PopupMenu(),
         ],
       ),
       body: SafeArea(
@@ -83,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 size: 18,
               ),
             ],
-            const SizedBox(height: 15),
+            const SizedBox(height: 2),
             Material(
               color: AppColors.cardColor,
               child: SizedBox(
@@ -114,13 +129,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                     labelText: 'Select your choice',
                                     labelStyle: const TextStyle(
                                       color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      // fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   items: chatProvider.getChatList.last.diseases!.map((value) {
+                                    setState(() {
+                                      displayName = value.nameDisplay;
+                                    });
                                     return DropdownMenuItem(
-                                      value: value.name
+                                      value: value.id
                                           .toString(),
                                       child: Text(value.nameDisplay
                                           .toString()),
@@ -131,7 +149,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                     setState(() {
                                       selectedValue = newValueSelected!;
                                     });
-                                    await sendChooseddMsgForBot(newValueSelected, chatProvider);
+                                    final tag = UserSharedPreference.getTagValue();
+                                    await sendChoseMsgForBot(displayName: displayName, chatProvider: chatProvider, tag: tag, diseaseId: int.parse(newValueSelected.toString()));
                                   },
                                   value: selectedValue,
                                   isExpanded: false,
@@ -148,7 +167,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 style: const TextStyle(color: Colors.white),
                                 controller: textEditingController,
                                 onSubmitted: (value) async {
-                                  // await sendMessageFCT(chatProvider: chatProvider);
+                                  final tag = UserSharedPreference.getTagValue();
+                                  await sendMessageFCT(chatProvider: chatProvider, msg: textEditingController.text, tag: tag);
                                 },
                                 decoration: const InputDecoration.collapsed(
                                   hintText: 'How can I help you..?',
@@ -162,7 +182,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           IconButton(
                             icon: const Icon(Icons.send, color: Colors.white),
                             onPressed: () async {
-                              await sendMessageFCT(chatProvider: chatProvider);
+                              final tag = UserSharedPreference.getTagValue();
+                              await sendMessageFCT(chatProvider: chatProvider, msg: textEditingController.text, tag: tag);
                             },
                           ),
                         ],
@@ -182,18 +203,19 @@ class _ChatScreenState extends State<ChatScreen> {
     _listScrollController.animateTo(_listScrollController.position.maxScrollExtent, duration: const Duration(seconds: 1), curve: Curves.easeInOut);
   }
 
-  Future<void> sendChooseddMsgForBot(value, chatProvider) async {
+  Future<void> sendChoseMsgForBot({required displayName, required ChatProvider chatProvider, required String? tag, required int diseaseId}) async {
     try {
       String msg = textEditingController.text;
       setState(() {
         _isTyping = true;
-        chatProvider.addUserMessage(msg: value);
+        chatProvider.addUserMessage(msg: displayName);
         focusNode.unfocus();
       });
-      chatProvider.sendMessageAndGetAnswers(msg: msg, accessToken: 'HfwGdcWHpiaHF1BnujmUEPbOZmrnvz', tag: 'greating', lang: 'en')
+      chatProvider.sendMessageApi2AndGetAnswers(msg: msg, accessToken: accessToken!, tag: tag, lang: 'en', diseaseId: diseaseId)
           .then((value) => {
         scrollListToEND(),
         setState(() {
+          selectedValue = null;
           _isTyping = false;
         }),
       });
@@ -208,7 +230,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> sendMessageFCT({required ChatProvider chatProvider}) async {
+  Future<void> sendMessageFCT({required ChatProvider chatProvider, required String msg, required String? tag}) async {
     // avoid send another msg before coming response of previous one
     if (_isTyping) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -220,7 +242,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     // avoid sending empty msg
-    if (textEditingController.text.isEmpty) {
+    if (msg.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: TextWidget(label: "Please type a message"),
           backgroundColor: Colors.red,
@@ -230,14 +252,14 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     try {
-      String msg = textEditingController.text;
+      // String msg = textEditingController.text;
       setState(() {
         _isTyping = true;
         chatProvider.addUserMessage(msg: msg);
         textEditingController.clear();
         focusNode.unfocus();
       });
-      chatProvider.sendMessageAndGetAnswers(msg: msg, accessToken: 'HfwGdcWHpiaHF1BnujmUEPbOZmrnvz', tag: 'greating', lang: 'en')
+      chatProvider.sendMessageAndGetAnswers(msg: msg, accessToken: accessToken!, tag: tag, lang: 'en')
           .then((value) => {
                 scrollListToEND(),
                 setState(() {
