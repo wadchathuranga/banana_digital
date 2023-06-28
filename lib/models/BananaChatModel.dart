@@ -1,6 +1,6 @@
 class BananaChatModel {
   int? chatIndex;
-  String? response;
+  dynamic response;
   String? language;
   String? tag;
   List<Diseases>? diseases;
