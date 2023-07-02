@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:banana_digital/services/C4_watering_fertilizer_api_service.dart';
+
 import 'package:expandable/expandable.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../services/C4_watering_fertilizer_api_service.dart';
 import '../../models/WateringPlanHistoryModel.dart';
 import '../../services/shared_preference.dart';
 import '../../utils/app_colors.dart';
@@ -37,13 +38,6 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
   // Get harvest prediction histories API
   Future fetchHistoryData() async {
     try {
-      // var url = Uri.parse(WATERING_PLAN_HISTORY);
-      // final response = await http.get(
-      //   url,
-      //   headers: {
-      //      "Authorization": "Bearer $accessToken",
-      //   },
-      // );
 
       http.Response response = await C4WateringFertilizerApiService.getWateringFertilizerHistory(accessToken: accessToken!, urlConst: WATERING_PLAN_HISTORY);
 

@@ -1,23 +1,17 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:banana_digital/screens/zoom_drawer_menu/menu_widget.dart';
-import 'package:banana_digital/services/shared_preference.dart';
-import 'package:banana_digital/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
-import '../../l10n/l10n.dart';
+import '../../services/shared_preference.dart';
+import '../../utils/app_colors.dart';
 import '../../../providers/chat_provider.dart';
-import 'ChatWidget.dart';
 import '../../../widgets/LanguagePicker.dart';
-import 'TextWidget.dart';
-import '../../providers/local_provider.dart';
-import '../../widgets/PopupMenu.dart';
+import './ChatWidget.dart';
+import './TextWidget.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);

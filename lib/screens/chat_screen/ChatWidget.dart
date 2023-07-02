@@ -78,34 +78,6 @@ class _ChatWidgetState extends State<ChatWidget> {
                                 );
                               },
                             ),
-                            // Column(
-                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                            //   children: [
-                            //     Text(
-                            //       widget.msg['name_display'],
-                            //       style: const TextStyle(
-                            //         color: Colors.white,
-                            //         fontSize: 16,
-                            //         fontWeight: FontWeight.w500,
-                            //       ),
-                            //     ),
-                            //     Text(
-                            //       widget.msg['description'],
-                            //       style: const TextStyle(
-                            //         color: Colors.white,
-                            //         fontSize: 16,
-                            //         fontWeight: FontWeight.w500,
-                            //       ),
-                            //     ),
-                            //     SizedBox(
-                            //       width: 150,
-                            //       height: 150,
-                            //       child: Image(
-                            //         image: NetworkImage(widget.msg['img']),
-                            //       ),
-                            //     )
-                            //   ],
-                            // ),
                           /// showing dynamic data ===================
                           // if (widget.dropdownData.isNotEmpty)
                           //   ListView.builder(

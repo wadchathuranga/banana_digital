@@ -1,7 +1,7 @@
-import 'package:banana_digital/models/DiseaseDetectionModel.dart';
-import 'package:banana_digital/screens/C1_deseas_detect/CuresForDiseaseScreen.dart';
-import 'package:banana_digital/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+
+import '../../models/DiseaseDetectionModel.dart';
+import '../../screens/C1_deseas_detect/CuresForDiseaseScreen.dart';
 
 class DiseaseDetectionResultScreen extends StatefulWidget {
   const DiseaseDetectionResultScreen({Key? key, required this.data}) : super(key: key);

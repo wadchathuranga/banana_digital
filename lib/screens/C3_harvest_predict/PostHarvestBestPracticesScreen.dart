@@ -1,6 +1,5 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../models/HarvestPredictionModel.dart';
 import '../../utils/app_colors.dart';
@@ -24,11 +23,6 @@ class _PostHarvestBestPracticesScreenState extends State<PostHarvestBestPractice
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // const SizedBox(height: 15),
-          // const Text(
-          //     'Post Harvest Best Practices',
-          //   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          // ),
          if (widget.data.isNotEmpty)
            Expanded(
             child: ListView.builder(

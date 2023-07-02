@@ -58,31 +58,15 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
 
   void _signup() async {
       try {
-        // var url = Uri.parse(USER_SIGN_UP);
-        // final response = await http.post(
-        //     url,
-        //     body: {
-        //       "username": usernameController.text.trim(),
-        //       "email": emailController.text.trim(),
-        //       "first_name": firstnameController.text.trim(),
-        //       "last_name": lastnameController.text.trim(),
-        //       "password": passwordController.text.trim(),
-        //       "re_password": confirmPasswordController.text.trim(),
-        //     });
         final response = await AuthApiService.userSignup(usernameController.text.trim(), emailController.text.trim(), firstnameController.text.trim(), lastnameController.text.trim(), passwordController.text.trim(), confirmPasswordController.text.trim());
 
         if (response.statusCode == 201) {
           final decodedData = jsonDecode(response.body);
           UserSharedPreference.setAccessToken(decodedData['access_token']);
-          print('========== Access Token: ${decodedData['access_token']} ==========');
+          if (kDebugMode) {
+            print('========== Access Token: ${decodedData['access_token']} ==========');
+          }
 
-          // var url = Uri.parse(USER_PROFILE_GET);
-          // final userRes = await http.get(
-          //     url,
-          //     headers: {
-          //       "Content-Type": "application/json",
-          //       "Authorization": "Bearer ${decodedData['access_token']}",
-          //     });
           final userRes = await AuthApiService.userProfile(decodedData['access_token']);
 
           if (userRes.statusCode == 200) {
