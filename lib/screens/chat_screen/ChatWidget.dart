@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../models/BananaChatModel.dart';
-import '../utils/app_colors.dart';
-import '../utils/app_images.dart';
-import './TextWidget.dart';
+import '../../models/BananaChatModel.dart';
+import '../../utils/app_colors.dart';
+import '../../utils/app_images.dart';
+import 'TextWidget.dart';
 
 class ChatWidget extends StatefulWidget {
   const ChatWidget({Key? key, required this.msg, required this.chatIndex, required this.dropdownData}) : super(key: key);
@@ -107,14 +107,14 @@ class _ChatWidgetState extends State<ChatWidget> {
                             //   ],
                             // ),
                           /// showing dynamic data ===================
-                          if (widget.dropdownData.isNotEmpty)
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: widget.dropdownData.length,
-                              itemBuilder: (context, index) {
-                                return TextWidget(label: widget.dropdownData[index].nameDisplay!);
-                              },
-                            ),
+                          // if (widget.dropdownData.isNotEmpty)
+                          //   ListView.builder(
+                          //     shrinkWrap: true,
+                          //     itemCount: widget.dropdownData.length,
+                          //     itemBuilder: (context, index) {
+                          //       return TextWidget(label: widget.dropdownData[index].nameDisplay!);
+                          //     },
+                          //   ),
                         ],
                       ), // WITHOUT TYPING ANIMATION
                       // : DefaultTextStyle(

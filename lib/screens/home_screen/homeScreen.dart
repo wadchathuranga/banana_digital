@@ -1,7 +1,7 @@
 import 'package:banana_digital/screens/zoom_drawer_menu/menu_widget.dart';
 import 'package:flutter/material.dart';
 import '../../utils/app_images.dart';
-import '../../widgets/GridView.dart';
+import 'GridView.dart';
 import '../../widgets/PopupMenu.dart';
 
 class HomeScreen extends StatefulWidget {

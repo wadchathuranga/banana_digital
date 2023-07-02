@@ -1,18 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
+import '../../services/C1_disease_detection_api_service.dart';
 import '../../models/DiseaseDetectionModel.dart';
 import '../../services/shared_preference.dart';
 import '../../utils/app_colors.dart';
-import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
-import '../../widgets/TextWidget.dart';
+import '../chat_screen/TextWidget.dart';
 import './DiseaseDetectionResultScreen.dart';
 
 class DiseasePredictionMainScreen extends StatefulWidget {
@@ -234,28 +235,29 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
 
   Future _proceedToClassification(imageFile) async {
     try {
-      // string to uri
-      var uri = Uri.parse(DISEASE_DETECTION);
+      // // string to uri
+      // var uri = Uri.parse(DISEASE_DETECTION);
+      //
+      // // create multipart request
+      // var request = http.MultipartRequest("POST", uri);
+      //
+      // // multipart that takes file
+      // var multipartFile = await http.MultipartFile.fromPath('image', imageFile.path);
+      //
+      // // add file to multipart
+      // request.files.add(multipartFile);
+      //
+      // // herders
+      // var headers = {
+      //   'Authorization': 'Bearer $accessToken'
+      // };
+      //
+      // // set headers to request
+      // request.headers.addAll(headers);
+      //
+      // // send request
 
-      // create multipart request
-      var request = http.MultipartRequest("POST", uri);
-
-      // multipart that takes file
-      var multipartFile = await http.MultipartFile.fromPath('image', imageFile.path);
-
-      // add file to multipart
-      request.files.add(multipartFile);
-
-      // herders
-      var headers = {
-        'Authorization': 'Bearer $accessToken'
-      };
-
-      // set headers to request
-      request.headers.addAll(headers);
-
-      // send request
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response = await C1DiseaseDetectionApiService.proceedToClassification(imageFile: imageFile, accessToken: accessToken!);
 
       if (response.statusCode == 200) {
         final resString = await response.stream.bytesToString();

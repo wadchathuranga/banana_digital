@@ -4,12 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/C3_harvest_prediction_api_service.dart';
 import '../../models/HarvestPredictionModel.dart';
 import '../../services/shared_preference.dart';
 import '../../utils/app_configs.dart';
 import '../../widgets/LanguagePicker.dart';
 import '../../widgets/Loading.dart';
-import '../../widgets/TextWidget.dart';
+import '../chat_screen/TextWidget.dart';
 import './HarvestPredictionResultScreen.dart';
 
 class HarvestPredictionMainScreen extends StatefulWidget {
@@ -137,14 +138,16 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
         "height": double.parse(heightController.text),
       };
 
-      var url = Uri.parse('$HARVEST_PREDICTION/predict');
-      final response = await http.post(
-          url,
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer $accessToken",
-          },
-          body: jsonEncode(bodyData));
+      // var url = Uri.parse('$HARVEST_PREDICTION/predict');
+      // final response = await http.post(
+      //     url,
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       "Authorization": "Bearer $accessToken",
+      //     },
+      //     body: jsonEncode(bodyData));
+
+      http.Response response = await C3HarvestPredictionApiService.estimateHarvest(accessToken: accessToken!, bodyData: bodyData);
 
       final resData = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -179,7 +182,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
         ),
       );
       if (kDebugMode) {
-        print("================= Catch Error ====================");
+        print("================= Catch Error [estimateHarvest()] ====================");
         print(err);
         print("==================================================");
       }
@@ -188,13 +191,15 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
 
   Future getAllVarieties() async {
     try {
-      var url = Uri.parse(HARVEST_PREDICTION_GET_ALL_VARITIES);
-      final response = await http.get(
-        url,
-        headers: {
-          "Authorization": "Bearer $accessToken",
-        },
-      );
+      // var url = Uri.parse(HARVEST_PREDICTION_GET_ALL_VARITIES);
+      // final response = await http.get(
+      //   url,
+      //   headers: {
+      //     "Authorization": "Bearer $accessToken",
+      //   },
+      // );
+
+      http.Response response = await C3HarvestPredictionApiService.getAllVarieties(accessToken: accessToken!);
 
       final resData = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -219,7 +224,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
         ),
       );
       if (kDebugMode) {
-        print("================= Catch Error ====================");
+        print("================= Catch Error [getAllVarieties()] ====================");
         print(err);
         print("==================================================");
       }
@@ -228,13 +233,15 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
 
   Future calculateDay(varietyId, age) async {
     try {
-      var url = Uri.parse('$HARVEST_PREDICTION_DAYS?variety=$varietyId&age=$age');
-      final response = await http.get(
-        url,
-        headers: {
-          "Authorization": "Bearer $accessToken",
-        },
-      );
+      // var url = Uri.parse('$HARVEST_PREDICTION_DAYS?variety=$varietyId&age=$age');
+      // final response = await http.get(
+      //   url,
+      //   headers: {
+      //     "Authorization": "Bearer $accessToken",
+      //   },
+      // );
+
+      http.Response response = await C3HarvestPredictionApiService.calculateHarvestingDay(accessToken: accessToken!, varietyId: varietyId, age: age);
 
       final resData = jsonDecode(response.body);
       if (response.statusCode == 200) {
