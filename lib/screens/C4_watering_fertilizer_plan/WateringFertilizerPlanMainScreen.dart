@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:banana_digital/services/C3_harvest_prediction_api_service.dart';
-import 'package:banana_digital/services/C4_watering_fertilizer_api_service.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../services/C3_harvest_prediction_api_service.dart';
+import '../../services/C4_watering_fertilizer_api_service.dart';
 import '../../models/FertilizerPlanModel.dart';
 import '../../services/weather_api_service.dart';
 import '../../models/CurrentWeatherModel.dart';
@@ -140,13 +141,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
 
   Future getAllVarieties() async {
     try {
-      // var url = Uri.parse(HARVEST_PREDICTION_GET_ALL_VARITIES);
-      // final response = await http.get(
-      //   url,
-      //   headers: {
-      //     "Authorization": "Bearer $accessToken",
-      //   },
-      // );
 
       http.Response response = await C3HarvestPredictionApiService.getAllVarieties(accessToken: accessToken!);
 
@@ -299,20 +293,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
 
   Future callToMakeThePlans(urlConst, dataBody, croppedImg) async {
     try {
-      // var headers = {
-      //   'Authorization': 'Bearer $accessToken'
-      // };
-      // var url = Uri.parse(urlConst); // url define
-      // var request = http.MultipartRequest(
-      //     'POST', url); // create multipart request
-      // var multipartFile = await http.MultipartFile.fromPath(
-      //     'soil_image', croppedImg.path);
-      //
-      // request.fields.addAll(dataBody); // set tha data body
-      // request.files.add(multipartFile); // multipart that takes file
-      // request.headers.addAll(headers); // set the headers
-      //
-      // http.StreamedResponse response = await request.send();
 
       http.StreamedResponse response = await C4WateringFertilizerApiService.predictThePlan(accessToken: accessToken!, urlConst: urlConst, croppedImg: croppedImg, dataBody: dataBody);
 

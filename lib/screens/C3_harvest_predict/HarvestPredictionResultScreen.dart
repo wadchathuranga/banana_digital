@@ -1,10 +1,9 @@
-import 'package:banana_digital/screens/C3_harvest_predict/PostHarvestBestPracticesScreen.dart';
-import 'package:banana_digital/utils/app_colors.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../screens/C3_harvest_predict/PostHarvestBestPracticesScreen.dart';
 import '../../models/HarvestPredictionModel.dart';
+import '../../utils/app_colors.dart';
 
 class HarvestPredictionResultScreen extends StatefulWidget {
   const HarvestPredictionResultScreen({Key? key, required this.result}) : super(key: key);

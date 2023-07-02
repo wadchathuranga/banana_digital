@@ -38,13 +38,6 @@ class _FertilizerPlanHistoryScreenState extends State<FertilizerPlanHistoryScree
   // Get harvest prediction histories API
   Future fetchHistoryData() async {
     try {
-      // var url = Uri.parse(FERTILIZER_PLAN_HISTORY);
-      // final response = await http.get(
-      //   url,
-      //   headers: {
-      //     "Authorization": "Bearer $accessToken",
-      //   },
-      // );
 
       http.Response response = await C4WateringFertilizerApiService.getWateringFertilizerHistory(accessToken: accessToken!, urlConst: FERTILIZER_PLAN_HISTORY);
 

@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:banana_digital/services/auth_api_service.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../services/auth_api_service.dart';
 import '../../services/shared_preference.dart';
 import '../../utils/app_colors.dart';
-import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
 import '../../widgets/PopupMenu.dart';
 import '../../utils/app_images.dart';
@@ -65,43 +64,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   //update user details
   Future _updateProfile() async {
-    // var url = Uri.parse(USER_PROFILE_UPDATE);
-    // final response = await http.patch(
-    //     url,
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "Authorization": "Bearer $accessToken",
-    //     },
-    //     body: jsonEncode({
-    //       "first_name": firstnameController.text,
-    //       "last_name": lastnameController.text,
-    //     }));
-    final response = await AuthApiService.updateUserProfile(firstnameController.text.trim(), lastnameController.text.trim(), accessToken!);
+    try {
+      final response = await AuthApiService.updateUserProfile(firstnameController.text.trim(), lastnameController.text.trim(), accessToken!);
 
-    if (response.statusCode == 200) {
-      await UserSharedPreference.setFirstName(firstnameController.text);
-      await UserSharedPreference.setLastName(lastnameController.text);
+      if (response.statusCode == 200) {
+        await UserSharedPreference.setFirstName(firstnameController.text);
+        await UserSharedPreference.setLastName(lastnameController.text);
+        if (!mounted) return;
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: TextWidget(label: "User Updated."),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        if (!mounted) return;
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: TextWidget(label: "Something went wrong!"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (err) {
       if (!mounted) return;
       setState(() {
         isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: TextWidget(label: "User Updated."),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      if (!mounted) return;
-      setState(() {
-        isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: TextWidget(label: "Something went wrong!"),
+        SnackBar(content: TextWidget(label: err.toString()),
           backgroundColor: Colors.red,
         ),
       );
+      if (kDebugMode) {
+        print("================= Catch Error [_updateProfile] ====================");
+        print(err);
+        print("==================================================");
+      }
     }
-
   }
 
   @override

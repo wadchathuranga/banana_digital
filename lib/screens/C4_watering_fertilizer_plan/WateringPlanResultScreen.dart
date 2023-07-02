@@ -1,9 +1,8 @@
-import 'package:banana_digital/models/WateringPlanModel.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../models/WateringPlanModel.dart';
 import '../../utils/app_colors.dart';
 
 class WateringPlanResultScreen extends StatefulWidget {

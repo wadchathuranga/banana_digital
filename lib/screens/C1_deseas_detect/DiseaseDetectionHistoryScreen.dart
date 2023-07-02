@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:banana_digital/utils/app_configs.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../../models/DiseaseDetectionModel.dart';
@@ -38,14 +36,6 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
   // Get disease detection histories by API
   Future fetchHistoryData() async {
     try {
-      // var url = Uri.parse(DISEASE_DETECTION_HISTORIES);
-      // final response = await http.get(
-      //   url,
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     "Authorization": "Bearer $accessToken",
-      //   },
-      // );
 
       final response = await C1DiseaseDetectionApiService.diseaseDetectionHistory(accessToken: accessToken!);
 
@@ -204,9 +194,9 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Column(
+                                    const Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: const [
+                                      children: [
                                         Text(
                                           'Disease Name:',
                                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

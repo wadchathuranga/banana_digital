@@ -1,8 +1,8 @@
-import 'package:banana_digital/models/FertilizerPlanModel.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
+import '../../models/FertilizerPlanModel.dart';
 import '../../utils/app_colors.dart';
 
 class FertilizerPlanResultScreen extends StatefulWidget {
