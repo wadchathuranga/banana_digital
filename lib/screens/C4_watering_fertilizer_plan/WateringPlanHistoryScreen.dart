@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:banana_digital/services/C4_watering_fertilizer_api_service.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +12,7 @@ import '../../services/shared_preference.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
-import '../../widgets/TextWidget.dart';
+import '../chat_screen/TextWidget.dart';
 
 class WateringPlanHistoryScreen extends StatefulWidget {
   const WateringPlanHistoryScreen({Key? key}) : super(key: key);
@@ -36,13 +37,15 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
   // Get harvest prediction histories API
   Future fetchHistoryData() async {
     try {
-      var url = Uri.parse(WATERING_PLAN_HISTORY);
-      final response = await http.get(
-        url,
-        headers: {
-           "Authorization": "Bearer $accessToken",
-        },
-      );
+      // var url = Uri.parse(WATERING_PLAN_HISTORY);
+      // final response = await http.get(
+      //   url,
+      //   headers: {
+      //      "Authorization": "Bearer $accessToken",
+      //   },
+      // );
+
+      http.Response response = await C4WateringFertilizerApiService.getWateringFertilizerHistory(accessToken: accessToken!, urlConst: WATERING_PLAN_HISTORY);
 
       if (response.statusCode == 200) {
         List<dynamic> resData = jsonDecode(response.body);
@@ -73,7 +76,7 @@ class _WateringPlanHistoryScreenState extends State<WateringPlanHistoryScreen> {
         ),
       );
       if (kDebugMode) {
-        print("================= Catch Error ====================");
+        print("================= Catch Error [fetchWateringPlanHistoryData] ====================");
         print(err);
         print("==================================================");
       }

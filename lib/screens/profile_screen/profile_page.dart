@@ -13,7 +13,7 @@ import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
 import '../../widgets/PopupMenu.dart';
 import '../../utils/app_images.dart';
-import '../../widgets/TextWidget.dart';
+import '../chat_screen/TextWidget.dart';
 import '../zoom_drawer_menu/menu_widget.dart';
 
 class ProfileScreen extends StatefulWidget {

@@ -1,24 +1,19 @@
 import 'dart:convert';
 
-import 'package:banana_digital/services/auth_api_service.dart';
-import 'package:banana_digital/services/shared_preference.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
+import '../../services/auth_api_service.dart';
+import '../../services/shared_preference.dart';
 import '../../models/User.dart';
 import '../../services/google_api_service.dart';
-import '../../utils/app_configs.dart';
 import '../../utils/app_images.dart';
 import '../../main.dart';
-import '../../widgets/TextWidget.dart';
+import '../chat_screen/TextWidget.dart';
 import './signup_page.dart';
-import './reset_password.dart';
-import '../screenHome/homeScreen.dart';
 
 
 class LoginScreen extends StatefulWidget {

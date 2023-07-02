@@ -1,22 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
 import '../../models/User.dart';
 import '../../services/auth_api_service.dart';
-import '../../services/google_api_service.dart';
 import '../../services/shared_preference.dart';
-import '../../utils/app_colors.dart';
-import '../../utils/app_configs.dart';
 import '../../utils/app_images.dart';
-import '../../widgets/TextWidget.dart';
+import '../chat_screen/TextWidget.dart';
 import './login_page.dart';
-import '../screenHome/homeScreen.dart';
 
 
 class SignupScreen extends StatefulWidget {

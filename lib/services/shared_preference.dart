@@ -56,6 +56,7 @@ class UserSharedPreference {
     prefs!.remove('prop_pic');
     prefs!.remove('login_type');
     prefs!.remove('tag');
+    prefs!.remove('language');
   }
 
 

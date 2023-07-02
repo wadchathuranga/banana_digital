@@ -8,10 +8,11 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../../models/DiseaseDetectionModel.dart';
+import '../../services/C1_disease_detection_api_service.dart';
 import '../../services/shared_preference.dart';
 import '../../utils/app_colors.dart';
 import '../../widgets/Loading.dart';
-import '../../widgets/TextWidget.dart';
+import '../chat_screen/TextWidget.dart';
 import './CuresForDiseaseScreen.dart';
 
 class DiseaseDetectionHistoryScreen extends StatefulWidget {
@@ -37,14 +38,16 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
   // Get disease detection histories by API
   Future fetchHistoryData() async {
     try {
-      var url = Uri.parse(DISEASE_DETECTION_HISTORIES);
-      final response = await http.get(
-        url,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $accessToken",
-        },
-      );
+      // var url = Uri.parse(DISEASE_DETECTION_HISTORIES);
+      // final response = await http.get(
+      //   url,
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     "Authorization": "Bearer $accessToken",
+      //   },
+      // );
+
+      final response = await C1DiseaseDetectionApiService.diseaseDetectionHistory(accessToken: accessToken!);
 
       if (response.statusCode == 200) {
         List<dynamic> resData = jsonDecode(response.body);
@@ -234,8 +237,8 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                   ],
                                 ),
                                 const SizedBox(height: 10),
-                                Row(
-                                  children: const [
+                                const Row(
+                                  children: [
                                     Expanded(
                                       child: Text('Original Image', textAlign: TextAlign.center,),
                                     ),
@@ -254,13 +257,13 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                   endIndent: 100,
                                   thickness: 2,
                                 ),
-                                Row(
+                                const Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text(
                                             'Disease Name',
                                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -271,7 +274,7 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text(
                                             'Probability',
                                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -282,7 +285,7 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text(
                                             'Total Areas',
                                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -339,9 +342,9 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                 const SizedBox(height: 50),
                                 ElevatedButton(
                                   onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: diseaseDetectedHistory.disease!))),
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: const [
+                                    children: [
                                       Text('Cures for Disease'),
                                       SizedBox(width: 10),
                                       Icon(Icons.arrow_circle_right_outlined),

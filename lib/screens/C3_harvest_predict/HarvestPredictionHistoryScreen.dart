@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:banana_digital/services/C3_harvest_prediction_api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:expandable/expandable.dart';
@@ -11,7 +12,7 @@ import '../../services/shared_preference.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_configs.dart';
 import '../../widgets/Loading.dart';
-import '../../widgets/TextWidget.dart';
+import '../chat_screen/TextWidget.dart';
 import 'PostHarvestBestPracticesScreen.dart';
 
 
@@ -41,14 +42,16 @@ class _HarvestPredictionHistoryScreenState extends State<HarvestPredictionHistor
   // Get harvest prediction histories API
   Future fetchHistoryData() async {
     try {
-      var url = Uri.parse(HARVEST_PREDICTION_HISTORIES);
-      final response = await http.get(
-        url,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $accessToken",
-        },
-      );
+      // var url = Uri.parse(HARVEST_PREDICTION_HISTORIES);
+      // final response = await http.get(
+      //   url,
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     "Authorization": "Bearer $accessToken",
+      //   },
+      // );
+
+      http.Response response = await C3HarvestPredictionApiService.getHarvestHistoryData(accessToken: accessToken!);
 
       if (response.statusCode == 200) {
         List<dynamic> resData = jsonDecode(response.body);

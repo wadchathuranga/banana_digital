@@ -1,9 +1,7 @@
-import 'package:banana_digital/models/BananaChatModel.dart';
-import 'package:banana_digital/services/shared_preference.dart';
 import 'package:flutter/material.dart';
 
-import '../models/chat_model.dart';
 import '../services/chat_api_services.dart';
+import '../models/BananaChatModel.dart';
 
 class ChatProvider with ChangeNotifier {
   List<BananaChatModel> chatList = [];
@@ -13,20 +11,24 @@ class ChatProvider with ChangeNotifier {
   }
 
   void addUserMessage({required String msg}) {
-    chatList.add(BananaChatModel(chatIndex: 0, response: msg, language: 'en', tag: 'default_tag', diseases: []));
+    chatList.add(BananaChatModel(chatIndex: 0, response: msg, diseases: [])); // language: 'en', tag: 'default_tag',
     notifyListeners();
   }
 
-  Future<void> sendMessageAndGetAnswers({required String msg, required String accessToken, required String? tag, required String lang}) async {
-    chatList.add(
-      await ChatApiServices.sendMessage(
-        accessToken: accessToken,
-        message: msg,
-        tag: tag,
-        lang: lang,
-      ),
-    );
-    notifyListeners();
+  Future sendMessageAndGetAnswers({required String msg, required String accessToken, required String? tag, required String? lang}) async {
+    try {
+      chatList.add(
+        await ChatApiServices.sendMessage(
+          accessToken: accessToken,
+          message: msg,
+          tag: tag,
+          lang: lang,
+        ),
+      );
+      notifyListeners();
+    } catch (err) {
+      throw Exception(err.toString());
+    }
   }
 
   Future<void> sendMessageApi2AndGetAnswers({required String msg, required String accessToken, required String? tag, required String lang, required int diseaseId}) async {

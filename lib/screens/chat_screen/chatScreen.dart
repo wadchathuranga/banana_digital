@@ -9,12 +9,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
-import '../../providers/chat_provider.dart';
-import '../../widgets/ChatWidget.dart';
-import '../../widgets/LanguagePicker.dart';
-import '../../widgets/TextWidget.dart';
-import '../widgets/PopupMenu.dart';
+import '../../l10n/l10n.dart';
+import '../../../providers/chat_provider.dart';
+import 'ChatWidget.dart';
+import '../../../widgets/LanguagePicker.dart';
+import 'TextWidget.dart';
+import '../../providers/local_provider.dart';
+import '../../widgets/PopupMenu.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -56,29 +59,33 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
+    final tag = UserSharedPreference.getTagValue();
+    final lang = UserSharedPreference.getLanguage();
+    print(lang);
     return Scaffold(
       backgroundColor: AppColors.chatScaffoldBackgroundColor,
-      appBar: AppBar(
-        leading: const MenuWidget(),
-        title: const Text('Chat'),
-        actions: <Widget>[
-          // LanguagePicker(),
-          IconButton(
-            onPressed: () {
-              UserSharedPreference.clearTag();
-              chatProvider.chatList.clear();
-              _isTyping = false;
-              selectedValue = null;
-              setState(() { });
-            },
-            icon: const Icon(Icons.clear_sharp),
-          ),
-          const PopupMenu(),
-        ],
-      ),
+      // appBar: AppBar(
+      //   leading: const MenuWidget(),
+      //   title: const Text('Chat'),
+      //   actions: <Widget>[
+      //     // LanguagePicker(),
+      //     IconButton(
+      //       onPressed: () {
+      //         UserSharedPreference.clearTag();
+      //         chatProvider.chatList.clear();
+      //         _isTyping = false;
+      //         selectedValue = null;
+      //         setState(() { });
+      //       },
+      //       icon: const Icon(Icons.clear_sharp),
+      //     ),
+      //     const PopupMenu(),
+      //   ],
+      // ),
       body: SafeArea(
         child: Column(
           children: [
+            if (chatProvider.getChatList.isNotEmpty)
               Flexible(
               child: ListView.builder(
                 controller: _listScrollController,
@@ -91,8 +98,18 @@ class _ChatScreenState extends State<ChatScreen> {
                   );
                 },
               ),
-            ),
-            if(_isTyping) ...[
+            )
+            else
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(AppLocalizations.of(context)!.selectLanguage),
+                    const LanguagePicker(),
+                  ],
+                ),
+              ),
+            if (_isTyping) ...[
               const SpinKitThreeBounce(
                 color: Colors.white,
                 size: 18,
@@ -126,7 +143,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    labelText: 'Select your choice',
+                                    labelText: AppLocalizations.of(context)!.dropdown,
                                     labelStyle: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
@@ -149,8 +166,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     setState(() {
                                       selectedValue = newValueSelected!;
                                     });
-                                    final tag = UserSharedPreference.getTagValue();
-                                    await sendChoseMsgForBot(displayName: displayName, chatProvider: chatProvider, tag: tag, diseaseId: int.parse(newValueSelected.toString()));
+                                    await sendChoseMsgForBot(displayName: displayName, chatProvider: chatProvider, tag: tag, lang: lang, diseaseId: int.parse(newValueSelected.toString()));
                                   },
                                   value: selectedValue,
                                   isExpanded: false,
@@ -167,12 +183,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                 style: const TextStyle(color: Colors.white),
                                 controller: textEditingController,
                                 onSubmitted: (value) async {
-                                  final tag = UserSharedPreference.getTagValue();
-                                  await sendMessageFCT(chatProvider: chatProvider, msg: textEditingController.text, tag: tag);
+                                  await sendMessageFCT(chatProvider: chatProvider, msg: textEditingController.text, tag: tag, lang: lang);
                                 },
-                                decoration: const InputDecoration.collapsed(
-                                  hintText: 'How can I help you..?',
-                                  hintStyle: TextStyle(
+                                decoration: InputDecoration.collapsed(
+                                  hintText: AppLocalizations.of(context)!.commonMsg,
+                                  hintStyle: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.white,
                                   ),
@@ -182,8 +197,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           IconButton(
                             icon: const Icon(Icons.send, color: Colors.white),
                             onPressed: () async {
-                              final tag = UserSharedPreference.getTagValue();
-                              await sendMessageFCT(chatProvider: chatProvider, msg: textEditingController.text, tag: tag);
+                              await sendMessageFCT(chatProvider: chatProvider, msg: textEditingController.text, tag: tag, lang: lang);
                             },
                           ),
                         ],
@@ -196,6 +210,21 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
+      floatingActionButton: (chatProvider.getChatList.isEmpty)
+          ? null
+          : FloatingActionButton(
+              onPressed: () {
+                UserSharedPreference.clearTag();
+                chatProvider.chatList.clear();
+                _isTyping = false;
+                selectedValue = null;
+                setState(() { });
+              },
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              child: const Icon(Icons.clear_sharp),
+            ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
     );
   }
 
@@ -203,7 +232,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _listScrollController.animateTo(_listScrollController.position.maxScrollExtent, duration: const Duration(seconds: 1), curve: Curves.easeInOut);
   }
 
-  Future<void> sendChoseMsgForBot({required displayName, required ChatProvider chatProvider, required String? tag, required int diseaseId}) async {
+  Future<void> sendChoseMsgForBot({required displayName, required ChatProvider chatProvider, required String? tag, required String? lang, required int diseaseId}) async {
     try {
       String msg = textEditingController.text;
       setState(() {
@@ -211,7 +240,7 @@ class _ChatScreenState extends State<ChatScreen> {
         chatProvider.addUserMessage(msg: displayName);
         focusNode.unfocus();
       });
-      chatProvider.sendMessageApi2AndGetAnswers(msg: msg, accessToken: accessToken!, tag: tag, lang: 'en', diseaseId: diseaseId)
+      chatProvider.sendMessageApi2AndGetAnswers(msg: msg, accessToken: accessToken!, tag: tag, lang: 'si', diseaseId: diseaseId)
           .then((value) => {
         scrollListToEND(),
         setState(() {
@@ -230,7 +259,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> sendMessageFCT({required ChatProvider chatProvider, required String msg, required String? tag}) async {
+  Future<void> sendMessageFCT({required ChatProvider chatProvider, required String msg, required String? tag, required String? lang}) async {
     // avoid send another msg before coming response of previous one
     if (_isTyping) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -259,7 +288,7 @@ class _ChatScreenState extends State<ChatScreen> {
         textEditingController.clear();
         focusNode.unfocus();
       });
-      chatProvider.sendMessageAndGetAnswers(msg: msg, accessToken: accessToken!, tag: tag, lang: 'en')
+      chatProvider.sendMessageAndGetAnswers(msg: msg, accessToken: accessToken!, tag: tag, lang: lang)
           .then((value) => {
                 scrollListToEND(),
                 setState(() {

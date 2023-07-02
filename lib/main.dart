@@ -1,5 +1,3 @@
-import 'package:banana_digital/screens/C4_watering_fertilizer_plan/FertilizerPlanHistoryScreen.dart';
-import 'package:banana_digital/screens/C4_watering_fertilizer_plan/WateringPlanHistoryScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -13,16 +11,18 @@ import '../screens/C2_disease_identification/DiseaseIdentificationMainScreen.dar
 import '../screens/C3_harvest_predict/HarvestPredictionMainScreen.dart';
 import '../screens/C3_harvest_predict/HarvestPredictionHistoryScreen.dart';
 import '../screens/C4_watering_fertilizer_plan/WateringFertilizerPlanMainScreen.dart';
+import '../screens/C4_watering_fertilizer_plan/WateringPlanHistoryScreen.dart';
+import '../screens/C4_watering_fertilizer_plan/FertilizerPlanHistoryScreen.dart';
 import '../services/shared_preference.dart';
-import '../screens/chatScreen.dart';
 import '../screens/zoom_drawer_menu/menu_item.dart';
 import '../screens/zoom_drawer_menu/menu_page.dart';
 import '../providers/chat_provider.dart';
 import '../providers/local_provider.dart';
 import '../screens/AboutScreen.dart';
-import '../screens/profile/profile_page.dart';
-import '../screens/screenHome/homeScreen.dart';
+import '../screens/profile_screen/profile_page.dart';
+import '../screens/home_screen/homeScreen.dart';
 import '../screens/splash_screen.dart';
+import './screens/chat_screen/chatScreen.dart';
 import './l10n/l10n.dart';
 
 void main() async {
@@ -93,15 +93,6 @@ class _MainPageState extends State<MainPage> {
 
   MenuItem currentItem = MenuItems.home;
 
-  // final navigationKey = GlobalKey<CurvedNavigationBarState>();
-  // int currentIndex = 0;
-
-  // final screens = [
-  //   const HomeScreen(),
-  //   const ChatScreen(),
-  //   const ProfileScreen(),
-  // ];
-
   //double tap to exit
   DateTime current = DateTime.now().subtract(const Duration(milliseconds: 1500));
   Future<bool> popped() {
@@ -131,37 +122,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    // final items = <Widget>[
-    //   const Icon(Icons.home, size: 30),
-    //   const Icon(Icons.chat, size: 30),
-    //   const Icon(Icons.person_pin_sharp, size: 30),
-    // ];
-    //
-    // return WillPopScope(
-    //   onWillPop: () => popped(),
-    //   child: Scaffold(
-    //     body: screens[currentIndex],
-    //     // body: const HomeScreen(),
-    //     bottomNavigationBar: Theme(
-    //       data: Theme.of(context).copyWith(
-    //         iconTheme: const IconThemeData(color: Colors.white),
-    //       ),
-    //       child: CurvedNavigationBar(
-    //         key: navigationKey,
-    //         backgroundColor: Colors.transparent,
-    //         items: items,
-    //         index: 0,
-    //         color: AppColors.primaryColor,
-    //         animationCurve: Curves.easeInOut,
-    //         animationDuration: const Duration(milliseconds: 250),
-    //         onTap: (index) => {
-    //           setState(()=>{ currentIndex = index }),
-    //         },
-    //       ),
-    //     ),
-    //   ),
-    // );
     return WillPopScope(
       onWillPop: () => popped(),
       child: ZoomDrawer(

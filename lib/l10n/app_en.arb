@@ -1,5 +1,5 @@
 {
-    "language": "English",
+    "language": "En",
     "@language": {
         "description": "The Current Language"
     },
@@ -22,5 +22,20 @@
     "q1desc": "The type of banana variety being grown (e.g. Cavendish, Williams, etc.)",
     "@questionnaireTitle": {
         "description": "1st question description of questionnaire"
+    },
+
+    "selectLanguage": "Choose a language",
+    "@selectLanguage": {
+        "description": "language choose message"
+    },
+
+    "commonMsg": "How can I help you..?",
+    "@commonMsg": {
+       "description": "chat screen send message text field"
+    },
+
+    "dropdown": "Select your choice",
+    "@dropdown": {
+       "description": "dropdown default label"
     }
 }

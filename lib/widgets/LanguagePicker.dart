@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/local_provider.dart';
 import '../l10n/l10n.dart';
+import '../services/shared_preference.dart';
 
 class LanguagePicker extends StatefulWidget {
   const LanguagePicker({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _LanguagePickerState extends State<LanguagePicker> {
               onTap: () {
                 final provider = Provider.of<LocaleProvider>(context, listen: false);
                 provider.setLocale(locale);
+                UserSharedPreference.setLanguage(locale.toString());
               },
               child: Center(
                 child: Text(
