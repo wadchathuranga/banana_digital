@@ -35,7 +35,12 @@ class _CuresForDiseaseIdentificationScreenState extends State<CuresForDiseaseIde
                   },
                 )
               else
-                const CircularProgressIndicator(),
+                const Padding(
+                  padding: EdgeInsets.all(25.0),
+                  child: Center(
+                    child: Text('Data not available'),
+                  ),
+                ),
             ],
           ),
 
@@ -136,9 +141,9 @@ class _CuresForDiseaseIdentificationScreenState extends State<CuresForDiseaseIde
   Widget _imageWidget(imageUrl) {
     if (imageUrl != null) {
       return Image.network( /// TODO: image not found exception should be validate
-        imageUrl,
+        imageUrl.toString(),
         errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-          return const Text('Image not found');
+          return const Text('Image not found', style: TextStyle(color: Colors.red),);
         },
       );
     } else {

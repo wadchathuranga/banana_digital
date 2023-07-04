@@ -1,5 +1,6 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../models/HarvestPredictionModel.dart';
 import '../../utils/app_colors.dart';
@@ -103,11 +104,9 @@ class _PostHarvestBestPracticesScreenState extends State<PostHarvestBestPractice
                             padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
                             child: Column(
                               children: [
-                                Text(postHarvestPractices.description.toString()),
-                                // TODO: Modify code to render markdown text
-                                // MarkdownBody(
-                                //   data: postHarvestPractices.description.toString(),
-                                // )
+                                MarkdownBody(
+                                  data: postHarvestPractices.description.toString(),
+                                )
                               ],
                             ),
                           ),
