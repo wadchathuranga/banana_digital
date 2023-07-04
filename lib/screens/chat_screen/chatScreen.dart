@@ -87,6 +87,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   return ChatWidget(
                     msg: chatProvider.getChatList[index].response!,
                     chatIndex: chatProvider.getChatList[index].chatIndex!,
+                    isCures: chatProvider.getChatList[index].toCures ?? false,
                     dropdownData:  chatProvider.getChatList[index].diseases == null ? [] : chatProvider.getChatList[index].diseases!,
                   );
                 },
@@ -150,7 +151,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     return DropdownMenuItem(
                                       value: value.id
                                           .toString(),
-                                      child: Text('${value.nameDisplay} (${(value.confidence! * 100).toStringAsFixed(2)}%)'),
+                                      child: Text('${value.nameDisplay} ${(value.confidence == null) ? '' : '(${(value.confidence! * 100).toStringAsFixed(2)}%)'}'),
                                     );
                                   }).toList(),
                                   onChanged: (newValueSelected) async {

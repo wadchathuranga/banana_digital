@@ -33,7 +33,7 @@ class ChatProvider with ChangeNotifier {
 
   Future<void> sendMessageApi2AndGetAnswers({required String msg, required String accessToken, required String? tag, required String lang, required int diseaseId}) async {
       chatList.add(
-        await ChatApiServices.sendMessageToGetDiseasesOrCuresById(
+        await ChatApiServices.sendMessageToGetDiseaseOrCuresById(
           accessToken: accessToken,
           message: msg,
           tag: tag,

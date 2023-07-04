@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import '../../models/BananaChatModel.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_images.dart';
-import 'TextWidget.dart';
+import './TextWidget.dart';
 
 class ChatWidget extends StatefulWidget {
-  const ChatWidget({Key? key, required this.msg, required this.chatIndex, required this.dropdownData}) : super(key: key);
 
+  const ChatWidget({Key? key, required this.msg, required this.isCures, required this.chatIndex, required this.dropdownData}) : super(key: key);
+
+  final bool isCures;
   final dynamic msg;
   final int chatIndex;
   final List<Diseases> dropdownData;
@@ -80,34 +82,41 @@ class _ChatWidgetState extends State<ChatWidget> {
                                               },
                                             )
                                           : Image.asset(AppImages.logoTW),
-                                    )
+                                    ),
+                                    const SizedBox(height: 10),
                                   ],
                                 );
                               },
                             ),
-                          /// showing dynamic data ===================
-                          // if (widget.dropdownData.isNotEmpty)
-                          //   ListView.builder(
-                          //     shrinkWrap: true,
-                          //     itemCount: widget.dropdownData.length,
-                          //     itemBuilder: (context, index) {
-                          //       return TextWidget(label: widget.dropdownData[index].nameDisplay!);
-                          //     },
-                          //   ),
+                          if (widget.isCures)
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: const SizedBox(
+                                height: 30,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_circle_left_outlined,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'Swipe left to try another method',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                         ],
-                      ), // WITHOUT TYPING ANIMATION
-                      // : DefaultTextStyle(
-                      //       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
-                      //       child: AnimatedTextKit(
-                      //         isRepeatingAnimation: false,
-                      //         repeatForever: false,
-                      //         displayFullTextOnTap: true,
-                      //         totalRepeatCount: 1,
-                      //         animatedTexts: [
-                      //           TyperAnimatedText(widget.msg.trim()),
-                      //         ],
-                      //       ),
-                      //   ),
+                      ),
                 ),
               ],
             ),

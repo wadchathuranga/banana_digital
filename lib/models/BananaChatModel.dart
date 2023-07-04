@@ -1,14 +1,16 @@
 class BananaChatModel {
   int? chatIndex;
   dynamic response;
+  bool? toCures;
   String? language;
   String? tag;
   List<Diseases>? diseases;
 
-  BananaChatModel({this.chatIndex,  this.response, this.language, this.tag, this.diseases});
+  BananaChatModel({this.chatIndex, this.toCures, this.response, this.language, this.tag, this.diseases});
 
   BananaChatModel.fromJson(Map<String, dynamic> json) {
     chatIndex = 1;
+    toCures = json['toCures'];
     response = json['response'];
     language = json['language'];
     tag = json['tag'];
