@@ -1,32 +1,52 @@
 {
     "language": "En",
     "@language": {
-        "description": "The Current Language"
+       "description": "The Current Language"
     },
 
     "required": "Required",
     "@language": {
-        "description": "Input field can not be null"
+       "description": "Input field can not be null"
     },
 
     "formTitle": "Fill the following questionnaire",
     "@questionnaireTitle": {
-        "description": "This is questionnaire form for collecting data"
+       "description": "This is questionnaire form for collecting data"
     },
 
     "q1name": "Variety",
     "@questionnaireTitle": {
-        "description": "1st question of questionnaire"
+       "description": "1st question of questionnaire"
+    },
+
+    "clear": "Clear Form",
+    "@clear": {
+       "description": "Clear Form"
+    },
+
+    "identifyDisease": "Identify the Disease",
+    "@identifyDisease": {
+       "description": "Identify the Disease"
+    },
+
+    "identifyDiseaseTabName": "Diseases Identification",
+    "@identifyDiseaseTabName": {
+       "description": "Diseases Identification"
+    },
+
+    "chatTabName": "Chat",
+    "@chatTabName": {
+       "description": "Chat"
     },
 
     "q1desc": "The type of banana variety being grown (e.g. Cavendish, Williams, etc.)",
     "@questionnaireTitle": {
-        "description": "1st question description of questionnaire"
+       "description": "1st question description of questionnaire"
     },
 
     "selectLanguage": "Choose a language",
     "@selectLanguage": {
-        "description": "language choose message"
+       "description": "language choose message"
     },
 
     "commonMsg": "How can I help you..?",
@@ -37,5 +57,111 @@
     "dropdown": "Select your choice",
     "@dropdown": {
        "description": "dropdown default label"
+    },
+
+
+    "leafColor": "Leaf Color",
+    "@leafColor": {
+       "description": "Leaf Color"
+    },
+    "leafSpots": "Leaf Spots",
+    "@leafSpots": {
+       "description": "Leaf Spots"
+    },
+    "leafCurling": "Leaf Curling",
+    "@leafCurling": {
+       "description": "Leaf Curling"
+    },
+    "leafWilting": "Leaf Wilting",
+    "@leafWilting": {
+       "description": "Leaf Wilting"
+    },
+    "stemColor": "Stem Color",
+    "@stemColor": {
+       "description": "Stem Color"
+    },
+    "rootRot": "Root Rot",
+    "@rootRot": {
+       "description": "Root Rot"
+    },
+    "abnormalFruiting": "Abnormal Fruiting",
+    "@abnormalFruiting": {
+       "description": "Abnormal Fruiting"
+    },
+    "presenceOfPets": "Presence of Pets",
+    "@presenceOfPets": {
+       "description": "Presence of Pets"
+    },
+    "stuntedGrowth": "Stunted Growth",
+    "@stuntedGrowth": {
+       "description": "Stunted Growth"
+    },
+
+
+    "yellow": "Yellow",
+    "@yellow": {
+       "description": "Leaf Color Yellow"
+    },
+    "brown": "Brown",
+    "@brown": {
+       "description": "Color"
+    },
+    "paleGreen": "Pale Green",
+    "@paleGreen": {
+       "description": "Color"
+    },
+    "darkGreen": "Dark Green",
+    "@darkGreen": {
+       "description": "Color"
+    },
+    "black": "Black",
+    "@black": {
+       "description": "Color"
+    },
+    "red": "Red",
+    "@red": {
+       "description": "Color"
+    },
+    "green": "Green",
+    "@green": {
+       "description": "Color"
+    },
+    "none": "None",
+    "@none": {
+       "description": "None"
+    },
+    "yes": "Yes",
+    "@yes": {
+       "description": "Yes"
+    },
+    "no": "No",
+    "@no": {
+       "description": "No"
+    },
+    "normal": "Normal",
+    "@normal": {
+       "description": "Normal"
+    },
+    "slow": "Slow",
+    "@slow": {
+       "description": "Slow"
+    },
+    "distorted": "Distorted",
+    "@distorted": {
+       "description": "Distorted"
+    },
+    "aphids": "Aphids",
+    "@aphids": {
+       "description": "Aphids"
+    },
+    "caterpillars": "Caterpillars",
+    "@caterpillars": {
+       "description": "Caterpillars"
+    },
+    "mites": "Mites",
+    "@mites": {
+       "description": "Mites"
     }
+
+
 }

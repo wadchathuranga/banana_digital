@@ -1,15 +1,20 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:convert';
 
-import 'package:banana_digital/screens/chat_screen/chatScreen.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/chat_provider.dart';
+import '../../services/C2_disease_identification_api_service.dart';
+import '../../models/DiseaseIdentificationModel.dart';
+import '../../screens/chat_screen/chatScreen.dart';
 import '../../services/shared_preference.dart';
-import '../../widgets/LanguagePicker.dart';
+import '../../providers/chat_provider.dart';
 import '../../widgets/Loading.dart';
+import '../chat_screen/TextWidget.dart';
+import 'DiseaseIdentificationResultScreen.dart';
 
 
 class DiseaseIdentificationMainScreen extends StatefulWidget {
@@ -23,34 +28,19 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
 
   late TabController tabController;
 
+  String? accessToken;
+
   final _qaFormKey = GlobalKey<FormState>();
   bool isLoading = false;
 
-  final List leafColor = ["Yellow", "Brown", "Pale Green"];
   var selectedLeafColor;
-
-  final List leafSpots = ["Black", "Brown", "None"];
   var selectedLeafSpots;
-
-  final List leafWilting = ["Yes", "No"];
   var selectedLeafWilting;
-
-  final List leafCurling = ["Yes", "No"];
   var selectedLeafCurling;
-
-  final List stuntedGrowth = ["Slow Growth", "Normal"];
-  var selectedstuntedGrowth;
-
-  final List stemColor = ["Brown", "Black", "Yellow", "Red", "Green"];
+  var selectedStuntedGrowth;
   var selectedStemColor;
-
-  final List rootRot = ["Yes", "No"];
   var selectedRootRot;
-
-  final List abnormalFruiting = ["Normal", "Distorted"];
   var selectedAbnormalFruiting;
-
-  final List presenceOfPets = ["Aphids", "None", "Caterpillars", "Mites"];
   var selectedPresenceOfPets;
 
   // TextFormField common InputDecoration function
@@ -75,6 +65,7 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
   @override
   void initState() {
     super.initState();
+    accessToken = UserSharedPreference.getAccessToken().toString();
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
       setState(() { });
@@ -88,17 +79,56 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
   }
 
   //update user details
-  Future _estimatHarvest() async {
-    // var data = {
-    //   "username": usernameController.text,
-    //   "email": emailController.text,
-    // };
+  Future diseaseIdentification(lang) async {
+      try {
+        final dataBody = {
+          "leaf_color": selectedLeafColor,
+          "leaf_spots": selectedLeafSpots,
+          "leaf_wilting": selectedLeafWilting,
+          "leaf_curling": selectedLeafCurling,
+          "stunned_growth": selectedStuntedGrowth,
+          "stem_color": selectedStemColor,
+          "root_rot": selectedRootRot,
+          "abnormal_fruiting": selectedAbnormalFruiting,
+          "presence_of_pests": selectedPresenceOfPets,
+        };
 
-    Timer(const Duration(seconds: 8), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
+        http.Response response = await C2DiseaseIdentificationApiService.identifyDiseases(accessToken: accessToken!, dataBody: dataBody, lang: lang);
+        if (response.statusCode == 200) {
+          Map<String, dynamic> resData = jsonDecode(response.body);
+          if (!mounted) return;
+          setState(() {
+            isLoading = false;
+          });
+          final result = DiseaseIdentificationModel.fromJson(resData);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => DiseaseIdentificationResultScreen(result: result)));
+        } else {
+          if (!mounted) return;
+          setState(() {
+            isLoading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: TextWidget(label: response.reasonPhrase.toString()),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (err) {
+        if (!mounted) return;
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: TextWidget(label: err.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+        if (kDebugMode) {
+          print("================= Catch Error: [diseaseIdentification()] ====================");
+          print(err);
+          print("==================================================");
+        }
+      }
   }
 
   @override
@@ -117,7 +147,7 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
         // backgroundColor: chatScaffoldBackgroundColor,
         appBar: AppBar(
           // backgroundColor: chatScaffoldBackgroundColor,
-          title: (tabController.index == 0) ? const Text('Chat bot') : const Text('Disease Identification'),
+          title: (tabController.index == 0) ? Text(AppLocalizations.of(context)!.chatTabName) : Text(AppLocalizations.of(context)!.identifyDiseaseTabName),
           actions: <Widget>[
             Center(
               child: Text(
@@ -129,9 +159,9 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
           ],
           bottom: TabBar(
             controller: tabController,
-            tabs: const [
-              Tab(text: 'Chat', icon: Icon(Icons.chat)),
-              Tab(text: 'Disease Identify', icon: Icon(Icons.search_sharp))
+            tabs: [
+              Tab(text: AppLocalizations.of(context)!.chatTabName, icon: const Icon(Icons.chat)),
+              Tab(text: AppLocalizations.of(context)!.identifyDiseaseTabName, icon: const Icon(Icons.search_sharp))
             ],
           ),
         ),
@@ -154,7 +184,7 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
       selectedAbnormalFruiting = null;
       selectedRootRot = null;
       selectedLeafCurling = null;
-      selectedstuntedGrowth = null;
+      selectedStuntedGrowth = null;
       selectedLeafSpots = null;
       selectedStemColor = null;
       selectedLeafWilting = null;
@@ -162,6 +192,51 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
   }
 
   Widget diseaseIdentifyBySymptoms() {
+    final List leafColor = [
+      {"name": AppLocalizations.of(context)!.yellow, "value": "Yellow"},
+      {"name": AppLocalizations.of(context)!.brown, "value": "Brown"},
+      {"name": AppLocalizations.of(context)!.paleGreen, "value": "Pale Green"},
+      {"name": AppLocalizations.of(context)!.darkGreen, "value": "Dark Green"},
+    ];
+    final List leafSpots = [
+      {"name": AppLocalizations.of(context)!.black, "value": "Black"},
+      {"name": AppLocalizations.of(context)!.brown, "value": "Brown"},
+      {"name": AppLocalizations.of(context)!.none, "value": "None"},
+    ];
+    final List leafWilting = [
+      {"name": AppLocalizations.of(context)!.yes, "value": "Yes"},
+      {"name": AppLocalizations.of(context)!.no, "value": "No"},
+    ];
+    final List leafCurling = [
+      {"name": AppLocalizations.of(context)!.yes, "value": "Yes"},
+      {"name": AppLocalizations.of(context)!.no, "value": "No"},
+    ];
+    final List rootRot = [
+      {"name": AppLocalizations.of(context)!.yes, "value": "Yes"},
+      {"name": AppLocalizations.of(context)!.no, "value": "No"},
+    ];
+    final List stemColor = [
+      {"name": AppLocalizations.of(context)!.yellow, "value": "Yellow"},
+      {"name": AppLocalizations.of(context)!.brown, "value": "Brown"},
+      {"name": AppLocalizations.of(context)!.green, "value": "Green"},
+      {"name": AppLocalizations.of(context)!.black, "value": "Black"},
+      {"name": AppLocalizations.of(context)!.red, "value": "Red"},
+    ];
+    final List stuntedGrowth = [
+      {"name": AppLocalizations.of(context)!.slow, "value": "Slow Growth"},
+      {"name": AppLocalizations.of(context)!.normal, "value": "Normal"},
+    ];
+    final List abnormalFruiting = [
+      {"name": AppLocalizations.of(context)!.normal, "value": "Normal"},
+      {"name": AppLocalizations.of(context)!.distorted, "value": "Distorted"},
+    ];
+    final List presenceOfPets = [
+      {"name": AppLocalizations.of(context)!.aphids, "value": "Aphids"},
+      {"name": AppLocalizations.of(context)!.none, "value": "None"},
+      {"name": AppLocalizations.of(context)!.caterpillars, "value": "Caterpillars"},
+      {"name": AppLocalizations.of(context)!.mites, "value": "Mites"},
+    ];
+    final lang = UserSharedPreference.getLanguage();
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -174,21 +249,16 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                   key: _qaFormKey,
                   child: Column(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 12.0, right: 12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Fill the following questionnaire',
-                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              'Using the provided data bellow, you can see watering plan, press the button to proceed with prediction process.',
-                            ),
-                          ],
-                        ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.formTitle,
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                       buildSizedBox(),
                       Row(
@@ -204,13 +274,13 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelText: 'Leaf Color',
+                                labelText: AppLocalizations.of(context)!.leafColor,
                               ),
-                              items: leafColor.map((variety) {
+                              items: leafColor.map((value) {
                                 return DropdownMenuItem(
-                                  value: variety
+                                  value: value['value']
                                       .toString(),
-                                  child: Text(variety
+                                  child: Text(value['name']
                                       .toString()),
                                 );
                               }).toList(),
@@ -236,13 +306,13 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelText: 'Leaf Spots',
+                                labelText: AppLocalizations.of(context)!.leafSpots,
                               ),
-                              items: leafSpots.map((variety) {
+                              items: leafSpots.map((value) {
                                 return DropdownMenuItem(
-                                  value: variety
+                                  value: value['value']
                                       .toString(),
-                                  child: Text(variety
+                                  child: Text(value['name']
                                       .toString()),
                                 );
                               }).toList(),
@@ -272,13 +342,13 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelText: 'Leaf Curling',
+                                labelText: AppLocalizations.of(context)!.leafCurling,
                               ),
                               items: leafCurling.map((value) {
                                 return DropdownMenuItem(
-                                  value: value
+                                  value: value['value']
                                       .toString(),
-                                  child: Text(value
+                                  child: Text(value['name']
                                       .toString()),
                                 );
                               }).toList(),
@@ -304,13 +374,13 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelText: 'Leaf Wilting',
+                                labelText: AppLocalizations.of(context)!.leafWilting,
                               ),
                               items: leafWilting.map((value) {
                                 return DropdownMenuItem(
-                                  value: value
+                                  value: value['value']
                                       .toString(),
-                                  child: Text(value
+                                  child: Text(value['name']
                                       .toString()),
                                 );
                               }).toList(),
@@ -340,13 +410,13 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelText: 'Stem Color',
+                                labelText: AppLocalizations.of(context)!.stemColor,
                               ),
                               items: stemColor.map((value) {
                                 return DropdownMenuItem(
-                                  value: value
+                                  value: value['value']
                                       .toString(),
-                                  child: Text(value
+                                  child: Text(value['name']
                                       .toString()),
                                 );
                               }).toList(),
@@ -372,13 +442,13 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelText: 'Root Rot',
+                                labelText: AppLocalizations.of(context)!.rootRot,
                               ),
                               items: rootRot.map((value) {
                                 return DropdownMenuItem(
-                                  value: value
+                                  value: value['value']
                                       .toString(),
-                                  child: Text(value
+                                  child: Text(value['name']
                                       .toString()),
                                 );
                               }).toList(),
@@ -408,13 +478,13 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelText: 'Abnormal Fruiting',
+                                labelText: AppLocalizations.of(context)!.abnormalFruiting,
                               ),
                               items: abnormalFruiting.map((value) {
                                 return DropdownMenuItem(
-                                  value: value
+                                  value: value['value']
                                       .toString(),
-                                  child: Text(value
+                                  child: Text(value['name']
                                       .toString()),
                                 );
                               }).toList(),
@@ -440,13 +510,13 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelText: 'Presence of Pets',
+                                labelText: AppLocalizations.of(context)!.presenceOfPets,
                               ),
                               items: presenceOfPets.map((value) {
                                 return DropdownMenuItem(
-                                  value: value
+                                  value: value['value']
                                       .toString(),
-                                  child: Text(value
+                                  child: Text(value['name']
                                       .toString()),
                                 );
                               }).toList(),
@@ -476,27 +546,26 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                labelText: 'Stunted Growth',
+                                labelText: AppLocalizations.of(context)!.stuntedGrowth,
                               ),
                               items: stuntedGrowth.map((value) {
                                 return DropdownMenuItem(
-                                  value: value
+                                  value: value['value']
                                       .toString(),
-                                  child: Text(value
+                                  child: Text(value['name']
                                       .toString()),
                                 );
                               }).toList(),
                               onChanged: (newValueSelected) {
                                 FocusScope.of(context).requestFocus(FocusNode());
                                 setState(() {
-                                  selectedstuntedGrowth = newValueSelected!;
+                                  selectedStuntedGrowth = newValueSelected!;
                                 });
                               },
-                              value: selectedstuntedGrowth,
+                              value: selectedStuntedGrowth,
                               isExpanded: false,
                             ),
                           ),
-                          const SizedBox(width: 10),
                         ],
                       ),
                     ],
@@ -517,10 +586,10 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                         child: SizedBox(
                           height: 55,
                           width: MediaQuery.of(context).size.width,
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              'Clear Form',
-                              style: TextStyle(fontSize: 16),
+                              AppLocalizations.of(context)!.clear,
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
                         ),
@@ -538,20 +607,19 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                         child: SizedBox(
                           height: 55,
                           width: MediaQuery.of(context).size.width,
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              'Identify the Disease',
-                              style: TextStyle(fontSize: 16),
+                              AppLocalizations.of(context)!.identifyDisease,
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
                         ),
                         onPressed: () {
-                          clearFormData();
                           if (_qaFormKey.currentState!.validate()) {
                             setState(() {
                               isLoading = true;
                             });
-                            _estimatHarvest();
+                            diseaseIdentification(lang);
                           }
                         },
                       ),
@@ -571,48 +639,48 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
     );
   }
 
-  void bottomSheet(String name, String desc) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (builder) {
-          return SizedBox(
-            // height: MediaQuery.of(context).size.height * 0.20,
-            width: MediaQuery.of(context).size.width,
-            // color: Colors.deepPurple.shade300,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            desc,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
+  // void bottomSheet(String name, String desc) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       isScrollControlled: true,
+  //       builder: (builder) {
+  //         return SizedBox(
+  //           // height: MediaQuery.of(context).size.height * 0.20,
+  //           width: MediaQuery.of(context).size.width,
+  //           // color: Colors.deepPurple.shade300,
+  //           child: SingleChildScrollView(
+  //             child: Padding(
+  //               padding: const EdgeInsets.all(30.0),
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.start,
+  //                 children: [
+  //                   SizedBox(
+  //                     width: MediaQuery.of(context).size.width,
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Text(
+  //                           name,
+  //                           style: const TextStyle(
+  //                             fontSize: 20,
+  //                             fontWeight: FontWeight.bold,
+  //                           ),
+  //                         ),
+  //                         Text(
+  //                           desc,
+  //                           style: const TextStyle(
+  //                             fontWeight: FontWeight.bold,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
 
 }

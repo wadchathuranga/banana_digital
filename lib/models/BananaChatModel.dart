@@ -26,6 +26,7 @@ class Diseases {
   String? nameDisplay;
   String? name;
   String? description;
+  double? confidence;
   String? symptomDescriptionSinhala;
   String? symptomDescriptionEnglish;
   String? img;
@@ -35,6 +36,7 @@ class Diseases {
         this.nameDisplay,
         this.name,
         this.description,
+        this.confidence,
         this.symptomDescriptionSinhala,
         this.symptomDescriptionEnglish,
         this.img});
@@ -44,6 +46,7 @@ class Diseases {
     nameDisplay = json['name_display'];
     name = json['name'];
     description = json['description'];
+    confidence = json['confidence'];
     symptomDescriptionSinhala = json['symptom_description_sinhala'];
     symptomDescriptionEnglish = json['symptom_description_english'];
     img = json['img'];
