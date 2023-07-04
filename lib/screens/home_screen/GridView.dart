@@ -67,7 +67,7 @@ class _GridViewCardState extends State<GridViewCard> {
                         ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.all(25.0),
                         child: Image.asset(
                           widget.img,
                         ),

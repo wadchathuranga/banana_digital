@@ -19,10 +19,10 @@ class AppImages {
   static String chatLogo = "$imagePath/chat_logo.png";
 
   // dashboard images
-  static String watering = "$imagePath/watering.png";
-  static String harvest = "$imagePath/harvest.png";
-  static String camera = "$imagePath/camera.png";
-  static String analysis = "$imagePath/analysis.png";
+  static String c4 = "$imagePath/watering.png";
+  static String c3 = "$imagePath/harvest.png";
+  static String c1 = "$imagePath/capture.png";
+  static String c2 = "$imagePath/chatbot.png";
 }
 
 
