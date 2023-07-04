@@ -5,10 +5,9 @@ import 'menu_item.dart';
 class MenuItems {
   static const home = MenuItem('Home', Icons.home);
   static const profile = MenuItem('Profile', Icons.person);
-  static const chat = MenuItem('Chat', Icons.message);
   static const about = MenuItem('About', Icons.info_outlined);
 
-  static const all = <MenuItem>[ home, profile, chat, about ];
+  static const all = <MenuItem>[ home, profile, about ];
 }
 
 

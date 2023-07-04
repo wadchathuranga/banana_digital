@@ -153,8 +153,6 @@ class _MainPageState extends State<MainPage> {
         return const HomeScreen();
       case MenuItems.profile:
         return const ProfileScreen();
-      case MenuItems.chat:
-        return const ChatScreen();
       default:
         return const AboutScreen();
     }
