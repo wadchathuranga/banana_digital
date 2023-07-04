@@ -115,6 +115,9 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
   void initState() {
     accessToken = UserSharedPreference.getAccessToken().toString();
     tabController = TabController(length: 2, vsync: this);
+    tabController.addListener(() {
+      setState(() { });
+    });
     getAllVarieties();
     super.initState();
   }
@@ -273,10 +276,11 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
           appBar: AppBar(
             title: const Text('Harvest Prediction'),
             actions: [
-              IconButton(
-                onPressed: () => Navigator.pushNamed(context, '/C3_harvest_history'),
-                icon: const Icon(Icons.history),
-              ),
+              if (tabController.index == 0)
+                IconButton(
+                  onPressed: () => Navigator.pushNamed(context, '/C3_harvest_history'),
+                  icon: const Icon(Icons.history),
+                ),
               // const LanguagePicker(),
               const SizedBox(
                 width: 10,
