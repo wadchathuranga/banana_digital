@@ -43,7 +43,7 @@ class ChatApiServices {
   }
 
   // send msg get answers from diseases
-  static Future sendMessageToGetDiseasesOrCuresById({ required String accessToken, required String message, required String? tag, required String lang, required int diseaseId }) async {
+  static Future sendMessageToGetDiseaseOrCuresById({ required String accessToken, required String message, required String? tag, required String lang, required int diseaseId }) async {
     try {
       final Map<String, dynamic> res;
       if (UserSharedPreference.getTagValue() == "management_strategies") {
@@ -55,6 +55,7 @@ class ChatApiServices {
         dynamic jsonDecRes = jsonDecode(response.body);
         res = {
           "response": jsonDecRes,
+          "toCures": false,
         };
       } else {
         var response = await http.get(
@@ -65,6 +66,7 @@ class ChatApiServices {
         dynamic jsonDecRes = jsonDecode(response.body);
         res = {
           "response": [jsonDecRes],
+          "toCures": true,
         };
       }
 

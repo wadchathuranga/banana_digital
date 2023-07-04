@@ -144,9 +144,7 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
         }
       },
       child: Scaffold(
-        // backgroundColor: chatScaffoldBackgroundColor,
         appBar: AppBar(
-          // backgroundColor: chatScaffoldBackgroundColor,
           title: (tabController.index == 0) ? Text(AppLocalizations.of(context)!.chatTabName) : Text(AppLocalizations.of(context)!.identifyDiseaseTabName),
           actions: <Widget>[
             Center(
