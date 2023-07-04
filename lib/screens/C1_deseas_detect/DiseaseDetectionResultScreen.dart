@@ -185,16 +185,22 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                     },
                   ),
                   const SizedBox(height: 50),
-                  ElevatedButton(
-                      onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: widget.data.disease!))),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Cures for Disease'),
-                          SizedBox(width: 10),
-                          Icon(Icons.arrow_circle_right_outlined),
-                        ],
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: widget.data.disease!))),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Cures for Disease'),
+                                SizedBox(width: 10),
+                                Icon(Icons.arrow_circle_right_outlined),
+                              ],
+                            ),
+                        ),
                       ),
+                    ],
                   ),
                 ],
               ),

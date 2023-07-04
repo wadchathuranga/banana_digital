@@ -84,7 +84,7 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             child: Column(
               children: [
                 if (historyList.isNotEmpty)
@@ -119,7 +119,7 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
 
   Widget _expandableTile(DiseaseDetectionModel diseaseDetectedHistory) {
     return Padding(
-      padding: const EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
+      padding: const EdgeInsets.only(top: 10.0),
       child: Column(
         children: [
           ExpandableNotifier(
@@ -319,7 +319,7 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               Text(
-                                                diseaseDetectedHistory.probabilities![index].totalArea.toString(),
+                                                '${diseaseDetectedHistory.probabilities![index].totalArea.toString()} px',
                                                 style: const TextStyle(fontSize: 16),
                                               ),
                                             ],
@@ -329,17 +329,23 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                     );
                                   },
                                 ),
-                                const SizedBox(height: 50),
-                                ElevatedButton(
-                                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: diseaseDetectedHistory.disease!))),
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text('Cures for Disease'),
-                                      SizedBox(width: 10),
-                                      Icon(Icons.arrow_circle_right_outlined),
-                                    ],
-                                  ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: diseaseDetectedHistory.disease!))),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text('Cures for Disease'),
+                                            SizedBox(width: 10),
+                                            Icon(Icons.arrow_circle_right_outlined),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

@@ -23,53 +23,56 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 15.0, right: 15.0, bottom: 10.0),
+          padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0, bottom: 10.0),
           child: Column(
             children: [
               const Text(
                 'DISEASE',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
+              _imageWidget(widget.data.img),
               const Divider(
-                indent: 100,
-                endIndent: 100,
                 thickness: 2,
               ),
-              // const SizedBox(height: 10),
-              _imageWidget(widget.data.img),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Column(
                 children: [
                   const Text(
                     'Name',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
+                  const SizedBox(height: 10),
+                  Text(widget.data.name.toString()),
+                  const SizedBox(height: 10),
                   const Divider(
-                    indent: 120,
-                    endIndent: 120,
                     thickness: 2,
                   ),
-                  Text(widget.data.name.toString()),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   const Text(
                     'Description',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
+                  const SizedBox(height: 10),
+                  MarkdownBody(data: widget.data.description!),
+                  const SizedBox(height: 10),
                   const Divider(
-                    indent: 100,
-                    endIndent: 100,
                     thickness: 2,
                   ),
-                  MarkdownBody(data: widget.data.description!), /// MARKDOWN COMPONENT USED HERE
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Symptom Description',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  MarkdownBody(data: widget.data.symptomDescription.toString()),
+                  const SizedBox(height: 10),
+                  const Divider(
+                    thickness: 2,
+                  ),
+                  const SizedBox(height: 10),
                   const Text(
                     'Cures',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const Divider(
-                    indent: 100,
-                    endIndent: 100,
-                    thickness: 2,
                   ),
                   if (widget.data.cures!.isNotEmpty)
                     ListView.builder(
@@ -105,7 +108,7 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
 
   Widget _expandableTile(Cures cures) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5.0, left: 15.0, right: 15.0),
+      padding: const EdgeInsets.only(top: 10.0),
       child: Column(
         children: [
           ExpandableNotifier(
@@ -124,7 +127,7 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
                     header: Padding(
                       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                       child: Text(
-                        cures.name.toString(),
+                        cures.nameDisplay.toString(),
                         style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

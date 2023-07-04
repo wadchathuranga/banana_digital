@@ -50,12 +50,14 @@ class Disease {
   String? nameDisplay;
   String? name;
   String? description;
+  String? symptomDescription;
 
   Disease(
       {this.id,
         this.cures,
         this.img,
         this.nameDisplay,
+        this.symptomDescription,
         this.name,
         this.description});
 
@@ -71,21 +73,22 @@ class Disease {
     nameDisplay = json['name_display'];
     name = json['name'];
     description = json['description'];
+    symptomDescription = json['symptom_description'];
   }
 }
 
 class Cures {
   int? id;
-  String? name;
+  String? nameDisplay;
   String? description;
   String? img;
   int? disease;
 
-  Cures({this.id, this.name, this.description, this.img, this.disease});
+  Cures({this.id, this.nameDisplay, this.description, this.img, this.disease});
 
   Cures.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
+    nameDisplay = json['name_display'];
     description = json['description'];
     img = json['img'];
     disease = json['disease'];
