@@ -78,9 +78,9 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
         actions: [
           IconButton(
             onPressed: () {
-              setState(() {
-                _croppedImg = null;
-              });
+              // setState(() {
+              //   _croppedImg = null;
+              // });
               Navigator.pushNamed(context, '/C1_disease_history');
             },
             icon: const Icon(Icons.history),
