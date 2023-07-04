@@ -14,7 +14,7 @@ class ChatApiServices {
     try {
       lang ??= 'en';
       if (kDebugMode) {
-        print('======================= $lang =======================');
+        print('======================= Language: $lang =======================');
         print('REQUEST MSG SEND TAG ===========>>>>>>> $tag');
       }
       var response = await http.post(

@@ -67,6 +67,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
+                                    const SizedBox(height: 5),
                                     SizedBox(
                                       width: 150,
                                       height: 150,

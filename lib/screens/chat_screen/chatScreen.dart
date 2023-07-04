@@ -55,7 +55,6 @@ class _ChatScreenState extends State<ChatScreen> {
     final chatProvider = Provider.of<ChatProvider>(context);
     final tag = UserSharedPreference.getTagValue();
     final lang = UserSharedPreference.getLanguage();
-    print(lang);
     return Scaffold(
       backgroundColor: AppColors.chatScaffoldBackgroundColor,
       // appBar: AppBar(
@@ -151,8 +150,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     return DropdownMenuItem(
                                       value: value.id
                                           .toString(),
-                                      child: Text(value.nameDisplay
-                                          .toString()),
+                                      child: Text('${value.nameDisplay} (${(value.confidence! * 100).toStringAsFixed(2)}%)'),
                                     );
                                   }).toList(),
                                   onChanged: (newValueSelected) async {

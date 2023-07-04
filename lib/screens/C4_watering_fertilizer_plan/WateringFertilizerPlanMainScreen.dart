@@ -414,12 +414,13 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
         appBar: AppBar(
           title: (tabController.index == 0) ? const Text('Watering Plan') : const Text('Fertilizer Plan'),
           actions: [
-            IconButton(
-              onPressed: () {
-                if (tabController.index == 0) Navigator.pushNamed(context, '/C4_watering_history');
-                if (tabController.index == 1) Navigator.pushNamed(context, '/C4_fertilizer_history');
-              },
-              icon: const Icon(Icons.history),
+            if (weatherData != null && soilMoisture != null && avgTemperature != null && avgRainfall != null)
+              IconButton(
+                onPressed: () {
+                  if (tabController.index == 0) Navigator.pushNamed(context, '/C4_watering_history');
+                  if (tabController.index == 1) Navigator.pushNamed(context, '/C4_fertilizer_history');
+                },
+                icon: const Icon(Icons.history),
             ),
             const SizedBox(
               width: 15,

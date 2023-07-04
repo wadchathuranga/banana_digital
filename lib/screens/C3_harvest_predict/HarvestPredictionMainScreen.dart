@@ -310,17 +310,17 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
           physics: const ScrollPhysics(),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.formTitle,
-                      style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      'Fill the following questionnaire',
+                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 5),
-                    const Text(
+                    SizedBox(height: 5),
+                    Text(
                       'Using the provided data bellow, you can estimate the banana harvest, press the button to proceed with prediction process.',
                     ),
                   ],
