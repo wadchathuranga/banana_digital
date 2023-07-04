@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: GridViewCard(
                           title: 'Identify Pests and Diseases using Images',
                           icon: Icons.person_outline,
-                          img: AppImages.logoTW,
+                          img: AppImages.c1,
                           value: '1',
                         ),
                       ),
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           title:
                               'Identify Banana Diseases using Questionnaires',
                           icon: Icons.list_alt_outlined,
-                          img: AppImages.logoTW,
+                          img: AppImages.c2,
                           value: '2',
                         ),
                       ),
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           title:
                               'Estimate Harvest of Banana using Questionnaires',
                           icon: Icons.person_outline,
-                          img: AppImages.logoTW,
+                          img: AppImages.c3,
                           value: '3',
                         ),
                       ),
@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: GridViewCard(
                           title: 'Supply Fertilizer and water management plan',
                           icon: Icons.list_alt_outlined,
-                          img: AppImages.logoTW,
+                          img: AppImages.c4,
                           value: '4',
                         ),
                       ),

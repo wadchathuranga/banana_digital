@@ -69,10 +69,16 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     ),
                                     const SizedBox(height: 5),
                                     SizedBox(
-                                      width: 150,
-                                      height: 150,
+                                      width: 100,
+                                      height: 100,
                                       child:  widget.msg[index]['img'] != null
-                                          ?  Image(image: NetworkImage(widget.msg[index]['img']))
+                                          // ?  Image(image: NetworkImage(widget.msg[index]['img']))
+                                          ? Image.network(
+                                              widget.msg[index]['img'].toString(),
+                                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                                return const Text('Image not found', style: TextStyle(color: Colors.red),);
+                                              },
+                                            )
                                           : Image.asset(AppImages.logoTW),
                                     )
                                   ],
