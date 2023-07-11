@@ -153,7 +153,15 @@ class _DiseaseIdentificationMainScreenState extends State<DiseaseIdentificationM
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(width: 25),
+            if (tabController.index == 0) const SizedBox(width: 25),
+            if (tabController.index != 0)
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: IconButton(
+                  onPressed: () => Navigator.pushNamed(context, '/C2_disease_identification_history'),
+                  icon: const Icon(Icons.history),
+                ),
+              ),
           ],
           bottom: TabBar(
             controller: tabController,

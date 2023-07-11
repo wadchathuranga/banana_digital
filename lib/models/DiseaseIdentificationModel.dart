@@ -48,19 +48,15 @@ class Disease {
 }
 
 class Cures {
-  int? id;
   String? nameDisplay;
   String? description;
   String? img;
-  int? disease;
 
-  Cures({this.id, this.nameDisplay, this.description, this.img, this.disease});
+  Cures({this.nameDisplay, this.description, this.img});
 
   Cures.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
     nameDisplay = json['name_display'];
     description = json['description'];
     img = json['img'];
-    disease = json['disease'];
   }
 }

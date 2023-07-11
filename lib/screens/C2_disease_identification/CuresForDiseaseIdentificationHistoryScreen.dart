@@ -2,19 +2,19 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-import '../../models/DiseaseIdentificationModel.dart';
+import '../../models/DiseaseIdentificationHistoryModel.dart';
 import '../../utils/app_colors.dart';
 
-class CuresForDiseaseIdentificationScreen extends StatefulWidget {
-  const CuresForDiseaseIdentificationScreen({Key? key, required this.cures}) : super(key: key);
+class CuresForDiseaseIdentificationHistoryScreen extends StatefulWidget {
+  const CuresForDiseaseIdentificationHistoryScreen({Key? key, required this.cures}) : super(key: key);
 
   final List<Cures>? cures;
 
   @override
-  State<CuresForDiseaseIdentificationScreen> createState() => _CuresForDiseaseIdentificationScreenState();
+  State<CuresForDiseaseIdentificationHistoryScreen> createState() => _CuresForDiseaseIdentificationHistoryScreenState();
 }
 
-class _CuresForDiseaseIdentificationScreenState extends State<CuresForDiseaseIdentificationScreen> {
+class _CuresForDiseaseIdentificationHistoryScreenState extends State<CuresForDiseaseIdentificationHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,21 +107,21 @@ class _CuresForDiseaseIdentificationScreenState extends State<CuresForDiseaseIde
                       ),
                       borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                     ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
-                              child: Column(
-                                  children: [
-                                    _imageWidget(cures.img),
-                                    const SizedBox(height: 10),
-                                    MarkdownBody(data: cures.description.toString()),
-                                  ],
-                                ),
-                              ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
+                          child: Column(
+                            children: [
+                              _imageWidget(cures.img),
+                              const SizedBox(height: 10),
+                              MarkdownBody(data: cures.description.toString()),
                             ],
                           ),
                         ),
+                      ],
+                    ),
+                  ),
                   theme: const ExpandableThemeData(
                       tapBodyToExpand: true,
                       tapBodyToCollapse: true,

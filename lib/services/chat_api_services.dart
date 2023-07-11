@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../services/shared_preference.dart';
 import '../models/BananaChatModel.dart';
@@ -37,7 +38,11 @@ class ChatApiServices {
       }
 
       return BananaChatModel.fromJson(jsonDecRes);
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       throw Exception(error.toString());
     }
   }
@@ -74,7 +79,11 @@ class ChatApiServices {
       UserSharedPreference.clearTag();
 
       return BananaChatModel.fromJson(res);
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       throw Exception(error.toString());
     }
   }

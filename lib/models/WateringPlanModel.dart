@@ -2,11 +2,13 @@ class WateringPlanModel {
   String? prediction;
   List<TopProbabilities>? topProbabilities;
   WateringPlan? wateringPlan;
+  String? error;
 
-  WateringPlanModel({this.prediction, this.topProbabilities, this.wateringPlan});
+  WateringPlanModel({this.prediction, this.error, this.topProbabilities, this.wateringPlan});
 
   WateringPlanModel.fromJson(Map<String, dynamic> json) {
     prediction = json['prediction'];
+    error = json['error'];
     if (json['top_probabilities'] != null) {
       topProbabilities = <TopProbabilities>[];
       json['top_probabilities'].forEach((v) {

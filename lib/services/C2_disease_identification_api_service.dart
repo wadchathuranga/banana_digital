@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:banana_digital/utils/app_configs.dart';
+import '../utils/app_configs.dart';
 
 class C2DiseaseIdentificationApiService {
   // POST: identify diseases
@@ -15,6 +15,21 @@ class C2DiseaseIdentificationApiService {
             "Authorization": "Bearer $accessToken",
           },
           body: jsonEncode(dataBody));
+      return response;
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  // GET: get all disease identification history
+  static Future diseaseIdentificationHistory({required String accessToken, required String lang}) async {
+    try {
+      var url = Uri.parse('$DISEASES_IDENTIFICATION_HISTORY&language=$lang');
+      final response = await http.get(
+          url,
+          headers: {
+            "Authorization": "Bearer $accessToken",
+          });
       return response;
     } catch (err) {
       throw Exception(err.toString());

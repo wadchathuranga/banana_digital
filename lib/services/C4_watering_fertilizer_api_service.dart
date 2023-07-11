@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class C4WateringFertilizerApiService {
   // POST: make the harvesting or fertilizer plan
@@ -19,7 +20,11 @@ class C4WateringFertilizerApiService {
 
       http.StreamedResponse response = await request.send();
       return response;
-    } catch (err) {
+    } catch (err, stackTrace) {
+      await Sentry.captureException(
+        err,
+        stackTrace: stackTrace,
+      );
       throw Exception(err.toString());
     }
   }
@@ -35,7 +40,11 @@ class C4WateringFertilizerApiService {
         },
       );
       return response;
-    } catch (err) {
+    } catch (err, stackTrace) {
+      await Sentry.captureException(
+        err,
+        stackTrace: stackTrace,
+      );
       throw Exception(err.toString());
     }
   }

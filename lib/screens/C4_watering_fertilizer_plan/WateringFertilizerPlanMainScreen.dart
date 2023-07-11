@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../services/C3_harvest_prediction_api_service.dart';
 import '../../services/C4_watering_fertilizer_api_service.dart';
@@ -259,8 +260,10 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
   }
 
   Future makeRequestBody() async {
+    print('===============${double.parse(soilPhController.text).toStringAsFixed(1)}');
     Map<String, String> dataBody = {
-      'pH': soilPhController.text.trim(),
+      // 'pH': double.parse(soilPhController.text).toStringAsFixed(1),
+      'pH': soilPhController.text,
       'organic_matter_content': selectedOrganicMatterContent.toString().toLowerCase(),
       'avg_temperature': avgTemperature!.toStringAsFixed(2),
       'temperature': temperature.toString(),
@@ -299,18 +302,37 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       if (response.statusCode == 200) {
         final resString = await response.stream.bytesToString();
         final data = await jsonDecode(resString);
+        print('===================\n${data}'); /// TODO: bug
         if (!mounted) return;
           setState(() {
             isLoading = false;
           });
         if ( tabController.index == 0) {
           final wateringPlan = WateringPlanModel.fromJson(data);
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-              WateringPlanResultScreen(wateringPlan: wateringPlan)));
+          if (wateringPlan.error != null || wateringPlan.wateringPlan == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: TextWidget(label: wateringPlan.error.toString()),
+                backgroundColor: Colors.red,
+              ),
+            );
+          } else {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                WateringPlanResultScreen(wateringPlan: wateringPlan)));
+          }
         } else {
           final fertilizerPlan = FertilizerPlanModel.fromJson(data);
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-              FertilizerPlanResultScreen(fertilizerPlan: fertilizerPlan)));
+          if (fertilizerPlan.error != null || fertilizerPlan.fertilizerPlan == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: TextWidget(label: fertilizerPlan.error.toString()),
+                backgroundColor: Colors.red,
+              ),
+            );
+          } else {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                FertilizerPlanResultScreen(fertilizerPlan: fertilizerPlan)));
+          }
         }
       }
       else {
@@ -324,21 +346,25 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
           ),
         );
       }
-    } catch (err) {
+    } catch (exception, stackTrace) {
       if (!mounted) return;
       setState(() {
         isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: TextWidget(label: err.toString()),
+        SnackBar(content: TextWidget(label: exception.toString()),
           backgroundColor: Colors.red,
         ),
       );
       if (kDebugMode) {
         print("================= Catch Error: (callToMakeThePlans) ====================");
-        print(err);
+        print(exception);
         print("==================================================");
       }
+      await Sentry.captureException(
+        exception,
+        stackTrace: stackTrace,
+      );
     }
   }
 

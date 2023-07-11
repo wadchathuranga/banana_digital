@@ -81,7 +81,7 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
               // setState(() {
               //   _croppedImg = null;
               // });
-              Navigator.pushNamed(context, '/C1_disease_history');
+              Navigator.pushNamed(context, '/C1_disease_detection_history');
             },
             icon: const Icon(Icons.history),
           ),
