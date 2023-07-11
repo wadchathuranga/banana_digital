@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../models/BananaChatModel.dart';
 import '../../utils/app_colors.dart';
@@ -61,12 +62,10 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    Text(
-                                      widget.msg[index]['description'],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
+                                    MarkdownBody(
+                                      data: widget.msg[index]['description'].toString(),
+                                      styleSheet: MarkdownStyleSheet(
+                                        p: const TextStyle(color: Colors.white),
                                       ),
                                     ),
                                     const SizedBox(height: 5),

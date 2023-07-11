@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
   late FocusNode focusNode;
 
   var selectedValue;
-  var displayName;
+  bool dropdownEnabled = true;
 
   @override
   void initState() {
@@ -145,22 +145,19 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                   ),
                                   items: chatProvider.getChatList.last.diseases!.map((value) {
-                                    setState(() {
-                                      displayName = value.nameDisplay;
-                                    });
                                     return DropdownMenuItem(
                                       value: value.id
                                           .toString(),
                                       child: Text('${value.nameDisplay} ${(value.confidence == null) ? '' : '(${(value.confidence! * 100).toStringAsFixed(2)}%)'}'),
                                     );
                                   }).toList(),
-                                  onChanged: (newValueSelected) async {
+                                  onChanged: dropdownEnabled ? (newValueSelected) async {
                                     FocusScope.of(context).requestFocus(FocusNode());
                                     setState(() {
                                       selectedValue = newValueSelected!;
                                     });
-                                    await sendChoseMsgForBot(displayName: displayName, chatProvider: chatProvider, tag: tag, lang: lang, diseaseId: int.parse(newValueSelected.toString()));
-                                  },
+                                    await sendChoseMsgForBot(chatProvider: chatProvider, tag: tag, lang: lang, diseaseId: int.parse(newValueSelected.toString()));
+                                  } : null,
                                   value: selectedValue,
                                   isExpanded: false,
                                 ),
@@ -225,20 +222,21 @@ class _ChatScreenState extends State<ChatScreen> {
     _listScrollController.animateTo(_listScrollController.position.maxScrollExtent, duration: const Duration(seconds: 1), curve: Curves.easeInOut);
   }
 
-  Future<void> sendChoseMsgForBot({required displayName, required ChatProvider chatProvider, required String? tag, required String? lang, required int diseaseId}) async {
+  Future<void> sendChoseMsgForBot({required ChatProvider chatProvider, required String? tag, required String? lang, required int diseaseId}) async {
     try {
       String msg = textEditingController.text;
       setState(() {
         _isTyping = true;
-        chatProvider.addUserMessage(msg: displayName);
+        dropdownEnabled = false;
         focusNode.unfocus();
       });
-      chatProvider.sendMessageApi2AndGetAnswers(msg: msg, accessToken: accessToken!, tag: tag, lang: 'si', diseaseId: diseaseId)
+      chatProvider.sendMessageApi2AndGetAnswers(msg: msg, accessToken: accessToken!, tag: tag, lang: lang!, diseaseId: diseaseId)
           .then((value) => {
         scrollListToEND(),
         setState(() {
           selectedValue = null;
           _isTyping = false;
+          dropdownEnabled = true;
         }),
       });
       setState(() {});

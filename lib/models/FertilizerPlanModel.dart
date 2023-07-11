@@ -2,11 +2,13 @@ class FertilizerPlanModel {
   String? dose;
   List<TopProbabilities>? topProbabilities;
   FertilizerPlan? fertilizerPlan;
+  String? error;
 
-  FertilizerPlanModel({this.dose, this.topProbabilities, this.fertilizerPlan});
+  FertilizerPlanModel({this.dose, this.error, this.topProbabilities, this.fertilizerPlan});
 
   FertilizerPlanModel.fromJson(Map<String, dynamic> json) {
     dose = json['dose'];
+    error = json['error'];
     fertilizerPlan = json['fertilizer_plan'] != null
         ? FertilizerPlan.fromJson(json['fertilizer_plan'])
         : null;

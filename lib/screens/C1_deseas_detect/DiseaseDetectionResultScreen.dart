@@ -110,7 +110,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Disease Name',
+                              'Disease',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -133,6 +133,17 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                           children: [
                             Text(
                               'Total Areas',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Cures',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -180,28 +191,39 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                               ],
                             ),
                           ),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: widget.data.disease!))),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.arrow_circle_right_outlined),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       );
                     },
                   ),
-                  const SizedBox(height: 50),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: widget.data.disease!))),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text('Cures for Disease'),
-                                SizedBox(width: 10),
-                                Icon(Icons.arrow_circle_right_outlined),
-                              ],
-                            ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // const SizedBox(height: 50),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: ElevatedButton(
+                  //           onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: widget.data.disease!))),
+                  //           child: const Row(
+                  //             mainAxisSize: MainAxisSize.min,
+                  //             children: [
+                  //               Text('Cures for Disease'),
+                  //               SizedBox(width: 10),
+                  //               Icon(Icons.arrow_circle_right_outlined),
+                  //             ],
+                  //           ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

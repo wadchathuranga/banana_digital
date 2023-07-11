@@ -1,13 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../screens/C1_deseas_detect/DiseaseDetectionHistoryScreen.dart';
 import '../screens/C1_deseas_detect/DiseasePredictionMainScreen.dart';
 import '../screens/C2_disease_identification/DiseaseIdentificationMainScreen.dart';
+import '../screens/C2_disease_identification/DiseaseIdentificationHistoryScreen.dart';
 import '../screens/C3_harvest_predict/HarvestPredictionMainScreen.dart';
 import '../screens/C3_harvest_predict/HarvestPredictionHistoryScreen.dart';
 import '../screens/C4_watering_fertilizer_plan/WateringFertilizerPlanMainScreen.dart';
@@ -22,13 +25,26 @@ import '../screens/AboutScreen.dart';
 import '../screens/profile_screen/profile_page.dart';
 import '../screens/home_screen/homeScreen.dart';
 import '../screens/splash_screen.dart';
+import '../utils/app_configs.dart';
 import './screens/chat_screen/chatScreen.dart';
 import './l10n/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserSharedPreference.init();
-  runApp(const MyApp());
+  if (kReleaseMode) {
+    await SentryFlutter.init(
+          (options) {
+        options.dsn = SENTRY_DSN;
+        // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+        // We recommend adjusting this value in production.
+        options.tracesSampleRate = 0.01;
+      },
+      appRunner: () => runApp(const MyApp()),
+    );
+  } else {
+    runApp(const MyApp());
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -66,8 +82,9 @@ class MyApp extends StatelessWidget {
             '/': (context) => const SplashScreen(),
             '/main': (context) => const MainPage(),
             '/C1_main': (context) => const DiseasePredictionMainScreen(),
-            '/C1_disease_history': (context) => const DiseaseDetectionHistoryScreen(),
+            '/C1_disease_detection_history': (context) => const DiseaseDetectionHistoryScreen(),
             '/C2_main': (context) => const DiseaseIdentificationMainScreen(),
+            '/C2_disease_identification_history': (context) => const DiseaseIdentificationHistoryScreen(),
             '/C3_main': (context) => const HarvestPredictionMainScreen(),
             '/C3_harvest_history': (context) => const HarvestPredictionHistoryScreen(),
             '/C4_main': (context) => const WateringFertilizerPlanMainScreen(),

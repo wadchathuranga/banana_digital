@@ -1,8 +1,8 @@
-import 'package:banana_digital/models/DiseaseDetectionModel.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
+import '../../models/DiseaseDetectionModel.dart';
 import '../../utils/app_colors.dart';
 
 class CuresForDiseaseScreen extends StatefulWidget {
@@ -148,10 +148,7 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           children: [
-                            Text(
-                              widget.data.description.toString(),
-                              style: const TextStyle(fontSize: 16),
-                            ),
+                            MarkdownBody(data: widget.data.description.toString()),
                           ],
                         ),
                       ),
@@ -177,10 +174,7 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
                                         '- Disease Image -',
                                       ),
                                       const SizedBox(height: 10),
-                                      Text(
-                                        widget.data.description.toString(),
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
+                                      MarkdownBody(data: widget.data.description.toString()),
                                     ],
                                   ),
                                 ),

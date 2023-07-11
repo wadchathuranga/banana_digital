@@ -56,7 +56,8 @@ dependencies:
   expandable: ^5.0.1
   flutter_markdown: ^0.6.15
   google_sign_in: ^6.1.4
-  flutter_facebook_auth: ^6.0.0
+  sentry_flutter: ^7.8.0
+#  flutter_facebook_auth: ^6.0.0
 
 
 dev_dependencies:

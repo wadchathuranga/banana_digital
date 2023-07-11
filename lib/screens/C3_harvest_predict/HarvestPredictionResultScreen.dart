@@ -35,14 +35,14 @@ class _HarvestPredictionResultScreenState extends State<HarvestPredictionResultS
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0, bottom: 15.0),
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0, bottom: 10.0),
           child: Column(
             children: [
               const Text(
                   'Harvest Predicted Results',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

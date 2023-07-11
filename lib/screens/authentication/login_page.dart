@@ -261,34 +261,34 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           ),
                           const SizedBox(height: 30),
                           Row(
-                            children: [
-                              Expanded(
-                                child: MaterialButton(
-                                  height: 50.0,
-                                  minWidth: 1000.0,
-                                  color: Colors.blueAccent,
-                                  textColor: Colors.white,
-                                  onPressed:facebookSignIn,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        "Login with",
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Image(
-                                        width: 25,
-                                        height: 25,
-                                        image: AssetImage(AppImages.facebook),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
+                            children: [ /// TODO: facebook login button
+                              // Expanded(
+                              //   child: MaterialButton(
+                              //     height: 50.0,
+                              //     minWidth: 1000.0,
+                              //     color: Colors.blueAccent,
+                              //     textColor: Colors.white,
+                              //     onPressed:facebookSignIn,
+                              //     child: Row(
+                              //       mainAxisAlignment: MainAxisAlignment.center,
+                              //       children: [
+                              //         const Text(
+                              //           "Login with",
+                              //           style: TextStyle(
+                              //             fontSize: 16.0,
+                              //           ),
+                              //         ),
+                              //         const SizedBox(width: 5),
+                              //         Image(
+                              //           width: 25,
+                              //           height: 25,
+                              //           image: AssetImage(AppImages.facebook),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+                              // const SizedBox(width: 10),
                               Expanded(
                                 child: MaterialButton(
                                   height: 50.0,
@@ -439,7 +439,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   Future facebookSignIn() async {
-    // TODO
+    /// TODO
   }
 
   //email validate method
