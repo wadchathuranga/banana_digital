@@ -53,7 +53,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Disease Name:',
+                            'Disease:',
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           )
                         ],

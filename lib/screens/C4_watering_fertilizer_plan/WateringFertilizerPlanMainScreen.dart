@@ -260,9 +260,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
   }
 
   Future makeRequestBody() async {
-    print('===============${double.parse(soilPhController.text).toStringAsFixed(1)}');
     Map<String, String> dataBody = {
-      // 'pH': double.parse(soilPhController.text).toStringAsFixed(1),
       'pH': soilPhController.text,
       'organic_matter_content': selectedOrganicMatterContent.toString().toLowerCase(),
       'avg_temperature': avgTemperature!.toStringAsFixed(2),
@@ -302,7 +300,6 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
       if (response.statusCode == 200) {
         final resString = await response.stream.bytesToString();
         final data = await jsonDecode(resString);
-        print('===================\n${data}'); /// TODO: bug
         if (!mounted) return;
           setState(() {
             isLoading = false;
@@ -310,12 +307,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
         if ( tabController.index == 0) {
           final wateringPlan = WateringPlanModel.fromJson(data);
           if (wateringPlan.error != null || wateringPlan.wateringPlan == null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: TextWidget(label: wateringPlan.error.toString()),
-                backgroundColor: Colors.red,
-              ),
-            );
+            popUpDialogue(wateringPlan.prediction, wateringPlan.error);
           } else {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
                 WateringPlanResultScreen(wateringPlan: wateringPlan)));
@@ -323,12 +315,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
         } else {
           final fertilizerPlan = FertilizerPlanModel.fromJson(data);
           if (fertilizerPlan.error != null || fertilizerPlan.fertilizerPlan == null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: TextWidget(label: fertilizerPlan.error.toString()),
-                backgroundColor: Colors.red,
-              ),
-            );
+            popUpDialogue(fertilizerPlan.dose, fertilizerPlan.error);
           } else {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
                 FertilizerPlanResultScreen(fertilizerPlan: fertilizerPlan)));
@@ -366,6 +353,57 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
         stackTrace: stackTrace,
       );
     }
+  }
+
+  Future popUpDialogue(prediction, error) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Predicted Plan'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                prediction.toString(),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Row(
+                children: [
+                  Text(
+                    'Warning!',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              // const SizedBox(height: 5),
+              Text(
+                error.toString(),
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 
