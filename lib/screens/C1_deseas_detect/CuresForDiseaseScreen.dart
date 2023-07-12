@@ -1,92 +1,156 @@
+import 'dart:convert';
+
+import 'package:banana_digital/services/C1_disease_detection_api_service.dart';
 import 'package:expandable/expandable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../models/DiseaseDetectionModel.dart';
+import '../../services/shared_preference.dart';
 import '../../utils/app_colors.dart';
+import '../../widgets/Loading.dart';
+import '../chat_screen/TextWidget.dart';
 
 class CuresForDiseaseScreen extends StatefulWidget {
-  const CuresForDiseaseScreen({Key? key, required this.data}) : super(key: key);
+  const CuresForDiseaseScreen({Key? key, required this.diseaseName}) : super(key: key);
 
-  final Disease data;
+  final String diseaseName;
 
   @override
   State<CuresForDiseaseScreen> createState() => _CuresForDiseaseScreenState();
 }
 
 class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
+
+  bool isLoading = false;
+  Disease? data;
+
+  @override
+  void initState() {
+    super.initState();
+    isLoading = true;
+    String? accessToken = UserSharedPreference.getAccessToken().toString();
+    getCuresByName(accessToken, widget.diseaseName);
+  }
+
+  Future getCuresByName(accessToken, diseaseName) async {
+    try {
+      final response = await C1DiseaseDetectionApiService.getCuresByDiseaseName(accessToken: accessToken, diseaseName: diseaseName);
+      if (response.statusCode == 200) {
+        data = Disease.fromJson(jsonDecode(response.body));
+        if (!mounted) return;
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+
+      }
+    } catch (err) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: TextWidget(label: err.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
+      if (kDebugMode) {
+        print("================= Catch Error ====================");
+        print(err);
+        print("==================================================");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cures'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0, bottom: 10.0),
-          child: Column(
-            children: [
-              const Text(
-                'DISEASE',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              _imageWidget(widget.data.img),
-              const Divider(
-                thickness: 2,
-              ),
-              const SizedBox(height: 10),
-              Column(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (data != null && !isLoading)
+            SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0, bottom: 10.0),
+              child: Column(
                 children: [
                   const Text(
-                    'Name',
+                    'DISEASE',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 10),
-                  Text(widget.data.name.toString()),
-                  const SizedBox(height: 10),
+                  _imageWidget(data!.img),
                   const Divider(
                     thickness: 2,
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Description',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Column(
+                    children: [
+                      const Text(
+                        'Name',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(data!.name.toString()),
+                      const SizedBox(height: 10),
+                      const Divider(
+                        thickness: 2,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Description',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      MarkdownBody(data: data!.description!),
+                      const SizedBox(height: 10),
+                      const Divider(
+                        thickness: 2,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Symptom Description',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      MarkdownBody(data: data!.symptomDescription.toString()),
+                      const SizedBox(height: 10),
+                      const Divider(
+                        thickness: 2,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Cures',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      if (data!.cures!.isNotEmpty)
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: data!.cures!.length,
+                          itemBuilder: (context, index) {
+                            return  _expandableTile(data!.cures![index]);
+                          },
+                        ),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  MarkdownBody(data: widget.data.description!),
-                  const SizedBox(height: 10),
-                  const Divider(
-                    thickness: 2,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Symptom Description',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  MarkdownBody(data: widget.data.symptomDescription.toString()),
-                  const SizedBox(height: 10),
-                  const Divider(
-                    thickness: 2,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Cures',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  if (widget.data.cures!.isNotEmpty)
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: widget.data.cures!.length,
-                      itemBuilder: (context, index) {
-                        return  _expandableTile(widget.data.cures![index]);
-                      },
-                    ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+          if (data == null && !isLoading)
+            const Padding(
+              padding: EdgeInsets.all(25.0),
+              child: Center(
+                child: Text('History not available'),
+              ),
+            ),
+          if (isLoading)
+            const LoadingWidget(),
+        ],
       ),
     );
   }

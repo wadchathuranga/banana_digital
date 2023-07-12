@@ -51,4 +51,20 @@ class C1DiseaseDetectionApiService {
     }
   }
 
+  // GET: get cures by diseaseName
+  static Future getCuresByDiseaseName({required String accessToken, required String diseaseName}) async {
+    try {
+      var url = Uri.parse('$GET_CURES_BY_DISEASE_NAME?name=$diseaseName');
+      final response = await http.get(
+        url,
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      );
+      return response;
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
 }

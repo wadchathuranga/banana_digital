@@ -193,7 +193,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                           ),
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: widget.data.disease!))),
+                              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(diseaseName: widget.data.probabilities![index].diseaseName!))),
                               child: const Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
