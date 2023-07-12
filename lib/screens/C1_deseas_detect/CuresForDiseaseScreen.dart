@@ -148,7 +148,7 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           children: [
-                            MarkdownBody(data: widget.data.description.toString()),
+                            MarkdownBody(data: cures.description.toString()),
                           ],
                         ),
                       ),
@@ -168,13 +168,9 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
                                 padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
                                 child: Column(
                                     children: [
-                                      _imageWidget(widget.data.img),
+                                      _imageWidget(cures.img),
                                       const SizedBox(height: 10),
-                                      const Text(
-                                        '- Disease Image -',
-                                      ),
-                                      const SizedBox(height: 10),
-                                      MarkdownBody(data: widget.data.description.toString()),
+                                      MarkdownBody(data: cures.description.toString()),
                                     ],
                                   ),
                                 ),
