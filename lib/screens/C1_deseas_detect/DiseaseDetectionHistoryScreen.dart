@@ -198,7 +198,7 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Disease Name:',
+                                          'Disease',
                                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                         )
                                       ],
@@ -243,8 +243,6 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                                 const Divider(
-                                  indent: 100,
-                                  endIndent: 100,
                                   thickness: 2,
                                 ),
                                 const Row(
@@ -338,7 +336,7 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                         ),
                                         Expanded(
                                           child: ElevatedButton(
-                                            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: diseaseDetectedHistory.disease!))),
+                                            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(diseaseName: diseaseDetectedHistory.disease!.name!))),
                                             child: const Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
@@ -351,22 +349,6 @@ class _DiseaseDetectionHistoryScreenState extends State<DiseaseDetectionHistoryS
                                     );
                                   },
                                 ),
-                                // const SizedBox(height: 20),
-                                // Row(
-                                //   children: [
-                                //     Expanded(
-                                //       child: ElevatedButton(
-                                //         onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CuresForDiseaseScreen(data: diseaseDetectedHistory.disease!))),
-                                //         child: const Row(
-                                //           mainAxisSize: MainAxisSize.min,
-                                //           children: [
-                                //             Icon(Icons.arrow_circle_right_outlined),
-                                //           ],
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
                               ],
                             ),
                           ),
