@@ -370,7 +370,11 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
                               isExpanded: false,
                             ),
                           ),
-                          const SizedBox(width: 10),
+                        ],
+                      ),
+                      buildSizedBox(),
+                      Row(
+                        children: [
                           Expanded(
                             child: DropdownButtonFormField<String>(
                               validator: (val) {
