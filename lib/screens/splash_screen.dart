@@ -70,7 +70,6 @@ class _SplashScreenState extends State<SplashScreen> {
                   ],
                 ),
               ),
-              const Text('Copyright @ www.bananadigital.com / alright received.', style: TextStyle(fontSize: 15, color: Colors.white30),)
             ],
           ),
         ],
