@@ -55,7 +55,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
 
   var selectedPesticide;
 
-  final List plantGeneration = ["1", "2", "3","4", "5", "More than 5"];
+  final List plantGeneration = ["1", "2", "3","4", "5", "more than 5"];
   var selectedPlantGeneration;
 
   final List fertilizerTypes = ["Organic", "Non Organic", "Both Used", "None"];
