@@ -77,8 +77,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           ? Image.network(
                                               widget.msg[index]['img'].toString(),
                                               errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                                return const Text('Image not found', style: TextStyle(color: Colors.red),);
-                                              },
+                                                return const Text('', style: TextStyle(color: Colors.red),);
+                                              }, // TODO: image not found error
                                             )
                                           : Image.asset(AppImages.logoTW),
                                     ),
