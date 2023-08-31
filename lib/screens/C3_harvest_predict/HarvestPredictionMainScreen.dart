@@ -58,7 +58,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
   final List plantGeneration = ["1", "2", "3","4", "5", "more than 5"];
   var selectedPlantGeneration;
 
-  final List fertilizerTypes = ["Organic", "Non Organic", "Both Used", "None"];
+  final List fertilizerTypes = ["Organic", "Non Organic", "Both used", "None"];
   var selectedFertilizerType;
 
   final List wateringSchedule = ["Twice a week", "Randomly", "None", "3 times a week", "Daily"];
