@@ -62,7 +62,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            ':   ${widget.data.disease!.nameDisplay}',
+                            widget.data.disease != null ? '   ${widget.data.disease!.nameDisplay}' : '   Data not found in db',
                             style: const TextStyle(fontSize: 18),
                           ),
                         ],

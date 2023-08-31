@@ -44,7 +44,9 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
           isLoading = false;
         });
       } else {
-
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (err) {
       if (!mounted) return;
@@ -134,7 +136,9 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
                           itemBuilder: (context, index) {
                             return  _expandableTile(data!.cures![index]);
                           },
-                        ),
+                        )
+                      else
+                        const Text('Curse not found', style: TextStyle(color: Colors.red),),
                     ],
                   ),
                 ],
@@ -145,7 +149,7 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
             const Padding(
               padding: EdgeInsets.all(25.0),
               child: Center(
-                child: Text('History not available'),
+                child: Text('Cures not found!'),
               ),
             ),
           if (isLoading)
@@ -157,9 +161,16 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
 
   Widget _imageWidget(imageUrl) {
     if (imageUrl != null) {
-      return Image(
+      // return Image(
+      //   fit: BoxFit.cover,
+      //   image: NetworkImage(imageUrl),
+      // ); // img not found bug fixed
+      return Image.network(
         fit: BoxFit.cover,
-        image: NetworkImage(imageUrl),
+        imageUrl.toString(),
+        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+          return const Text('Image not found!', style: TextStyle(color: Colors.red),);
+        },
       );
     } else {
       return const Icon(
