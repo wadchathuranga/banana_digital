@@ -131,6 +131,7 @@ class _CuresForDiseaseScreenState extends State<CuresForDiseaseScreen> {
                       ),
                       if (data!.cures!.isNotEmpty)
                         ListView.builder(
+                          physics: const ScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: data!.cures!.length,
                           itemBuilder: (context, index) {
