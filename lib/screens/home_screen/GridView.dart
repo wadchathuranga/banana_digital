@@ -76,7 +76,7 @@ class _GridViewCardState extends State<GridViewCard> {
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
-                    height: 50,
+                    height: 70,
                     child: Text(
                       widget.title,
                       textAlign: TextAlign.center,
