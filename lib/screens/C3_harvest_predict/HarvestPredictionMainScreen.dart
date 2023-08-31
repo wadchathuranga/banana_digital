@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../services/C3_harvest_prediction_api_service.dart';
 import '../../models/HarvestPredictionModel.dart';
@@ -67,6 +67,11 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
   final List sunlightReceived = ["Low", "Moderate", "High"];
   var selectedSunlightReceived;
 
+  final TextEditingController _dateOfInspectionController =
+  TextEditingController();
+
+  late DateTime date;
+
   // TextFormField common InputDecoration function
   InputDecoration buildInputDecoration(String hintText) {
     return InputDecoration(
@@ -114,6 +119,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
   @override
   void initState() {
     accessToken = UserSharedPreference.getAccessToken().toString();
+    date = DateTime.now();
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
       setState(() { });
@@ -760,7 +766,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
                 const Text(
                   'Using the provided data bellow, you can estimate the banana harvest, press the button to proceed with prediction process.',
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 15),
                 Form(
                   key: _varietyFormKey,
                   child: Column(
@@ -799,17 +805,45 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
                               isExpanded: false,
                             ),
                           ),
-                          const SizedBox(width: 10),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
                           Expanded(
                             child: TextFormField(
-                              validator: (val) {
-                                if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                              readOnly: true,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "required!";
+                                } else {
+                                  return null;
+                                }
                               },
-                              decoration: buildInputDecoration('Age'),
-                              keyboardType: TextInputType.number,
-                              controller: harvestDayController,
+                              controller: _dateOfInspectionController,
+                              decoration: InputDecoration(
+                                labelText: 'Date of Inspection',
+                                suffixIcon: const Icon(Icons.calendar_month_outlined),
+                                contentPadding:
+                                const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              onTap: () => pickDate(),
+                              onTapOutside: (val) => FocusScope.of(context).requestFocus(FocusNode()),
                             ),
                           ),
+                          // Expanded(
+                          //   child: TextFormField(
+                          //     validator: (val) {
+                          //       if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
+                          //     },
+                          //     decoration: buildInputDecoration('Age'),
+                          //     keyboardType: TextInputType.number,
+                          //     controller: harvestDayController,
+                          //   ),
+                          // ),
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -842,7 +876,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (_varietyFormKey.currentState!.validate()) {
-                                    calculateDay(selectedVarietyForDay, harvestDayController.text);
+                                    calculateDay(selectedVarietyForDay, _dateOfInspectionController.text);
                                     setState(() {
                                       isFetchinData = true;
                                     });
@@ -881,5 +915,19 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
     );
   }
 
+  // Date picker function
+  Future pickDate() async {
+    final newDate = await showDatePicker(
+      context: context,
+      initialDate: date,
+      firstDate: DateTime(DateTime.now().year - 5),
+      lastDate: DateTime(DateTime.now().year + 5),
+    );
+    if (newDate == null) return;
+    setState(() {
+      date = newDate;
+      _dateOfInspectionController.text = DateFormat('yyyy-MM-dd').format(date);
+    });
+  }
 
 }
