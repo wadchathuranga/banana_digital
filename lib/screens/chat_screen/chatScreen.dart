@@ -79,8 +79,30 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           children: [
             if (chatProvider.getChatList.isNotEmpty)
+              /// this code use to try to fixed scroll issue, this one also nice list view widget with scrolling
+              // Flexible(
+              //   child: CustomScrollView(
+              //     shrinkWrap: true,
+              //     slivers: [
+              //       SliverList(
+              //         delegate: SliverChildBuilderDelegate(
+              //               (context, index) {
+              //                 return ChatWidget(
+              //                   msg: chatProvider.getChatList[index].response!,
+              //                   chatIndex: chatProvider.getChatList[index].chatIndex!,
+              //                   isCures: chatProvider.getChatList[index].toCures ?? false,
+              //                   dropdownData:  chatProvider.getChatList[index].diseases == null ? [] : chatProvider.getChatList[index].diseases!,
+              //                 );
+              //           },
+              //           childCount: chatProvider.getChatList.length,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // )
               Flexible(
               child: ListView.builder(
+                physics: const ScrollPhysics(), /// this one use for activate scrolling
                 controller: _listScrollController,
                 itemCount: chatProvider.getChatList.length,
                 itemBuilder: (context, index) {
