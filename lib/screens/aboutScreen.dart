@@ -83,7 +83,6 @@ class _AboutScreenState extends State<AboutScreen> {
                 ),
                 const SizedBox(height: 50),
                 const Text('Developed by Team Musa Base.'),
-                const Text('Next Level Flutter Apps Developer Team in Sri Lanka.'),
                 const SizedBox(height: 15),
                 TextButton.icon(
                   label: const Text('Email'),
@@ -98,9 +97,9 @@ class _AboutScreenState extends State<AboutScreen> {
 
                     final Uri emailLaunchUri = Uri(
                       scheme: 'mailto',
-                      path: 'bananadigitalsl@gmail.com',
+                      path: 'musabase@gmail.com',
                       query: encodeQueryParameters(<String, String>{
-                        'subject': 'Banana Digital Mobile App',
+                        'subject': 'Musa Base Mobile App',
                       }),
                     );
 
@@ -108,7 +107,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   },
                 ),
                 Link(
-                  uri: Uri.parse('https://github.com/wadchathuranga'),
+                  uri: Uri.parse('https://github.com/###'),
                   target: LinkTarget.defaultTarget,
                   builder: (BuildContext context, FollowLink? followLink) {
                     return TextButton.icon(
@@ -119,7 +118,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   },
                 ),
                 Link(
-                  uri: Uri.parse('https://www.linkedin.com/in/wadchathuranga/'),
+                  uri: Uri.parse('https://www.linkedin.com/in/###/'),
                   target: LinkTarget.defaultTarget,
                   builder: (BuildContext context, FollowLink? followLink) {
                     return TextButton.icon(
