@@ -5,6 +5,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../screens/C2_disease_identification/CuresForDiseaseIdentificationScreen.dart';
 import '../../models/DiseaseIdentificationModel.dart';
 import '../../utils/app_colors.dart';
+import '../chat_screen/TextWidget.dart';
 
 class DiseaseIdentificationResultScreen extends StatefulWidget {
   const DiseaseIdentificationResultScreen({Key? key, required this.result}) : super(key: key);
@@ -47,18 +48,18 @@ class _DiseaseIdentificationResultScreenState extends State<DiseaseIdentificatio
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 10),
-                  Text(widget.result.disease!.nameDisplay.toString()),
+                  Text(widget.result.disease != null ? widget.result.disease!.nameDisplay.toString() : 'Not found'),
                   const Divider(),
                   const Text(
                     'Disease Description',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 10),
-                  MarkdownBody(data: widget.result.disease!.description.toString()),
+                  MarkdownBody(data: widget.result.disease != null ? widget.result.disease!.description.toString() : 'Not found'),
                   const Divider(),
                   const Text('Symptom Description', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
                   const SizedBox(height: 10),
-                  MarkdownBody(data: widget.result.disease!.symptomDescription.toString()),
+                  MarkdownBody(data: widget.result.disease != null ? widget.result.disease!.symptomDescription.toString() : 'Not found'),
                   const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -97,10 +98,20 @@ class _DiseaseIdentificationResultScreenState extends State<DiseaseIdentificatio
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () =>
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CuresForDiseaseIdentificationScreen(
-                              cures: widget.result.disease!.cures))),
+                    onPressed: () {
+                      if (widget.result.disease != null) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                CuresForDiseaseIdentificationScreen(
+                                    cures: widget.result.disease!.cures)));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: TextWidget(label: 'Cures not found'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
                     child: const SizedBox(
                       height: 50,
                       child: Row(
