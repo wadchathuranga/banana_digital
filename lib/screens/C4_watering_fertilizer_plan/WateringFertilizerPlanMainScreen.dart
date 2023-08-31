@@ -1141,10 +1141,18 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                                       ),
                                       onPressed: () {
                                         if (_qaFormKey.currentState!.validate()) {
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-                                          makeRequestBody();
+                                          if (croppedImg != null) {
+                                            setState(() {
+                                              isLoading = true;
+                                            });
+                                            makeRequestBody();
+                                          } else {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(content: TextWidget(label: 'Image is required!'),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                          }
                                         }
                                       },
                                     ),
