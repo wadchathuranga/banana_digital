@@ -78,11 +78,11 @@ class _AboutScreenState extends State<AboutScreen> {
                   child: Divider(indent: 50, endIndent: 50,),
                 ),
                 const Text(
-                    'Banana digital mobile app provides farmers with a range of useful tools and features that can help them to optimize their banana crops, minimize disease outbreaks, and maximize yields. It has the potential to be a valuable resource for banana farmers and can help to promote sustainable and profitable agriculture practices.',
+                    'Musa Base mobile app provides farmers with a range of useful tools and features that can help them to optimize their banana crops, minimize disease outbreaks, and maximize yields. It has the potential to be a valuable resource for banana farmers and can help to promote sustainable and profitable agriculture practices.',
                   textAlign: TextAlign.justify,
                 ),
                 const SizedBox(height: 50),
-                const Text('Developed by Team Banana Digital.'),
+                const Text('Developed by Team Musa Base.'),
                 const Text('Next Level Flutter Apps Developer Team in Sri Lanka.'),
                 const SizedBox(height: 15),
                 TextButton.icon(

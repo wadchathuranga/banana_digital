@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const MenuWidget(),
-        title: const Text('Banana Digital'),
+        title: const Text('Musa Base'),
         actions: const <Widget>[
           PopupMenu(),
         ],
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 50,
                       child: Center(
                         child: Text(
-                          'Welcome To Banana Digital',
+                          'Welcome To Musa Base',
                           style: TextStyle(
                               fontSize: 25.0, fontWeight: FontWeight.bold),
                         ),
