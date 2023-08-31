@@ -21,119 +21,108 @@ class _CuresForDiseaseIdentificationScreenState extends State<CuresForDiseaseIde
       appBar: AppBar(
         title: const Text('Cures'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0, bottom: 10.0),
-          child: Column(
-            children: [
-              if (widget.cures!.isNotEmpty)
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.cures!.length,
-                  itemBuilder: (context, index) {
-                    return  _expandableTile(widget.cures![index]);
-                  },
-                )
-              else
-                const Padding(
-                  padding: EdgeInsets.all(25.0),
-                  child: Center(
-                    child: Text('Data not available'),
-                  ),
-                ),
-            ],
+      body: (widget.cures!.isNotEmpty) ?
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.cures!.length,
+            itemBuilder: (context, index) {
+              return  _expandableTile(widget.cures![index]);
+            },
           ),
-
+        )
+      :
+        const Padding(
+          padding: EdgeInsets.all(25.0),
+          child: Center(
+            child: Text('Data not available'),
+          ),
         ),
-      ),
     );
   }
 
 
   Widget _expandableTile(Cures cures) {
-    return Column(
-      children: [
-        ExpandableNotifier(
-          initialExpanded: false,
-          child: Stack(
-            children: [
-              Container(
-                height: 40,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                  color: AppColors.primaryColor,
+    return ExpandableNotifier(
+      initialExpanded: false,
+      child: Stack(
+        children: [
+          Container(
+            height: 40,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+              color: AppColors.primaryColor,
+            ),
+          ),
+          ScrollOnExpand(
+            child: ExpandablePanel(
+              header: Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                child: Text(
+                  cures.nameDisplay.toString(),
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                  ),
                 ),
               ),
-              ScrollOnExpand(
-                child: ExpandablePanel(
-                  header: Padding(
-                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: Text(
-                      cures.nameDisplay.toString(),
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                      ),
-                    ),
+              collapsed: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: AppColors.primaryColor,
+                    width: 2,
                   ),
-                  collapsed: Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: AppColors.primaryColor,
-                        width: 2,
+                  borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      MarkdownBody(
+                        data: cures.description.toString(),
+                        // styleSheet: MarkdownStyleSheet(textAlign: WrapAlignment.spaceBetween),
                       ),
-                      borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          MarkdownBody(
-                            data: cures.description.toString(),
-                            // styleSheet: MarkdownStyleSheet(textAlign: WrapAlignment.spaceBetween),
+                    ],
+                  ),
+                ),
+              ),
+              expanded: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: AppColors.primaryColor,
+                    width: 2,
+                  ),
+                  borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
+                          child: Column(
+                              children: [
+                                _imageWidget(cures.img),
+                                const SizedBox(height: 10),
+                                MarkdownBody(data: cures.description.toString()),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  expanded: Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: AppColors.primaryColor,
-                        width: 2,
-                      ),
-                      borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-                    ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
-                              child: Column(
-                                  children: [
-                                    _imageWidget(cures.img),
-                                    const SizedBox(height: 10),
-                                    MarkdownBody(data: cures.description.toString()),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                  theme: const ExpandableThemeData(
-                      tapBodyToExpand: true,
-                      tapBodyToCollapse: true,
-                      iconColor: Colors.white,
-                      headerAlignment: ExpandablePanelHeaderAlignment.center
-                  ),
-                ),
+              theme: const ExpandableThemeData(
+                  tapBodyToExpand: true,
+                  tapBodyToCollapse: true,
+                  iconColor: Colors.white,
+                  headerAlignment: ExpandablePanelHeaderAlignment.center
               ),
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
