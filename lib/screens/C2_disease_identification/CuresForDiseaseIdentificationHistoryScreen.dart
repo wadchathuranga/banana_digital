@@ -21,31 +21,24 @@ class _CuresForDiseaseIdentificationHistoryScreenState extends State<CuresForDis
       appBar: AppBar(
         title: const Text('Cures'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0, bottom: 10.0),
-          child: Column(
-            children: [
-              if (widget.cures!.isNotEmpty)
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.cures!.length,
-                  itemBuilder: (context, index) {
-                    return  _expandableTile(widget.cures![index]);
-                  },
-                )
-              else
-                const Padding(
-                  padding: EdgeInsets.all(25.0),
-                  child: Center(
-                    child: Text('Data not available'),
-                  ),
-                ),
-            ],
+      body: (widget.cures!.isNotEmpty) ?
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.cures!.length,
+            itemBuilder: (context, index) {
+              return  _expandableTile(widget.cures![index]);
+            },
           ),
-
+        )
+      :
+        const Padding(
+          padding: EdgeInsets.all(25.0),
+          child: Center(
+            child: Text('Data not available'),
+          ),
         ),
-      ),
     );
   }
 
@@ -141,6 +134,7 @@ class _CuresForDiseaseIdentificationHistoryScreenState extends State<CuresForDis
   Widget _imageWidget(imageUrl) {
     if (imageUrl != null) {
       return Image.network(
+        fit: BoxFit.cover,
         imageUrl.toString(),
         errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
           return const Text('Image not found', style: TextStyle(color: Colors.red),);
