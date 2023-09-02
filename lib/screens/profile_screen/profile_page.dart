@@ -145,28 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Upload image
     Future uploadProfileImage(imageFile) async {
       try {
-        // // string to uri
-        // var uri = Uri.parse(USER_PROFILE_UPDATE);
-        //
-        // // create multipart request
-        // var request = http.MultipartRequest("PATCH", uri);
-        //
-        // // multipart that takes file
-        // var multipartFile = await http.MultipartFile.fromPath('profile_pic', imageFile.path, filename: '${UserSharedPreference.getUserName().toString()}.jpg');
-        //
-        // // add file to multipart
-        // request.files.add(multipartFile);
-        //
-        // // herders
-        // var headers = {
-        //   'Authorization': 'Bearer $accessToken'
-        // };
-        //
-        // // set headers to request
-        // request.headers.addAll(headers);
-        //
-        // // send request
-        // http.StreamedResponse response = await request.send();
+
         final response = await AuthApiService.updateUserProfilePicture(accessToken!, imageFile);
 
         setState(() {

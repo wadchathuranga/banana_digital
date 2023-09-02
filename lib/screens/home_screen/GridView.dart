@@ -22,7 +22,7 @@ class _GridViewCardState extends State<GridViewCard> {
   Widget build(BuildContext context) {
     return Card(
         elevation: 8.0,
-        margin: const EdgeInsets.all(5.0),
+        margin: const EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
