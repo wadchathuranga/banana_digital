@@ -113,14 +113,14 @@ class _DiseaseIdentificationResultScreenState extends State<DiseaseIdentificatio
                         );
                       }
                     },
-                    child: const SizedBox(
+                    child: SizedBox(
                       height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Cures'),
-                          SizedBox(width: 15),
-                          Icon(Icons.arrow_circle_right_outlined),
+                          Text(AppLocalizations.of(context)!.cures),
+                          const SizedBox(width: 15),
+                          const Icon(Icons.arrow_circle_right_outlined),
                         ],
                       ),
                     ),
