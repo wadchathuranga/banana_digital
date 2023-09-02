@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../screens/C2_disease_identification/CuresForDiseaseIdentificationScreen.dart';
 import '../../models/DiseaseIdentificationModel.dart';
@@ -32,7 +33,7 @@ class _DiseaseIdentificationResultScreenState extends State<DiseaseIdentificatio
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Disease Identification'),
+        title: Text(AppLocalizations.of(context)!.identifiedDisease),
       ),
       body: SingleChildScrollView(
         child: Column(

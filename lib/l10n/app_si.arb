@@ -9,8 +9,10 @@
     "dropdown": "ඔබේ තේරීම තෝරන්න",
     "clear": "දත්ත ඉවත් කරන්න",
     "identifyDisease": "රෝගය හඳුනා ගන්න",
+    "identifiedDisease": "හඳුනාගත් රෝගය",
     "identifyDiseaseTabName": "රෝග හඳුනා ගැනීම",
     "chatTabName": "කතාබස් කිරීම",
+    "cures": "පිළියම්",
 
     "leafColor": "පත්‍ර වර්ණය",
     "leafSpots": "පත්‍ර පැල්ලම් වර්ණය",

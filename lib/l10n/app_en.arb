@@ -5,23 +5,33 @@
     },
 
     "required": "Required",
-    "@language": {
+    "@required": {
        "description": "Input field can not be null"
     },
 
     "formTitle": "Fill the following questionnaire",
-    "@questionnaireTitle": {
+    "@formTitle": {
        "description": "This is questionnaire form for collecting data"
     },
 
     "q1name": "Variety",
-    "@questionnaireTitle": {
+    "@q1name": {
        "description": "1st question of questionnaire"
     },
 
     "clear": "Clear Form",
     "@clear": {
        "description": "Clear Form"
+    },
+
+    "identifiedDisease": "Identified Disease",
+    "@identifiedDisease": {
+      "description": "Identified Disease"
+    },
+
+    "cures": "Cures",
+    "@cures": {
+      "description": "Cures"
     },
 
     "identifyDisease": "Identify the Disease",

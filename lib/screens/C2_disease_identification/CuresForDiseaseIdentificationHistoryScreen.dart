@@ -1,6 +1,7 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../models/DiseaseIdentificationHistoryModel.dart';
 import '../../utils/app_colors.dart';
@@ -19,7 +20,7 @@ class _CuresForDiseaseIdentificationHistoryScreenState extends State<CuresForDis
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cures'),
+        title: Text(AppLocalizations.of(context)!.cures),
       ),
       body: (widget.cures!.isNotEmpty) ?
         Padding(
