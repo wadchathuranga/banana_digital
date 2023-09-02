@@ -59,7 +59,7 @@ class _DiseasePredictionMainScreenState extends State<DiseasePredictionMainScree
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: "Cropper Tool",
-            toolbarColor: Colors.blue,
+            toolbarColor: AppColors.primaryColor,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false,
