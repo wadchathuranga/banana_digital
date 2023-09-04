@@ -111,6 +111,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                           children: [
                             Text(
                               'Disease',
+                              textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -121,7 +122,8 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Probability',
+                              'Intensity order',
+                              textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -133,6 +135,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                           children: [
                             Text(
                               'Total Areas',
+                              textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -144,6 +147,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                           children: [
                             Text(
                               'Cures',
+                              textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -164,6 +168,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                               children: [
                                 Text(
                                   widget.data.probabilities![index].diseaseName.toString(),
+                                  textAlign: TextAlign.center,
                                   style: const TextStyle(fontSize: 16),
                                 ),
                               ],
@@ -175,6 +180,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                               children: [
                                 Text(
                                   '${(double.parse(widget.data.probabilities![index].avgConfidence!) * 100).toStringAsFixed(2)}%',
+                                  textAlign: TextAlign.center,
                                   style: const TextStyle(fontSize: 16),
                                 ),
                               ],
@@ -186,6 +192,7 @@ class _DiseaseDetectionResultScreenState extends State<DiseaseDetectionResultScr
                               children: [
                                 Text(
                                   '${widget.data.probabilities![index].totalArea.toString()} px',
+                                  textAlign: TextAlign.center,
                                   style: const TextStyle(fontSize: 16),
                                 ),
                               ],

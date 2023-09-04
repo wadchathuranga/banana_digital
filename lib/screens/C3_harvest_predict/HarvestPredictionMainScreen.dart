@@ -61,7 +61,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
   final List fertilizerTypes = ["Organic", "Non Organic", "Both used", "None"];
   var selectedFertilizerType;
 
-  final List wateringSchedule = ["Twice a week", "Randomly", "None", "3 times a week", "Daily"];
+  final List wateringSchedule = ["None", "Randomly", "Twice a week", "3 times a week", "Daily"];
   var selectedWateringSchedule;
 
   final List sunlightReceived = ["Low", "Moderate", "High"];
@@ -670,7 +670,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
                               validator: (val) {
                                 if (val!.trim().isEmpty) {return 'Required!';} else {return null;}
                               },
-                              decoration: buildInputDecoration('Height (in feet)'),
+                              decoration: buildInputDecoration('Height (in meters)'),
                               keyboardType: TextInputType.number,
                               controller: heightController,
                             ),
