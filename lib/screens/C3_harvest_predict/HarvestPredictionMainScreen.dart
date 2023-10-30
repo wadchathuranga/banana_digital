@@ -37,7 +37,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
 
   TextEditingController heightController = TextEditingController();
   TextEditingController leavesController = TextEditingController();
-  TextEditingController phController = TextEditingController();
+  // TextEditingController phController = TextEditingController();
   TextEditingController spaceController = TextEditingController();
 
   bool isLoading = false;
@@ -103,7 +103,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
       selectedWateringSchedule = null;
       heightController.clear();
       leavesController.clear();
-      phController.clear();
+      // phController.clear();
       spaceController.clear();
     });
   }
@@ -142,7 +142,7 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
         "watering_schedule": selectedWateringSchedule.toString().toLowerCase(),
         "spacing_between_plants": spaceController.text,
         "number_of_leaves": leavesController.text,
-        "soil_ph": double.parse(phController.text),
+        "soil_ph": double.parse('6.0'),
         "height": double.parse(heightController.text),
       };
 
@@ -563,23 +563,23 @@ class _HarvestPredictionMainScreenState extends State<HarvestPredictionMainScree
                               isExpanded: false,
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TextFormField(
-                              validator: (val) {
-                                if (val!.trim().isEmpty) {
-                                  return 'Required!';
-                                } else if (double.parse(val) < 0.0 || double.parse(val) > 14.0) {
-                                  return 'It should between 1 and 14';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              decoration: buildInputDecoration('Soil pH'),
-                              keyboardType: TextInputType.number,
-                              controller: phController,
-                            ),
-                          ),
+                          // const SizedBox(width: 10),
+                          // Expanded(
+                          //   child: TextFormField(
+                          //     validator: (val) {
+                          //       if (val!.trim().isEmpty) {
+                          //         return 'Required!';
+                          //       } else if (double.parse(val) < 0.0 || double.parse(val) > 14.0) {
+                          //         return 'It should between 1 and 14';
+                          //       } else {
+                          //         return null;
+                          //       }
+                          //     },
+                          //     decoration: buildInputDecoration('Soil pH'),
+                          //     keyboardType: TextInputType.number,
+                          //     controller: phController,
+                          //   ),
+                          // ),
                         ],
                       ),
                       buildSizedBox(),

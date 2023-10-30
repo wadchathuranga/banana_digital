@@ -40,7 +40,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
 
   final _qaFormKey = GlobalKey<FormState>();
   TextEditingController plantDensityController = TextEditingController();
-  TextEditingController soilPhController = TextEditingController();
+  // TextEditingController soilPhController = TextEditingController();
   TextEditingController stemDimeterController = TextEditingController();
   TextEditingController plantHeightController = TextEditingController();
 
@@ -261,7 +261,7 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
 
   Future makeRequestBody() async {
     Map<String, String> dataBody = {
-      'pH': soilPhController.text,
+      'pH': '6.0',
       'organic_matter_content': selectedOrganicMatterContent.toString().toLowerCase(),
       'avg_temperature': avgTemperature!.toStringAsFixed(2),
       'temperature': temperature.toString(),
@@ -1079,23 +1079,23 @@ class _WateringFertilizerPlanMainScreenState extends State<WateringFertilizerPla
                                       controller: plantHeightController,
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: TextFormField(
-                                      validator: (val) {
-                                        if (val!.trim().isEmpty) {
-                                          return 'Required!';
-                                        } else if (double.parse(val) < 0.0 || double.parse(val) > 14.0) {
-                                          return 'It should between 1 and 14';
-                                        } else {
-                                          return null;
-                                        }
-                                      },
-                                      decoration: buildInputDecoration('Soil pH'),
-                                      keyboardType: TextInputType.number,
-                                      controller: soilPhController,
-                                    ),
-                                  ),
+                                  // const SizedBox(width: 10),
+                                  // Expanded(
+                                  //   child: TextFormField(
+                                  //     validator: (val) {
+                                  //       if (val!.trim().isEmpty) {
+                                  //         return 'Required!';
+                                  //       } else if (double.parse(val) < 0.0 || double.parse(val) > 14.0) {
+                                  //         return 'It should between 1 and 14';
+                                  //       } else {
+                                  //         return null;
+                                  //       }
+                                  //     },
+                                  //     decoration: buildInputDecoration('Soil pH'),
+                                  //     keyboardType: TextInputType.number,
+                                  //     controller: soilPhController,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                               buildSizedBox(),
